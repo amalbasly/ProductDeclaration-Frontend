@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <app-navbar (addEmployeeClicked)="toggleAddEmployeeForm(true)"></app-navbar>
+  
+  <div class="main-content">
+    <app-employee-add 
+      *ngIf="showAddEmployeeForm"
+      (success)="onEmployeeAdded()"
+      (cancel)="toggleAddEmployeeForm(false)">
+    </app-employee-add>
+
+    <ng-container *ngIf="shouldShowDashboardContent()">
+      <section class="metrics-section centered-content">
+        <div class="metric-card">
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="details">
+            <h3>Total Employees</h3>
+            <p class="count">{{ totalEmployees }}</p>
+            <span class="trend positive" *ngIf="growthRate">
+              <i class="fas fa-arrow-up"></i> {{ growthRate }}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="directory-section centered-content">
+        <div class="section-header">
+          <h2>Employee List</h2>
+          <button (click)="refresh()" [disabled]="isLoading" class="refresh-btn">
+            <span *ngIf="!isLoading">Refresh</span>
+            <span *ngIf="isLoading">Refreshing...</span>
+          </button>
+        </div>
+        
+        <div *ngIf="isLoading" class="loading-indicator">
+          <i class="fas fa-spinner fa-spin"></i> Loading employees...
+        </div>
+      
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+      
+        <div *ngIf="!isLoading && !errorMessage">
+          <div class="employee-table-container">
+            <table class="employee-table">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Badge</th>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>Function</th>
+                  <th>Group</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of employees">
+                  <td>{{ employee.pl_matric }}</td>
+                  <td>{{ employee.pl_badge }}</td>
+                  <td>{{ employee.pl_nom }}</td>
+                  <td>{{ employee.pl_prenom }}</td>
+                  <td>{{ employee.pl_fonc }}</td>
+                  <td>{{ employee.Groupe?.descriptionGrp || 'N/A' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          
+            <div *ngIf="employees.length === 0" class="no-employees">
+              No employees found.
+            </div>
+          </div>
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</div>

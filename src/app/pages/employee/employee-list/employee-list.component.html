@@ -1,0 +1,47 @@
+<div class="employee-container">
+    <h2>Employee List</h2>
+    
+    <div class="controls">
+      <button (click)="refresh()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Refresh</span>
+        <span *ngIf="isLoading">Refreshing...</span>
+      </button>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-indicator">
+      Loading employees...
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <div *ngIf="!isLoading && !errorMessage">
+      <table class="employee-table">
+        <thead>
+          <tr>
+            <th>Matricule</th>
+            <th>Badge</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Function</th>
+            <th>Group</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let employee of employees">
+            <td>{{ employee.pl_matric }}</td>
+            <td>{{ employee.pl_badge }}</td>
+            <td>{{ employee.pl_nom }}</td>
+            <td>{{ employee.pl_prenom }}</td>
+            <td>{{ employee.pl_fonc }}</td>
+            <td>{{ employee.Groupe?.descriptionGrp || 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <div *ngIf="employees.length === 0" class="no-employees">
+        No employees found.
+      </div>
+    </div>
+  </div>

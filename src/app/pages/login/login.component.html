@@ -1,0 +1,39 @@
+<div class="page-wrapper">
+  <div class="login-container">
+    <div class="left-section">
+      <h2>Login</h2>
+      <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
+        <div class="input-group">
+          <label for="credentials">Enter Matricule, Nom, and Prenom</label>
+          <input
+            type="text"
+            id="credentials"
+            [(ngModel)]="credentials"
+            name="credentials"
+            placeholder="Matricule Nom Prenom"
+            required
+            [disabled]="isLoading"
+            (input)="errorMessage = null">
+          <div *ngIf="loginForm.submitted && !credentials" class="error-message">
+            Please enter your credentials
+          </div>
+        </div>
+        <button type="submit" [disabled]="isLoading || !credentials">
+          <span *ngIf="!isLoading">Login</span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i> Verifying...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <div class="right-section">
+      <img src="assets/Logo.ico" alt="Company Logo" class="logo">
+      <h2>Welcome Back!</h2>
+      <p>Login to continue</p>
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+</div>

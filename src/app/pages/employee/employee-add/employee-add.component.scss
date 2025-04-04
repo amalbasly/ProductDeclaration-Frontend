@@ -1,0 +1,151 @@
+/* employee-add.component.css */
+
+.employee-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.9rem;
+  }
+  
+  .form-group label::after {
+    content: '*';
+    color: #e53e3e;
+    margin-left: 0.2rem;
+    display: none;
+  }
+  
+  .form-group.required label::after {
+    display: inline;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    background-color: #ffffff;
+  }
+  
+  .form-group input[type="file"] {
+    padding: 0.5rem;
+    background: transparent;
+    border: 1px dashed #cbd5e0;
+  }
+  
+  .form-group input[type="file"]:focus {
+    border-style: solid;
+  }
+  
+  .form-actions {
+    margin-top: 2rem;
+    text-align: right;
+  }
+  
+  .form-actions button {
+    padding: 0.75rem 1.5rem;
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+  }
+  
+  .form-actions button:hover {
+    background-color: #3182ce;
+  }
+  
+  .form-actions button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .message {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .message.success {
+    background-color: #f0fff4;
+    color: #2f855a;
+    border: 1px solid #c6f6d5;
+  }
+  
+  .message.error {
+    background-color: #fff5f5;
+    color: #c53030;
+    border: 1px solid #fed7d7;
+  }
+  
+  /* Loading spinner */
+  .form-actions button .spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 0.5rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .employee-form {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .form-actions button {
+      width: 100%;
+    }
+  }
+  
+  /* Validation styles */
+  .ng-invalid.ng-touched:not(form) {
+    border-color: #fc8181 !important;
+  }
+  
+  .ng-valid.ng-touched:not(form) {
+    border-color: #68d391 !important;
+  }

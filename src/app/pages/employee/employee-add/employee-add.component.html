@@ -1,0 +1,49 @@
+<!-- employee-add.component.html -->
+<form #employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)" class="employee-form">
+  <div class="form-group">
+    <label for="pl_nom">Last Name*</label>
+    <input id="pl_nom" name="pl_nom" [(ngModel)]="employee.pl_nom" required>
+  </div>
+
+  <div class="form-group">
+    <label for="pl_prenom">First Name*</label>
+    <input id="pl_prenom" name="pl_prenom" [(ngModel)]="employee.pl_prenom" required>
+  </div>
+
+  <div class="form-group">
+    <label for="pl_badge">Badge Number*</label>
+    <input id="pl_badge" type="number" name="pl_badge" [(ngModel)]="employee.pl_badge" required>
+  </div>
+
+  <div class="form-group">
+    <label for="pl_fonc">Function</label>
+    <input id="pl_fonc" name="pl_fonc" [(ngModel)]="employee.pl_fonc">
+  </div>
+
+  <div class="form-group">
+    <label for="descriptionGrp">Group Description*</label>
+    <input id="descriptionGrp" name="descriptionGrp" [(ngModel)]="employee.descriptionGrp" required>
+  </div>
+
+  <div class="form-group">
+    <label for="img">Photo</label>
+    <input id="img" type="file" (change)="handleFileInput($event)">
+    <small *ngIf="employee.img">Selected file: {{ employee.img }}</small>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="!employeeForm.valid || isLoading">
+      {{ isLoading ? 'Adding Employee...' : 'Add Employee' }}
+    </button>
+    <button type="button" (click)="onCancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</form>

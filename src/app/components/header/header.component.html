@@ -1,0 +1,28 @@
+<header *ngIf="auth.isLoggedIn$ | async" class="thin-header">
+  <div class="header-content">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search...">
+    </div>
+    
+    <div class="header-actions">
+      <button class="notification-btn">
+        <i class="fas fa-bell"></i>
+        <span class="badge">{{notifications.length}}</span>
+      </button>
+      
+      <div class="dropdown-container">
+        <button class="menu-btn" (click)="toggleDropdown()">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        
+        <div class="dropdown-menu" *ngIf="showDropdown">
+          <a href="#"><i class="fas fa-envelope"></i> Messages</a>
+          <a href="#"><i class="fas fa-question-circle"></i> Help Center</a>
+          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+          <a (click)="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

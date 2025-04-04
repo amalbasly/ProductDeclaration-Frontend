@@ -1,0 +1,26 @@
+<div class="delete-container">
+  <h2>Delete Employee</h2>
+  
+  <div class="input-group">
+    <label>Matricule:</label>
+    <input type="number" [(ngModel)]="employee.pl_matric" placeholder="Employee ID">
+  </div>
+  
+  <div class="input-group">
+    <label>Last Name:</label>
+    <input type="text" [(ngModel)]="employee.pl_nom" placeholder="Last name">
+  </div>
+  
+  <div class="input-group">
+    <label>First Name:</label>
+    <input type="text" [(ngModel)]="employee.pl_prenom" placeholder="First name">
+  </div>
+  
+  <button (click)="confirmDelete()" [disabled]="isDeleting">
+    {{ isDeleting ? 'Deleting...' : 'Delete Employee' }}
+  </button>
+  
+  <div *ngIf="message" class="message">
+    {{ message }}
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="employee-details-container">
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchMatricule" 
+      placeholder="Enter employee matricule"
+      (keyup.enter)="searchEmployee()"
+    >
+    <button (click)="searchEmployee()">Search</button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading employee details...</div>
+  
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="employee && !isLoading" class="employee-card">
+    <div class="employee-header">
+      <h2>Employee Details</h2>
+      <span class="matricule">Matricule: {{ employee.pl_matric }}</span>
+    </div>
+
+    <div class="employee-body">
+      <div class="employee-image">
+        <img [src]="employee.img || 'assets/default-user.png'" alt="Employee photo">
+      </div>
+
+      <div class="employee-info">
+        <div class="info-row">
+          <span class="label">Name:</span>
+          <span class="value">{{ employee.pl_prenom }} {{ employee.pl_nom }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Badge:</span>
+          <span class="value">{{ employee.pl_badge }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Function:</span>
+          <span class="value">{{ employee.pl_fonc }}</span>
+        </div>
+        
+        <div class="info-row" *ngIf="employee.Groupe">
+          <span class="label">Group:</span>
+          <span class="value">{{ employee.Groupe.descriptionGrp }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

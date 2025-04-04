@@ -1,0 +1,232 @@
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f8f8, #e0e0e0);
+  }
+  
+  .login-container {
+    display: flex;
+    width: 800px;
+    height: 500px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .left-section {
+    width: 50%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+  }
+  
+  form {
+    width: 100%;
+    max-width: 100%; 
+  }
+  
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #f8f8f8, #e0e0e0);
+}
+
+.login-container {
+    display: flex;
+    width: 800px;
+    height: 500px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.left-section {
+    width: 50%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #e1e1e1;
+}
+
+.left-section h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #e63946;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0px 0px 8px rgba(230, 57, 70, 0.3);
+}
+
+.error-message {
+    color: #ffffff;
+    font-size: 14px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    background: #b51e2b;
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 12px rgba(181, 30, 43, 0.3);
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.right-section {
+    width: 50%;
+    background: linear-gradient(135deg, #e63946, #ff6b81);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 50px;
+}
+
+.right-section h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.right-section p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.logo {
+    width: 160px;
+    height: auto;
+    margin-bottom: 25px;
+    margin-top: -50px;
+    filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+    }
+
+    .left-section, .right-section {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .right-section {
+        order: -1;
+        padding: 40px 20px;
+    }
+
+    .logo {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .left-section h2 {
+        font-size: 28px;
+    }
+
+    .right-section h2 {
+        font-size: 30px;
+    }
+
+    .input-group input {
+        padding: 12px;
+    }
+
+    button {
+        padding: 14px;
+        font-size: 14px;
+    }
+}
