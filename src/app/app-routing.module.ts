@@ -7,28 +7,32 @@ import { EmployeeAddComponent } from './pages/employee/employee-add/employee-add
 import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
 import { EmployeeDetailsComponent } from './pages/employee/employee-details/employee-details.component';
 import { EmployeeEditComponent } from './pages/employee/employee-edit/employee-edit.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ProductComponent } from './pages/products/product/product.component';
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  {path : 'navbar', component : NavbarComponent},
-  //{ path: 'employee/add', component: EmployeeAddComponent },
-  { path: 'employee/delete', component: EmployeeDeleteComponent },
-  { path: 'employee/list', component: EmployeeListComponent },
-  { path: 'employee/edit/:matricule', component: EmployeeEditComponent },
-  { path: 'employee/details/:matricule', component: EmployeeDetailsComponent },
-  { path: 'profile-dashboard', component: ProfileDashboardComponent,
+  // Public
+  { path: '',              redirectTo: 'login',           pathMatch: 'full' },
+  { path: 'login',         component: LoginComponent },
+
+  // Dashboard (RH / Traca / Admin)
+  {
+    path: 'profile-dashboard',
+    component: ProfileDashboardComponent,
     children: [
-      { path: 'employee', redirectTo: 'employee/list', pathMatch: 'full' },
-      //{ path: 'employee/list', component: EmployeeListComponent },
-      { path: 'employee/add', component: EmployeeAddComponent },
-      //{ path: 'employee/edit/:matricule', component: EmployeeEditComponent },
-      //{ path: 'employee/delete/:matricule', component: EmployeeDeleteComponent },
-      { path: 'employee/details/:matricule', component: EmployeeDetailsComponent }
+      // Default: go straight to list
+      { path: '',redirectTo: 'employee/list',  pathMatch: 'full'},
+
+      // Employee management
+      { path: 'employee/list',component: EmployeeListComponent},
+      { path: 'employee/add',component: EmployeeAddComponent},
+      { path: 'employee/edit/:mat',component: EmployeeEditComponent},
+      { path: 'employee/details/:mat',component: EmployeeDetailsComponent},
+      { path: 'employee/delete',component: EmployeeDeleteComponent},
     ]
   },
-  { path: '**', redirectTo: '/login' }
+  {path : 'sidebar',component:SidebarComponent},
+  { path: 'product', component: ProductComponent},
+  { path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({

@@ -1,0 +1,40 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <!-- Required Fields -->
+    <div>
+      <label>Ligne:</label>
+      <input type="text" formControlName="ligne" required>
+    </div>
+  
+    <div>
+      <label>Famille:</label>
+      <input type="text" formControlName="famille" required>
+    </div>
+  
+    <div>
+      <label>Sous-Famille:</label>
+      <input type="text" formControlName="sousFamille" required>
+    </div>
+  
+    <div>
+      <label>Code Produit:</label>
+      <input type="text" formControlName="codeProduit" required>
+    </div>
+  
+    <div>
+      <label>Libellé:</label>
+      <input type="text" formControlName="libelle" required>
+    </div>
+  
+    <!-- Optional Fields -->
+    <div>
+      <label>Type:</label>
+      <input type="text" formControlName="type">
+    </div>
+  
+    <div>
+      <label>Flashable:</label>
+      <input type="checkbox" formControlName="flashable">
+    </div>
+  
+    <button type="submit" [disabled]="!productForm.valid">Create Product</button>
+  </form>

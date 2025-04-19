@@ -1,4 +1,3 @@
-// app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,8 +13,10 @@ import { EmployeeDetailsComponent } from './pages/employee/employee-details/empl
 import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
 import { EmployeeService } from './Services/employee.service';
 import { HeaderComponent } from './components/header/header.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ProductComponent } from './pages/products/product/product.component';
+
 
 @NgModule({
   declarations: [
@@ -28,8 +29,9 @@ import { FooterComponent } from './components/footer/footer.component';
     EmployeeDetailsComponent,
     EmployeeDeleteComponent,
     HeaderComponent,
-    NavbarComponent,
+    SidebarComponent,
     FooterComponent,
+    ProductComponent,   
   ],
   imports: [
     BrowserModule,

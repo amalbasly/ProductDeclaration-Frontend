@@ -1,4 +1,4 @@
-<header *ngIf="auth.isLoggedIn$ | async" class="thin-header">
+<header *ngIf="auth.currentUser$ | async as user" class="thin-header">
   <div class="header-content">
     <div class="search-bar">
       <i class="fas fa-search"></i>

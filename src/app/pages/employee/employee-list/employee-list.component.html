@@ -1,47 +1,135 @@
 <div class="employee-container">
-    <h2>Employee List</h2>
+  <h2>Employee List</h2>
+  
+  <div class="controls">
+    <button (click)="refresh()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Refresh</span>
+      <span *ngIf="isLoading">Refreshing...</span>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    Loading employees...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th>Matricule</th>
+          <th>Badge</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Function</th>
+          <th>Group</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees">
+          <td class="clickable" (click)="openDetailsModal(employee)">{{ employee.pl_matric }}</td>
+          <td>{{ employee.pl_badge }}</td>
+          <td class="clickable" (click)="openDetailsModal(employee)">{{ employee.pl_nom }}</td>
+          <td class="clickable" (click)="openDetailsModal(employee)">{{ employee.pl_prenom }}</td>
+          <td>{{ employee.pl_fonc }}</td>
+          <td>{{ employee.Groupe?.descriptionGrp || 'N/A' }}</td>
+          <td class="actions">
+            <button (click)="openUpdateModal(employee)" class="action-button edit-button" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button (click)="deleteEmployee(employee)" class="action-button delete-button" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="employees.length === 0" class="no-employees">
+      No employees found.
+    </div>
+  </div>
+</div>
+
+<!-- Update Modal -->
+<div *ngIf="showUpdateModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Update Employee Function</h2>
     
-    <div class="controls">
-      <button (click)="refresh()" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Refresh</span>
-        <span *ngIf="isLoading">Refreshing...</span>
-      </button>
-    </div>
-  
-    <div *ngIf="isLoading" class="loading-indicator">
-      Loading employees...
-    </div>
-  
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-  
-    <div *ngIf="!isLoading && !errorMessage">
-      <table class="employee-table">
-        <thead>
-          <tr>
-            <th>Matricule</th>
-            <th>Badge</th>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>Function</th>
-            <th>Group</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let employee of employees">
-            <td>{{ employee.pl_matric }}</td>
-            <td>{{ employee.pl_badge }}</td>
-            <td>{{ employee.pl_nom }}</td>
-            <td>{{ employee.pl_prenom }}</td>
-            <td>{{ employee.pl_fonc }}</td>
-            <td>{{ employee.Groupe?.descriptionGrp || 'N/A' }}</td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <div *ngIf="employees.length === 0" class="no-employees">
-        No employees found.
+    <div *ngIf="selectedEmployee">
+      <p><strong>Employee:</strong> {{selectedEmployee.pl_prenom}} {{selectedEmployee.pl_nom}}</p>
+      <p><strong>Current Function:</strong> {{selectedEmployee.pl_fonc || 'N/A'}}</p>
+      
+      <div class="form-group">
+        <label for="newFunction">New Function:</label>
+        <input 
+          id="newFunction"
+          type="text"
+          [(ngModel)]="newFunction"
+          placeholder="Enter new function"
+          class="form-control">
+      </div>
+      
+      <div class="button-group">
+        <button (click)="closeModal()" class="btn-secondary">Cancel</button>
+        <button 
+          (click)="updateEmployeeFunction()"
+          [disabled]="isLoading"
+          class="btn-primary">
+          {{ isLoading ? 'Updating...' : 'Update' }}
+        </button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Details Modal -->
+<div *ngIf="showDetailsModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Employee Details</h2>
+      <button (click)="closeModal()" class="close-button">&times;</button>
+    </div>
+    
+    <div *ngIf="selectedEmployee" class="employee-details">
+      <div class="detail-row">
+        <span class="detail-label">Matricule:</span>
+        <span class="detail-value">{{ selectedEmployee.pl_matric }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Badge:</span>
+        <span class="detail-value">{{ selectedEmployee.pl_badge }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Last Name:</span>
+        <span class="detail-value">{{ selectedEmployee.pl_nom }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">First Name:</span>
+        <span class="detail-value">{{ selectedEmployee.pl_prenom }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Function:</span>
+        <span class="detail-value">{{ selectedEmployee.pl_fonc || 'N/A' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Group:</span>
+        <span class="detail-value">{{ selectedEmployee.Groupe?.descriptionGrp || 'N/A' }}</span>
+      </div>
+      <!-- Add more details as needed -->
+      
+      <div class="button-group">
+        <button (click)="closeModal()" class="btn-secondary">Close</button>
+        <button 
+          (click)="openUpdateModal(selectedEmployee)"
+          class="btn-primary">
+          Edit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
