@@ -2,8 +2,9 @@
   <div *ngIf="user.employeeFunction === 'RH'">
     <div class="logo">
       <i class="fas fa-user-tie"></i>
-      <h2>HR Management</h2>
+      <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
     </div>
+    
 
     <ul class="nav-links">
       <li>
@@ -25,10 +26,15 @@
         </a>
       </li>
     </ul>
+    <div class="user-email">
+      <i class="fas fa-envelope"></i>
+      <span>{{ user?.employeeEmail || '' }}</span>
+    </div>
 
     <div class="logout" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i>
       <span>Logout</span>
     </div>
   </div>
+  
 </nav>

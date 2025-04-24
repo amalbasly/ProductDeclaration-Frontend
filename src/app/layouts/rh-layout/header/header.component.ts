@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ValidateEmployeeService } from '../../Services/validate-employee.service';
+import { ValidateEmployeeService } from '../../../Services/validate-employee.service';
 import { Router } from '@angular/router';
 
 @Component({

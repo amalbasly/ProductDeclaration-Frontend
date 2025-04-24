@@ -1,0 +1,50 @@
+<nav class="sidebar" *ngIf="authService.currentUser$ | async as user" [class.open]="isOpen">
+    <!-- Préparateur Sidebar -->
+  <div *ngIf="user.employeeFunction === 'préparateur'">
+    <div class="logo">
+      <i class="fas fa-user-tie"></i>
+      <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/prep/dashboard" routerLinkActive="active">
+          <i class="fas fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      
+      <li class="has-submenu" [class.open]="isSubmenuOpen">
+        <a (click)="toggleSubmenu()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Add Product</span>
+          <i class="dropdown-icon fas fa-chevron-down"></i>
+        </a>
+        <ul class="submenu">
+          <li>
+            <a routerLink="/prep/products/create/serialized" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-barcode"></i>
+              <span>Serialized Product</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/prep/products/create/non-serialized" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-cubes"></i>
+              <span>Non-Serialized Product</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="user-email">
+      <i class="fas fa-envelope"></i>
+      <span>{{ user?.employeeEmail || '' }}</span>
+    </div>
+
+    <div class="logout" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </div>
+  </div>
+</nav>

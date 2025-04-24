@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ValidateEmployeeService } from '../../Services/validate-employee.service';
+import { ValidateEmployeeService } from '../../../Services/validate-employee.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -40,4 +40,9 @@ export class SidebarComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+ngOnInit() {
+  this.authService.currentUser$.subscribe(user => {
+    console.log('Current User in Sidebar:', user);
+  });
+}
 }

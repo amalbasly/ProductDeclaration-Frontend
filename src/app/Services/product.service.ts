@@ -1,28 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 
-interface ProductCreateRequest {
-  ligne: string;
-  famille: string;
-  sousFamille: string;
-  codeProduit: string;
-  libelle: string;
-  type?: string;
-  libelle2?: string;
-  statut?: string;
-  codeProduitClientC264?: string;
-  poids?: number;
-  createur?: string;
-  dateCreation?: Date;
-  tolerance?: string;
-  flashable?: boolean;
+interface DropdownOptions {
+  lignes: string[];
+  famille: string[];
+  sousFamilles: string[];
+  types: string[];
+  statuts: string[];
 }
 
-interface ApiResponse {
-  Result: string;
-  Message: string;
-  ProductCode?: string;
+interface ProductCreateResponse {
+  result: string;
+  message: string;
+  productCode: string;
 }
 
 @Injectable({
@@ -30,50 +21,60 @@ interface ApiResponse {
 })
 export class ProductService {
   private apiUrl = 'http://localhost:5134/api/Products';
-  private headers = new HttpHeaders({
-    'Content-Type': 'application/x-www-form-urlencoded'
-  });
 
   constructor(private http: HttpClient) { }
 
-  createProduct(productData: ProductCreateRequest): Observable<ApiResponse> {
-    const body = new URLSearchParams();
-    
-    // Required fields
-    body.set('ligne', productData.ligne);
-    body.set('famille', productData.famille);
-    body.set('sousFamille', productData.sousFamille);
-    body.set('codeProduit', productData.codeProduit);
-    body.set('libelle', productData.libelle);
-
-    // Optional fields
-    if (productData.type) body.set('type', productData.type);
-    if (productData.libelle2) body.set('libelle2', productData.libelle2);
-    if (productData.statut) body.set('statut', productData.statut);
-    if (productData.codeProduitClientC264) body.set('codeProduitClientC264', productData.codeProduitClientC264);
-    if (productData.poids) body.set('poids', productData.poids.toString());
-    if (productData.createur) body.set('createur', productData.createur);
-    if (productData.dateCreation) body.set('dateCreation', productData.dateCreation.toISOString());
-    if (productData.tolerance) body.set('tolerance', productData.tolerance);
-    body.set('flashable', productData.flashable ? '1' : '0');
-
-    return this.http.post<ApiResponse>(
-      `${this.apiUrl}/CreateProduct`,
-      body.toString(),
-      { headers: this.headers }
-    ).pipe(
-      catchError(this.handleError)
+  getDropdownOptions(): Observable<DropdownOptions> {
+    return this.http.get<DropdownOptions>(`${this.apiUrl}/GetOptions`).pipe(
+      catchError(error => {
+        console.error('Error fetching dropdown options:', error);
+        throw error;
+      })
     );
   }
 
-  private handleError(error: any): Observable<never> {
-    let errorMessage = 'An error occurred';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client error: ${error.error.message}`;
-    } else {
-      errorMessage = `Server error: ${error.status} - ${error.error?.Message || error.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+  checkProductCode(code: string): Observable<{ exists: boolean }> {
+    return this.http.get<{ exists: boolean }>(
+      `${this.apiUrl}/CheckProductCode?code=${encodeURIComponent(code)}`
+    ).pipe(
+      catchError(error => {
+        console.error('Error checking product code:', error);
+        throw error;
+      })
+    );
+  }
+
+  createProduct(productData: any): Observable<ProductCreateResponse> {
+    const params = new HttpParams({fromObject: productData})
+      .set('ligne', productData.ligne || '')
+      .set('famille', productData.famille || '')
+      .set('sousFamille', productData.sousFamille || '')
+      .set('codeProduit', productData.codeProduit || '')
+      .set('libelle', productData.libelle || '')
+      .set('type', productData.type || '')
+      .set('libelle2', productData.libelle2 || '')
+      .set('statut', productData.statut || '')
+      .set('codeProduitClientC264', productData.codeProduitClientC264 || '')
+      .set('poids', productData.poids?.toString() || '')
+      .set('createur', productData.createur || '')
+      .set('dateCreation', productData.dateCreation || '')
+      .set('tolerance', productData.tolerance || '')
+      .set('flashable', productData.flashable?.toString() || '');
+
+    return this.http.post<ProductCreateResponse>(
+      `${this.apiUrl}/CreateProduct`, 
+      {}, 
+      { params }
+    ).pipe(
+      catchError(error => {
+        console.error('Error creating product:', error);
+        return throwError(() => ({
+          error: {
+            result: 'Error',
+            message: error.error?.message || 'Unknown error occurred'
+          }
+        }));
+      })
+    );
   }
 }

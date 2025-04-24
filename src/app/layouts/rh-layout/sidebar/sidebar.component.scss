@@ -60,6 +60,37 @@
     }
   }
 
+  /* NEW EMAIL SECTION STYLES - Add this above the .logout */
+  .user-email {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto; // This pushes it to the bottom
+    transition: all 0.3s;
+
+    i {
+      color: #3498db;
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+    }
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
   .logout {
     padding: 15px 20px;
     display: flex;

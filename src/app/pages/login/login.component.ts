@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ValidateEmployeeService } from '../../Services/validate-employee.service';
+import { ValidateEmployeeService, User } from '../../Services/validate-employee.service';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone : false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -46,19 +46,24 @@ export class LoginComponent {
       parts[1], 
       parts[2]
     ).subscribe({
-      next: (result) => {
+      next: (result: User | null) => {  // Now using User interface from service
         this.isLoading = false;
+        
+        if (!result) {
+          this.errorMessage = 'Réponse invalide du serveur';
+          return;
+        }
+
         if (result.accessStatus === 1) {
-          // Store user data in the service
           this.validateEmployeeService.currentUser$.next(result);
 
-          // Redirect based on role
           if (result.employeeFunction === 'RH') {
-            this.router.navigate(['/profile-dashboard']);
-          } else {
-            this.router.navigate(['/default-dashboard']);
+            this.router.navigate(['/rh']); // Use the base RH route
+          } else if (result.employeeFunction =='préparateur') {
+            this.router.navigate(['/prep']);
+          } 
           }
-        } else {
+         else {
           this.errorMessage = 'Identifiants invalides. Veuillez réessayer.';
         }
       },

@@ -1,40 +1,144 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <!-- Required Fields -->
-    <div>
-      <label>Ligne:</label>
-      <input type="text" formControlName="ligne" required>
+<div class="container mt-4">
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="text-center mb-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading...</p>
     </div>
-  
-    <div>
-      <label>Famille:</label>
-      <input type="text" formControlName="famille" required>
+
+    <!-- Ligne -->
+    <div class="mb-3">
+      <label class="form-label">Ligne</label>
+      <select formControlName="ligne" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('ligne')?.invalid">
+        <option value="">Select Ligne</option>
+        <option *ngFor="let item of dropdowns.lignes" [value]="item">{{ item }}</option>
+      </select>
+      <div *ngIf="formSubmitted && productForm.get('ligne')?.invalid" class="invalid-feedback">
+        Ligne is required
+      </div>
     </div>
-  
-    <div>
-      <label>Sous-Famille:</label>
-      <input type="text" formControlName="sousFamille" required>
+
+    <!-- Famille -->
+    <div class="mb-3">
+      <label class="form-label">Famille</label>
+      <select formControlName="famille" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('famille')?.invalid">
+        <option value="">Select Famille</option>
+        <option *ngFor="let item of dropdowns.famille" [value]="item">{{ item }}</option>
+      </select>
+      <div *ngIf="formSubmitted && productForm.get('famille')?.invalid" class="invalid-feedback">
+        Famille is required
+      </div>
     </div>
-  
-    <div>
-      <label>Code Produit:</label>
-      <input type="text" formControlName="codeProduit" required>
+
+    <!-- Sous-Famille -->
+    <div class="mb-3">
+      <label class="form-label">Sous-Famille</label>
+      <select formControlName="sousFamille" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('sousFamille')?.invalid">
+        <option value="">Select Sous-Famille</option>
+        <option *ngFor="let item of dropdowns.sousFamilles" [value]="item">{{ item }}</option>
+      </select>
+      <div *ngIf="formSubmitted && productForm.get('sousFamille')?.invalid" class="invalid-feedback">
+        Sous-Famille is required
+      </div>
     </div>
-  
-    <div>
-      <label>Libellé:</label>
-      <input type="text" formControlName="libelle" required>
+
+    <!-- Code Produit -->
+    <div class="mb-3">
+      <label class="form-label">Code Produit</label>
+      <input type="text" formControlName="codeProduit" class="form-control" 
+             [class.is-invalid]="formSubmitted && productForm.get('codeProduit')?.invalid">
+             <div *ngIf="formSubmitted && productForm.get('Code Produit')?.invalid" class="invalid-feedback">
+              Code Produit is required
+            </div>
     </div>
-  
-    <!-- Optional Fields -->
-    <div>
-      <label>Type:</label>
-      <input type="text" formControlName="type">
+
+    <!-- Libelle -->
+    <div class="mb-3">
+      <label class="form-label">Libelle</label>
+      <input type="text" formControlName="libelle" class="form-control" 
+             [class.is-invalid]="formSubmitted && productForm.get('libelle')?.invalid">
+      <div *ngIf="formSubmitted && productForm.get('libelle')?.invalid" class="invalid-feedback">
+        Libelle is required
+      </div>
     </div>
-  
-    <div>
-      <label>Flashable:</label>
-      <input type="checkbox" formControlName="flashable">
+
+    <!-- Type -->
+    <div class="mb-3">
+      <label class="form-label">Type</label>
+      <select formControlName="type" class="form-select">
+        <option value="">Select Type (optional)</option>
+        <option *ngFor="let item of dropdowns.types" [value]="item">{{ item }}</option>
+      </select>
     </div>
-  
-    <button type="submit" [disabled]="!productForm.valid">Create Product</button>
+
+    <!-- Libelle 2 -->
+    <div class="mb-3">
+      <label class="form-label">Libelle 2</label>
+      <input type="text" formControlName="libelle2" class="form-control">
+    </div>
+
+    <!-- Statut -->
+    <div class="mb-3">
+      <label class="form-label">Statut</label>
+      <select formControlName="statut" class="form-select">
+        <option value="">Select Statut (optional)</option>
+        <option *ngFor="let item of dropdowns.statuts" [value]="item">{{ item }}</option>
+      </select>
+    </div>
+
+    <!-- Poids -->
+    <div class="mb-3">
+      <label class="form-label">Poids</label>
+      <input type="number" formControlName="poids" class="form-control" min="0"
+             [class.is-invalid]="formSubmitted && productForm.get('poids')?.invalid">
+      <div *ngIf="formSubmitted && productForm.get('poids')?.invalid" class="invalid-feedback">
+        Must be positive number
+      </div>
+    </div>
+
+    <!-- Additional Fields -->
+    <div class="mb-3">
+      <label class="form-label">Code Produit Client C264</label>
+      <input type="text" formControlName="codeProduitClientC264" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Createur</label>
+      <input type="text" formControlName="createur" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Date Creation</label>
+      <input type="date" formControlName="dateCreation" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Tolerance</label>
+      <input type="text" formControlName="tolerance" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Flashable</label>
+      <select formControlName="flashable" class="form-select">
+        <option value="">Select (optional)</option>
+        <option [value]="1">Yes</option>
+        <option [value]="0">No</option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Create Product</span>
+      <span *ngIf="isLoading">Creating...</span>
+    </button>
+    <div class="text-end synoptique-btn-wrapper">
+      <button type="button" class="btn btn-primary" 
+              (click)="goToSynoptique()"
+              [disabled]="productForm.invalid">
+        Remplir Le synoptique de ce Produit
+      </button>
+    </div>
   </form>
+</div>

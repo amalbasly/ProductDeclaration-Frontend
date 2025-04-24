@@ -1,42 +1,104 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+// Public
 import { LoginComponent } from './pages/login/login.component';
-import { ProfileDashboardComponent } from './pages/profile-dashboard/profile-dashboard.component';
+
+// RH Layout & Pages
+import { RhLayoutComponent } from './layouts/rh-layout/rh-layout/rh-layout.component';
+import { PrepLayoutComponent } from './layouts/prep-layout/prep-layout/prep-layout.component';
+import { ProfileDashboardComponent } from './layouts/rh-layout/profile-dashboard/profile-dashboard.component';
+import { PrepDashboardComponent } from './layouts/prep-layout/prep-dashboard/prep-dashboard.component';
+
+
+// Admin Layout & Pages
+//import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+//import { AdminDashboardComponent } from './layouts/admin-layout/admin-dashboard/admin-dashboard.component';
+
+// Shared Employee Pages
 import { EmployeeListComponent } from './pages/employee/employee-list/employee-list.component';
 import { EmployeeAddComponent } from './pages/employee/employee-add/employee-add.component';
-import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
-import { EmployeeDetailsComponent } from './pages/employee/employee-details/employee-details.component';
 import { EmployeeEditComponent } from './pages/employee/employee-edit/employee-edit.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { EmployeeDetailsComponent } from './pages/employee/employee-details/employee-details.component';
+import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
+
+// Other Pages
 import { ProductComponent } from './pages/products/product/product.component';
+import { SerializedComponent } from './pages/products/serialized/serialized.component';
+import { NonSerializedComponent } from './pages/products/non-serialized/non-serialized.component';
+import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.component';
+
 const routes: Routes = [
-  // Public
-  { path: '',              redirectTo: 'login',           pathMatch: 'full' },
-  { path: 'login',         component: LoginComponent },
-
-  // Dashboard (RH / Traca / Admin)
+  // Public route
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  // RH Layout with nested routes
   {
-    path: 'profile-dashboard',
-    component: ProfileDashboardComponent,
+    path: 'rh',
+    component: RhLayoutComponent,
     children: [
-      // Default: go straight to list
-      { path: '',redirectTo: 'employee/list',  pathMatch: 'full'},
-
-      // Employee management
-      { path: 'employee/list',component: EmployeeListComponent},
-      { path: 'employee/add',component: EmployeeAddComponent},
-      { path: 'employee/edit/:mat',component: EmployeeEditComponent},
-      { path: 'employee/details/:mat',component: EmployeeDetailsComponent},
-      { path: 'employee/delete',component: EmployeeDeleteComponent},
+      { path: '', component: ProfileDashboardComponent },
+      { path: 'employees', children: [
+        { path: 'list', component: EmployeeListComponent },
+        { path: 'add', component: EmployeeAddComponent },
+        { path: 'edit/:mat', component: EmployeeEditComponent },
+        { path: 'details/:mat', component: EmployeeDetailsComponent },
+        { path: 'delete', component: EmployeeDeleteComponent },
+      ]},
     ]
   },
-  {path : 'sidebar',component:SidebarComponent},
-  { path: 'product', component: ProductComponent},
-  { path: '**', redirectTo: 'login'}
+
+  {
+    path: 'prep',
+    component: PrepLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: PrepDashboardComponent },
+      
+      // Product routes (simplified structure)
+      { 
+        path: 'products/create/serialized', 
+        component: SerializedComponent,
+        children: [
+          { path: '', redirectTo: 'product', pathMatch: 'full' },
+          { path: 'product', component: ProductComponent },
+          { path: 'synoptique/:ptNum', component: SynoptiqueComponent }
+        ]
+      },
+      { 
+        path: 'products/create/non-serialized',
+        component: NonSerializedComponent,
+        children: [
+          { path: '', redirectTo: 'product', pathMatch: 'full' },
+          { path: 'product', component: ProductComponent }
+        ]
+      }
+    ]
+  },
+  
+  // Admin Layout with shared pages
+  /*{
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: AdminDashboardComponent },
+      { path: 'employees', children: [
+        { path: 'list', component: EmployeeListComponent },
+        { path: 'add', component: EmployeeAddComponent },
+        { path: 'edit/:mat', component: EmployeeEditComponent },
+        { path: 'details/:mat', component: EmployeeDetailsComponent },
+        { path: 'delete', component: EmployeeDeleteComponent },
+      ]},
+      { path: 'product', component: ProductComponent }
+    ]
+  },*/
+
+  // Fallback
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

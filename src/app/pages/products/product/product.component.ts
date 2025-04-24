@@ -1,21 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../Services/product.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product',
-  standalone : false,
+  standalone: false,
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
+  
   productForm: FormGroup;
+  dropdowns = {
+    lignes: [] as string[],
+    famille: [] as string[],
+    sousFamilles: [] as string[],
+    types: [] as string[],
+    statuts: [] as string[]
+  };
   isLoading = false;
   formSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.productForm = this.fb.group({
       ligne: ['', Validators.required],
@@ -27,64 +38,109 @@ export class ProductComponent implements OnInit {
       libelle2: [''],
       statut: [''],
       codeProduitClientC264: [''],
-      poids: [null],
+      poids: [null, Validators.min(0)],
       createur: [''],
       dateCreation: [null],
       tolerance: [''],
-      flashable: [false]
+      flashable: [null]
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadDropdownOptions();
+  }
 
-  onSubmit(): void {
-    this.formSubmitted = true;
-    
-    if (this.productForm.invalid) {
-      this.markAllAsTouched();
-      alert('Please fill all required fields correctly');
-      return;
-    }
-
+  loadDropdownOptions(): void {
     this.isLoading = true;
-    const formData = this.productForm.getRawValue();
-
-    const productData = {
-      ...formData,
-      dateCreation: formData.dateCreation ? new Date(formData.dateCreation) : null,
-      flashable: formData.flashable
-    };
-
-    this.productService.createProduct(productData).subscribe({
-      next: (response) => {
+    this.productService.getDropdownOptions().subscribe({
+      next: (options: any) => {
+        this.dropdowns = {
+          lignes: options.lignes || [],
+          famille: options.famille || [],
+          sousFamilles: options.sousFamilles || [],
+          types: options.types || [],
+          statuts: options.statuts || []
+        };
         this.isLoading = false;
-        if (response.Result === 'Success') {
-          alert('Product created successfully!');
-          this.resetForm();
-        } else {
-          alert(`Error: ${response.Message}`);
-        }
       },
-      error: (err) => {
+      error: (error: any) => {
+        console.error('Error loading dropdown options:', error);
         this.isLoading = false;
-        alert(`Error creating product: ${err.message}`);
       }
     });
   }
 
-  private resetForm(): void {
-    this.productForm.reset({
-      ligne: '',
-      famille: '',
-      sousFamille: '',
-      flashable: false
-    });
-    this.formSubmitted = false;
+  checkProductCode(): void {
+    const code = this.productForm.get('codeProduit')?.value;
+    if (code) {
+      this.productService.checkProductCode(code).subscribe({
+        next: (response: any) => {
+          if (response.exists) {
+            this.productForm.get('codeProduit')?.setErrors({ exists: true });
+          }
+        },
+        error: (error: any) => {
+          console.error('Error checking product code:', error);
+        }
+      });
+    }
   }
 
-  private markAllAsTouched(): void {
-    Object.values(this.productForm.controls).forEach(control => {
-      control.markAsTouched();
+  onSubmit(): void {
+    this.formSubmitted = true;
+    if (this.productForm.invalid) {
+      return;
+    }
+  
+    this.isLoading = true;
+    const formData = this.productForm.value;
+  
+    this.productService.createProduct(formData).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        console.log('Full server response:', response);
+        
+        if (response.result === 'Success') {
+          alert(`Product created successfully! Code: ${response.productCode}`);
+          this.productForm.reset();
+          this.formSubmitted = false;
+        } else {
+          alert(response.message || 'Operation failed');
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error response:', error);
+        alert(error.error?.message || 'Failed to create product');
+      }
+    });
+  }
+
+  goToSynoptique(): void {
+    this.formSubmitted = true;
+    if (this.productForm.invalid) {
+      return;
+    }
+  
+    this.isLoading = true;
+    const formData = this.productForm.value;
+  
+    this.productService.createProduct(formData).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.result === 'Success') {
+          // Navigate to synoptique with the product code as route parameter
+          this.router.navigate(['../synoptique', response.productCode], { 
+            relativeTo: this.route 
+          });
+        } else {
+          alert(response.message || 'Operation failed');
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        alert(error.error?.message || 'Failed to create product');
+      }
     });
   }
 }
