@@ -1,10 +1,4 @@
 <div class="serialized-flow-container">
-    <!-- Step indicator -->
-    <div class="flow-steps">
-      <div [class.active]="currentStep === 'product'">1. Product Information</div>
-      <div [class.active]="currentStep === 'synoptique'">2. Synoptique</div>
-    </div>
-    
     <!-- This is where the current step will be displayed -->
     <router-outlet></router-outlet>
   </div>

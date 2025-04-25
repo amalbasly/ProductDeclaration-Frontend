@@ -55,10 +55,10 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
       
-      // Product routes (simplified structure)
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,
+        data: { isSerialized: true }, // Add route data
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
@@ -68,6 +68,7 @@ const routes: Routes = [
       { 
         path: 'products/create/non-serialized',
         component: NonSerializedComponent,
+        data: { isSerialized: false }, // Add route data
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent }

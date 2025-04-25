@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="productForm">
     <!-- Loading Indicator -->
     <div *ngIf="isLoading" class="text-center mb-3">
       <div class="spinner-border text-primary" role="status">
@@ -45,14 +45,17 @@
     </div>
 
     <!-- Code Produit -->
-    <div class="mb-3">
-      <label class="form-label">Code Produit</label>
-      <input type="text" formControlName="codeProduit" class="form-control" 
-             [class.is-invalid]="formSubmitted && productForm.get('codeProduit')?.invalid">
-             <div *ngIf="formSubmitted && productForm.get('Code Produit')?.invalid" class="invalid-feedback">
-              Code Produit is required
-            </div>
-    </div>
+<div class="mb-3">
+  <label class="form-label">Code Produit</label>
+  <input type="text" formControlName="codeProduit" class="form-control" 
+         [class.is-invalid]="formSubmitted && productForm.get('codeProduit')?.invalid">
+  <div *ngIf="formSubmitted && productForm.get('codeProduit')?.hasError('required')" class="invalid-feedback">
+    Code Produit is required
+  </div>
+  <div *ngIf="formSubmitted && productForm.get('codeProduit')?.hasError('pattern')" class="invalid-feedback">
+    Only alphanumeric characters allowed
+  </div>
+</div>
 
     <!-- Libelle -->
     <div class="mb-3">
@@ -128,15 +131,20 @@
       </select>
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary" [disabled]="isLoading">
-      <span *ngIf="!isLoading">Create Product</span>
-      <span *ngIf="isLoading">Creating...</span>
-    </button>
-    <div class="text-end synoptique-btn-wrapper">
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between">
+      <!-- Create Product Button (shown for both) -->
       <button type="button" class="btn btn-primary" 
+              (click)="onSubmit()"
+              [disabled]="isLoading">
+        <span *ngIf="!isLoading">Create Product</span>
+        <span *ngIf="isLoading">Creating...</span>
+      </button>
+
+      <!-- Synoptique Button (only shown for serialized) -->
+      <button *ngIf="isSerializedRoute" type="button" class="btn btn-primary ms-2" 
               (click)="goToSynoptique()"
-              [disabled]="productForm.invalid">
+              [disabled]="productForm.invalid || isLoading">
         Remplir Le synoptique de ce Produit
       </button>
     </div>

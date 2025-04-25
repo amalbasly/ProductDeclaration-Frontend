@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product',
-  standalone: false,
+  standalone : false,
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
@@ -21,6 +21,7 @@ export class ProductComponent implements OnInit {
   };
   isLoading = false;
   formSubmitted = false;
+  isSerializedRoute = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,13 +43,20 @@ export class ProductComponent implements OnInit {
       createur: [''],
       dateCreation: [null],
       tolerance: [''],
-      flashable: [null]
+      flashable: [null],
+      isSerialized: [false] // Initialize with default value
     });
   }
 
   ngOnInit(): void {
+    // Get the isSerialized flag from parent route data
+    this.route.parent?.data.subscribe(data => {
+        this.isSerializedRoute = data['isSerialized']; // Changed to bracket notation
+        this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
+    });
+
     this.loadDropdownOptions();
-  }
+}
 
   loadDropdownOptions(): void {
     this.isLoading = true;
@@ -70,47 +78,31 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  checkProductCode(): void {
-    const code = this.productForm.get('codeProduit')?.value;
-    if (code) {
-      this.productService.checkProductCode(code).subscribe({
-        next: (response: any) => {
-          if (response.exists) {
-            this.productForm.get('codeProduit')?.setErrors({ exists: true });
-          }
-        },
-        error: (error: any) => {
-          console.error('Error checking product code:', error);
-        }
-      });
-    }
-  }
-
   onSubmit(): void {
     this.formSubmitted = true;
     if (this.productForm.invalid) {
       return;
     }
-  
+
     this.isLoading = true;
     const formData = this.productForm.value;
-  
+
     this.productService.createProduct(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
-        console.log('Full server response:', response);
-        
         if (response.result === 'Success') {
           alert(`Product created successfully! Code: ${response.productCode}`);
-          this.productForm.reset();
-          this.formSubmitted = false;
-        } else {
-          alert(response.message || 'Operation failed');
+          
+          if (!this.isSerializedRoute) {
+            this.productForm.reset();
+            this.formSubmitted = false;
+            // Reset isSerialized to the current route value
+            this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
+          }
         }
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Error response:', error);
         alert(error.error?.message || 'Failed to create product');
       }
     });
@@ -121,20 +113,17 @@ export class ProductComponent implements OnInit {
     if (this.productForm.invalid) {
       return;
     }
-  
+
     this.isLoading = true;
     const formData = this.productForm.value;
-  
+
     this.productService.createProduct(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.result === 'Success') {
-          // Navigate to synoptique with the product code as route parameter
           this.router.navigate(['../synoptique', response.productCode], { 
             relativeTo: this.route 
           });
-        } else {
-          alert(response.message || 'Operation failed');
         }
       },
       error: (error) => {

@@ -43,13 +43,21 @@ export class SynoptiqueService {
   }
 
   saveSynoptique(request: SynoptiqueSaveRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/synoptique`, request).pipe(
+    return this.http.post('http://localhost:5134/api/Synoptique', request).pipe(
       catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
-    return throwError(() => new Error('Operation failed. Please try again.'));
+  
+    if (error.error && error.error.Message) {
+      // Return the detailed backend error
+      return throwError(() => new Error(error.error.Message));
+    } else {
+      // Fallback generic message
+      return throwError(() => new Error('Operation failed. Please try again.'));
+    }
   }
+  
 }
