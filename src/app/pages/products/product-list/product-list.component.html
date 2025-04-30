@@ -1,0 +1,32 @@
+<table *ngIf="!loading && products.length > 0" class="product-table">
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Code</th>
+      <th>Libellé</th>
+      <th>Famille</th>
+      <th>Sous Famille</th>
+      <th>Status</th>
+      <th>Serialized</th>
+      <th>Poids</th>
+      <th>Date Creation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of products">
+      <td>
+        <button class="delete-btn" (click)="deleteProduct(p.ptNum)" title="Delete product">
+          <i class="material-icons">delete</i>
+        </button>
+      </td>
+      <td>{{ p.ptNum }}</td>
+      <td>{{ p.ptLib }}</td>
+      <td>{{ p.fpCod }}</td>
+      <td>{{ p.spCod }}</td>
+      <td>{{ p.spId }}</td>
+      <td>{{ p.isSerialized ? 'Yes' : 'No' }}</td>
+      <td>{{ p.ptPoids }}</td>
+      <td>{{ p.ptDcreat | date: 'short' }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -13,7 +13,7 @@
           <span>Dashboard</span>
         </a>
       </li>
-      
+    
       <li class="has-submenu" [class.open]="isSubmenuOpen">
         <a (click)="toggleSubmenu()">
           <i class="fas fa-plus-circle"></i>
@@ -35,7 +35,17 @@
           </li>
         </ul>
       </li>
+    
+      <!-- Move Product List Here -->
+      <li>
+        <a routerLink="/prep/list" routerLinkActive="active">
+          <i class="fas fa-list"></i>
+          <span>Product List</span>
+        </a>
+      </li>
+      
     </ul>
+    
 
     <div class="user-email">
       <i class="fas fa-envelope"></i>

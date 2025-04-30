@@ -1,0 +1,34 @@
+<div class="container mt-4">
+  <h2>Delete Product</h2>
+
+  <input
+    type="text"
+    [(ngModel)]="productCode"
+    class="form-control"
+    placeholder="Enter product code"
+  />
+
+  <button
+    (click)="deleteProduct()"
+    [disabled]="loading || !productCode.trim()"
+    class="btn btn-danger mt-2"
+  >
+    {{ loading ? 'Deleting...' : 'Delete Product' }}
+  </button>
+
+  <!-- SUCCESS ALERT -->
+  <div *ngIf="successMessage" class="alert alert-success mt-3" @fadeInOut>
+    {{ successMessage }}
+    <button class="btn btn-sm btn-success float-end" (click)="resetForm()">
+      OK
+    </button>
+  </div>
+
+  <!-- ERROR ALERT -->
+  <div *ngIf="error" class="alert alert-danger mt-3" @fadeInOut>
+    {{ error }}
+    <button class="btn btn-sm btn-danger float-end" (click)="resetForm()">
+      OK
+    </button>
+  </div>
+</div>

@@ -23,7 +23,17 @@ import { PrepSidebarComponent } from './layouts/prep-layout/prep-sidebar/prep-si
 import { SerializedComponent } from './pages/products/serialized/serialized.component';
 import { NonSerializedComponent } from './pages/products/non-serialized/non-serialized.component';
 import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.component';
-
+import { ProductListComponent } from './pages/products/product-list/product-list.component';
+import { AdminDashboardComponent } from './layouts/admin-layout/admin-dashboard/admin-dashboard.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout.component';
+import { AdminSidebarComponent } from './layouts/admin-layout/admin-sidebar/admin-sidebar.component';
+import { TracaDashboardComponent } from './layouts/traca-layout/traca-dashboard/traca-dashboard.component';
+import { TracaLayoutComponent } from './layouts/traca-layout/traca-layout/traca-layout.component';
+import { TracaSidebarComponent } from './layouts/traca-layout/traca-sidebar/traca-sidebar.component';
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { ApplicationConfig } from '@angular/core';
+import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +55,15 @@ import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.comp
     PrepSidebarComponent,
     SerializedComponent,
     NonSerializedComponent,
-    SynoptiqueComponent   
+    SynoptiqueComponent,
+    ProductListComponent,
+    AdminDashboardComponent,
+    AdminLayoutComponent,
+    AdminSidebarComponent,
+    TracaDashboardComponent,
+    TracaLayoutComponent,
+    TracaSidebarComponent,
+    ProductDeleteComponent   
   ],
   imports: [
     BrowserModule,
@@ -54,7 +72,16 @@ import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.comp
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [EmployeeService],
+  providers: [EmployeeService , ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter([]),
+    provideHttpClient(
+      withFetch(),             // <--- important for your NG02801 warning
+      withInterceptorsFromDi()
+    )
+  ]
+};

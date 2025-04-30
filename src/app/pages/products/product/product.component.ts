@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProductService } from '../../../Services/product.service';
+import { ProductService } from '../../../Services/product.service'; 
 import { Router, ActivatedRoute } from '@angular/router';
+import { DropdownOptions } from '../../../models/product';
 
 @Component({
   selector: 'app-product',
-  standalone : false,
+  standalone: false,
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  
   productForm: FormGroup;
-  dropdowns = {
-    lignes: [] as string[],
-    famille: [] as string[],
-    sousFamilles: [] as string[],
-    types: [] as string[],
-    statuts: [] as string[]
+  dropdowns: DropdownOptions = {
+    lignes: [],
+    famille: [],
+    sousFamilles: [],
+    types: [],
+    statuts: []
   };
   isLoading = false;
   formSubmitted = false;
@@ -39,29 +39,28 @@ export class ProductComponent implements OnInit {
       libelle2: [''],
       statut: [''],
       codeProduitClientC264: [''],
-      poids: [null, Validators.min(0)],
+      poids: [null, [Validators.min(0)]],
       createur: [''],
       dateCreation: [null],
       tolerance: [''],
       flashable: [null],
-      isSerialized: [false] // Initialize with default value
+      isSerialized: [false]
     });
   }
 
   ngOnInit(): void {
-    // Get the isSerialized flag from parent route data
     this.route.parent?.data.subscribe(data => {
-        this.isSerializedRoute = data['isSerialized']; // Changed to bracket notation
-        this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
+      this.isSerializedRoute = data['isSerialized'] || false;
+      this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
     });
 
     this.loadDropdownOptions();
-}
+  }
 
   loadDropdownOptions(): void {
     this.isLoading = true;
     this.productService.getDropdownOptions().subscribe({
-      next: (options: any) => {
+      next: (options: DropdownOptions) => {
         this.dropdowns = {
           lignes: options.lignes || [],
           famille: options.famille || [],
@@ -71,9 +70,10 @@ export class ProductComponent implements OnInit {
         };
         this.isLoading = false;
       },
-      error: (error: any) => {
+      error: (error) => {
         console.error('Error loading dropdown options:', error);
         this.isLoading = false;
+        alert('Failed to load dropdown options. Please try again.');
       }
     });
   }
@@ -94,10 +94,7 @@ export class ProductComponent implements OnInit {
           alert(`Product created successfully! Code: ${response.productCode}`);
           
           if (!this.isSerializedRoute) {
-            this.productForm.reset();
-            this.formSubmitted = false;
-            // Reset isSerialized to the current route value
-            this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
+            this.resetForm();
           }
         }
       },
@@ -131,5 +128,18 @@ export class ProductComponent implements OnInit {
         alert(error.error?.message || 'Failed to create product');
       }
     });
+  }
+
+  private resetForm(): void {
+    this.productForm.reset();
+    this.formSubmitted = false;
+    // Reset isSerialized to the current route value
+    this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
+  }
+
+  // Helper method to check if a field is invalid
+  isFieldInvalid(field: string): boolean {
+    const control = this.productForm.get(field);
+    return !!control && control.invalid && (control.touched || this.formSubmitted);
   }
 }

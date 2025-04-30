@@ -27,11 +27,15 @@ import { ProductComponent } from './pages/products/product/product.component';
 import { SerializedComponent } from './pages/products/serialized/serialized.component';
 import { NonSerializedComponent } from './pages/products/non-serialized/non-serialized.component';
 import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.component';
+import { ProductListComponent } from './pages/products/product-list/product-list.component';
+import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
+
 
 const routes: Routes = [
   // Public route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  
   // RH Layout with nested routes
   {
     path: 'rh',
@@ -54,6 +58,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
+      {path : 'list', component : ProductListComponent},
       
       { 
         path: 'products/create/serialized', 
@@ -62,6 +67,7 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
+          { path: 'deleteP', component:ProductDeleteComponent },
           { path: 'synoptique/:ptNum', component: SynoptiqueComponent }
         ]
       },
@@ -74,6 +80,7 @@ const routes: Routes = [
           { path: 'product', component: ProductComponent }
         ]
       }
+      
     ]
   },
   
