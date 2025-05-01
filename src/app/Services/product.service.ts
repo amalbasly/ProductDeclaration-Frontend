@@ -87,82 +87,55 @@ export class ProductService {
 
   getDropdownOptions(): Observable<DropdownOptions> {
     return this.http.get<DropdownOptions>(`${this.apiUrl}/GetOptions`).pipe(
-      tap(options => console.debug('Dropdown options received:', options)),
-      catchError(this.handleError<DropdownOptions>('getDropdownOptions'))
+      catchError(error => {
+        console.error('Error fetching dropdown options:', error);
+        throw error;
+      })
     );
   }
 
   checkProductCode(code: string): Observable<{ exists: boolean }> {
-    if (!code) {
-      return throwError(() => new Error('Product code is required'));
-    }
-
     return this.http.get<{ exists: boolean }>(
       `${this.apiUrl}/CheckProductCode?code=${encodeURIComponent(code)}`
     ).pipe(
-      catchError(this.handleError<{ exists: boolean }>('checkProductCode'))
+      catchError(error => {
+        console.error('Error checking product code:', error);
+        throw error;
+      })
     );
   }
 
   createProduct(productData: any): Observable<ProductCreateResponse> {
-    if (!productData) {
-      return throwError(() => new Error('Product data is required'));
-    }
-
-    const params = new HttpParams({ fromObject: this.sanitizeProductData(productData) });
+    const params = new HttpParams({fromObject: productData})
+      .set('ligne', productData.ligne || '')
+      .set('famille', productData.famille || '')
+      .set('sousFamille', productData.sousFamille || '')
+      .set('codeProduit', productData.codeProduit || '')
+      .set('libelle', productData.libelle || '')
+      .set('type', productData.type || '')
+      .set('libelle2', productData.libelle2 || '')
+      .set('statut', productData.statut || '')
+      .set('codeProduitClientC264', productData.codeProduitClientC264 || '')
+      .set('poids', productData.poids?.toString() || '')
+      .set('createur', productData.createur || '')
+      .set('dateCreation', productData.dateCreation || '')
+      .set('tolerance', productData.tolerance || '')
+      .set('flashable', productData.flashable?.toString() || '');
 
     return this.http.post<ProductCreateResponse>(
-      `${this.apiUrl}/CreateProduct`,
-      {},
+      `${this.apiUrl}/CreateProduct`, 
+      {}, 
       { params }
     ).pipe(
-      catchError(this.handleError<ProductCreateResponse>('createProduct'))
+      catchError(error => {
+        console.error('Error creating product:', error);
+        return throwError(() => ({
+          error: {
+            result: 'Error',
+            message: error.error?.message || 'Unknown error occurred'
+          }
+        }));
+      })
     );
-  }
-
-  private sanitizeProductData(data: any): { [key: string]: string } {
-    return {
-      ligne: data.ligne || '',
-      famille: data.famille || '',
-      sousFamille: data.sousFamille || '',
-      codeProduit: data.codeProduit || '',
-      libelle: data.libelle || '',
-      type: data.type || '',
-      libelle2: data.libelle2 || '',
-      statut: data.statut || '',
-      codeProduitClientC264: data.codeProduitClientC264 || '',
-      poids: data.poids?.toString() || '0',
-      createur: data.createur || '',
-      dateCreation: data.dateCreation || new Date().toISOString(),
-      tolerance: data.tolerance || '',
-      flashable: data.flashable?.toString() || 'false'
-    };
-  }
-
-  private handleError<T>(operation = 'operation') {
-    return (error: HttpErrorResponse): Observable<T> => {
-      console.error(`${operation} failed:`, error);
-
-      let errorMessage = 'An unknown error occurred';
-      if (error.error instanceof ErrorEvent) {
-        errorMessage = `Error: ${error.error.message}`;
-      } else {
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-        
-        if (error.error?.Message) {
-          errorMessage = error.error.Message;
-        } else if (error.error?.message) {
-          errorMessage = error.error.message;
-        } else if (error.error) {
-          errorMessage = typeof error.error === 'string' ? error.error : JSON.stringify(error.error);
-        }
-      }
-
-      return throwError(() => ({
-        Result: 'Error',
-        Message: errorMessage,
-        ...(operation === 'getProducts' ? { Products: [] } : {})
-      }));
-    };
   }
 }

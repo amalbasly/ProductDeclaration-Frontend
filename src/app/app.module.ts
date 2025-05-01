@@ -34,6 +34,7 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
 import { provideRouter } from '@angular/router';
 import { ApplicationConfig } from '@angular/core';
 import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
+import { JustificationComponent } from './pages/products/justification/justification.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { ProductDeleteComponent } from './pages/products/product-delete/product-
     TracaDashboardComponent,
     TracaLayoutComponent,
     TracaSidebarComponent,
-    ProductDeleteComponent   
+    ProductDeleteComponent,
+    JustificationComponent   
   ],
   imports: [
     BrowserModule,

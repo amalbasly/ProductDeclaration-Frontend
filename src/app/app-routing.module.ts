@@ -35,7 +35,7 @@ const routes: Routes = [
   // Public route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  
+  { path: 'deleteP', component:ProductDeleteComponent },
   // RH Layout with nested routes
   {
     path: 'rh',
@@ -59,7 +59,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
       {path : 'list', component : ProductListComponent},
-      
+
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,
@@ -80,7 +80,7 @@ const routes: Routes = [
           { path: 'product', component: ProductComponent }
         ]
       }
-      
+
     ]
   },
   
