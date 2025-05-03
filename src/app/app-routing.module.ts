@@ -29,6 +29,7 @@ import { NonSerializedComponent } from './pages/products/non-serialized/non-seri
 import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.component';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
+import { JustificationComponent } from './pages/products/justification/justification.component';
 
 
 const routes: Routes = [
@@ -68,7 +69,8 @@ const routes: Routes = [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
           { path: 'deleteP', component:ProductDeleteComponent },
-          { path: 'synoptique/:ptNum', component: SynoptiqueComponent }
+          { path: 'synoptique/:ptNum', component: SynoptiqueComponent },
+          {path :'justification/:ptNum', component: JustificationComponent}
         ]
       },
       { 

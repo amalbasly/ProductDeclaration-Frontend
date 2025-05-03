@@ -1,1 +1,45 @@
-<p>justification works!</p>
+<div class="justification-container">
+  <h2>Submit Justification for Product: {{ productCode }}</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+  </div>
+
+  <!-- Justification Form -->
+  <form #justificationForm="ngForm" (ngSubmit)="submitJustification()">
+    <div class="form-group">
+      <label for="justificationText">Justification *</label>
+      <textarea id="justificationText" class="form-control" rows="5"
+                [(ngModel)]="justificationText" name="justificationText"
+                placeholder="Please explain why this product is needed (minimum 10 characters)..."
+                required minlength="10"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="urgencyLevel">Urgency Level</label>
+      <select id="urgencyLevel" class="form-control"
+              [(ngModel)]="urgencyLevel" name="urgencyLevel" required>
+        <option value="Low">Low Priority</option>
+        <option value="Medium" selected>Medium Priority</option>
+        <option value="High">High Priority</option>
+      </select>
+    </div>
+
+    <div class="action-buttons">
+      <button type="button" class="btn btn-outline-secondary"
+              (click)="navigateToProducts()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary"
+              [disabled]="isSubmitting || !justificationText || justificationText.length < 10">
+        <span *ngIf="!isSubmitting">
+          <i class="bi bi-send"></i> Submit
+        </span>
+        <span *ngIf="isSubmitting">
+          <i class="bi bi-hourglass"></i> Submitting...
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

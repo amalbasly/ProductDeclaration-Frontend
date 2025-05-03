@@ -65,7 +65,7 @@ import { JustificationComponent } from './pages/products/justification/justifica
     TracaLayoutComponent,
     TracaSidebarComponent,
     ProductDeleteComponent,
-    JustificationComponent   
+    JustificationComponent
   ],
   imports: [
     BrowserModule,
