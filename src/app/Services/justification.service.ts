@@ -14,7 +14,7 @@ interface JustificationResponse {
   providedIn: 'root'
 })
 export class JustificationService {
-  private apiUrl = 'http://localhost:5134/api/Justification';
+  private apiUrl = 'http://localhost:5201/api/Justification';
 
   constructor(private http: HttpClient) { }
 

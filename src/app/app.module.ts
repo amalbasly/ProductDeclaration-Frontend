@@ -35,6 +35,15 @@ import { provideRouter } from '@angular/router';
 import { ApplicationConfig } from '@angular/core';
 import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
 import { JustificationComponent } from './pages/products/justification/justification.component';
+import { ProfileComponent } from './pages/employee/profile/profile.component';
+import { GalliaListComponent } from './pages/Gallia/gallia-list/gallia-list.component';
+import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-create.component';
+import { GalliaUpdateComponent } from './pages/Gallia/gallia-update/gallia-update.component';
+import { NgxBarcode6Module } from 'ngx-barcode6';
+import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -65,14 +74,20 @@ import { JustificationComponent } from './pages/products/justification/justifica
     TracaLayoutComponent,
     TracaSidebarComponent,
     ProductDeleteComponent,
-    JustificationComponent
+    JustificationComponent,
+    ProfileComponent,
+    GalliaListComponent,
+    GalliaCreateComponent,
+    GalliaUpdateComponent,
+    ReferenceFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxBarcode6Module
   ],
   providers: [EmployeeService , ],
   bootstrap: [AppComponent]
@@ -82,7 +97,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([]),
     provideHttpClient(
-      withFetch(),             // <--- important for your NG02801 warning
+      withFetch(),             
       withInterceptorsFromDi()
     )
   ]

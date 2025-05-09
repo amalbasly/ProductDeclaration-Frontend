@@ -1,0 +1,22 @@
+<div class="gallia-grid">
+  <div *ngFor="let gallia of gallias" class="gallia-card">
+    <div class="qr-wrapper">
+      <!-- Show QR Code if available, else show generating message -->
+      <img [src]="qrCodes[gallia.galliaId]" alt="QR Code" *ngIf="qrCodes[gallia.galliaId]" />
+      <p *ngIf="!qrCodes[gallia.galliaId]">Generating QR...</p>
+    </div>
+
+    <div class="info-section">
+      <h3>ID: {{ gallia.galliaId }}</h3>
+      <p><strong>P:</strong> {{ gallia.pliB1 || '-' }}</p>
+      <p><strong>Q:</strong> {{ gallia.qliB3 || '-' }}</p>
+      <p><strong>V:</strong> {{ gallia.supplierName || '-' }}</p>
+      <p><strong>M:</strong> {{ gallia.labelDate | date }}</p>
+      <p><strong>Created:</strong> {{ gallia.createdAt | date }}</p>
+    </div>
+
+    <div class="card-actions">
+      <button (click)="deleteGallia(gallia.galliaId)" [disabled]="isLoading">Delete</button>
+    </div>
+  </div>
+</div>

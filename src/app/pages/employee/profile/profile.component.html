@@ -1,0 +1,48 @@
+<div class="profile-container">
+  <h2>Update Profile</h2>
+  
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="pl_nom">Last Name</label>
+      <input type="text" id="pl_nom" formControlName="pl_nom" class="form-control">
+      <div *ngIf="profileForm.get('pl_nom')?.invalid && profileForm.get('pl_nom')?.touched" class="text-danger">
+        Last name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="pl_prenom">First Name</label>
+      <input type="text" id="pl_prenom" formControlName="pl_prenom" class="form-control">
+      <div *ngIf="profileForm.get('pl_prenom')?.invalid && profileForm.get('pl_prenom')?.touched" class="text-danger">
+        First name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Profile Image</label>
+      <div class="image-upload-container">
+        <div class="image-preview" *ngIf="profileImageUrl">
+          <img [src]="profileImageUrl" alt="Profile Image" class="profile-image">
+        </div>
+        <div class="file-input-wrapper">
+          <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+          <label for="fileInput" class="btn btn-secondary">Choose Image</label>
+          <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading">
+      <span *ngIf="!isLoading">Update Profile</span>
+      <span *ngIf="isLoading">Updating...</span>
+    </button>
+  </form>
+</div>

@@ -27,17 +27,25 @@ export class ProductListComponent implements OnInit {
     this.loading = true;
     this.error = '';
     this.successMessage = '';
+    this.products = [];
 
     const isSerialized = this.isSerializedFilter === '' ? undefined : this.isSerializedFilter === 'true';
 
     this.productService.getProducts(this.codeProduitFilter, this.statusFilter, isSerialized)
       .subscribe({
         next: (response: any) => {
-          this.products = response.products || [];
+          // Handle both possible response structures
+          if (response.products?.products) {
+            this.products = response.products.products;
+          } else if (response.Products) {
+            this.products = response.Products;
+          } else if (response.products) {
+            this.products = response.products;
+          }
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Failed to load products';
+          this.error = 'Failed to load products: ' + (err.error?.message || err.message);
           console.error(err);
           this.loading = false;
         }
@@ -50,17 +58,16 @@ export class ProductListComponent implements OnInit {
     }
 
     this.productService.deleteProduct(productCode).subscribe({
-      next: (response) => {
-        if (response.result.toLowerCase() === 'success') {
-          this.successMessage = `Product ${response.productCode} deleted successfully.`;
-          // Refresh the product list
+      next: (response: any) => {
+        if (response.Result?.toLowerCase() === 'success' || response.result?.toLowerCase() === 'success') {
+          this.successMessage = `Product ${response.ProductCode || response.productCode} deleted successfully.`;
           this.getProducts();
         } else {
-          this.error = response.message;
+          this.error = response.Message || response.message || 'Failed to delete product';
         }
       },
       error: (err) => {
-        this.error = 'Failed to delete product';
+        this.error = 'Failed to delete product: ' + (err.error?.Message || err.error?.message || err.message);
         console.error(err);
       }
     });

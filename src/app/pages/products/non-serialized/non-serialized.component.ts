@@ -9,10 +9,9 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./non-serialized.component.scss']
 })
 export class NonSerializedComponent {
-  currentStep = 'product'; // Tracks the current step (always 'product' for non-serialized)
+  currentStep = 'product'; 
 
   constructor(private router: Router) {
-    // Listen to navigation events to update the current step
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -21,8 +20,9 @@ export class NonSerializedComponent {
   }
 
   private updateCurrentStep(url: string): void {
-    // For non-serialized, there's only one step: 'product'
-    if (url.includes('product')) {
+    if (url.includes('reference')) {
+      this.currentStep = 'reference';
+    } else {
       this.currentStep = 'product';
     }
   }

@@ -3,12 +3,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-export interface Mode {
+export interface ModeDto {
   id: number;
   nomMode: string;
 }
 
-export interface SynoptiqueEntry {
+export interface SynoptiqueEntryDto {
   modeID: number;
   ptNum: string;
   nomMvt: string;
@@ -19,45 +19,57 @@ export interface SynoptiqueEntry {
 export interface SynoptiqueSaveRequest {
   ptNum: string;
   matricule?: string;
-  entries: SynoptiqueEntry[];
+  entries: SynoptiqueEntryDto[];
+}
+
+export interface SynoptiqueSaveResult {
+  success: boolean;
+  message: string;
+  productCode: string;
+  deletedEntries?: number;
+  insertedEntries?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SynoptiqueService {
-  private apiUrl = 'http://localhost:5134/api/Synoptique';
+  private apiUrl = 'http://localhost:5201/api/Synoptique';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getAllModes(): Observable<Mode[]> {
-    return this.http.get<Mode[]>(`${this.apiUrl}/modes`).pipe(
+  getSerializedProducts(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/products`).pipe(
       catchError(this.handleError)
     );
   }
 
-  getSynoptiqueForProduct(ptNum: string): Observable<SynoptiqueEntry[]> {
-    return this.http.get<SynoptiqueEntry[]>(`${this.apiUrl}/${ptNum}`).pipe(
+  getAllModes(): Observable<ModeDto[]> {
+    return this.http.get<ModeDto[]>(`${this.apiUrl}/modes`).pipe(
       catchError(this.handleError)
     );
   }
 
-  saveSynoptique(request: SynoptiqueSaveRequest): Observable<any> {
-    return this.http.post('http://localhost:5134/api/Synoptique', request).pipe(
+  getSynoptiqueForProduct(ptNum: string): Observable<SynoptiqueEntryDto[]> {
+    return this.http.get<SynoptiqueEntryDto[]>(`${this.apiUrl}/${ptNum}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  saveSynoptique(request: SynoptiqueSaveRequest): Observable<SynoptiqueSaveResult> {
+    return this.http.post<SynoptiqueSaveResult>(this.apiUrl, request).pipe(
       catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
-  
-    if (error.error && error.error.Message) {
-      // Return the detailed backend error
-      return throwError(() => new Error(error.error.Message));
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      return throwError(() => new Error('Network error occurred. Please try again.'));
     } else {
-      // Fallback generic message
-      return throwError(() => new Error('Operation failed. Please try again.'));
+      // Server-side error
+      return throwError(() => new Error(error.error?.message || 'Server error occurred. Please try again later.'));
     }
   }
-  
 }

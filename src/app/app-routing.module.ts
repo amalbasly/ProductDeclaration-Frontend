@@ -12,8 +12,8 @@ import { PrepDashboardComponent } from './layouts/prep-layout/prep-dashboard/pre
 
 
 // Admin Layout & Pages
-//import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-//import { AdminDashboardComponent } from './layouts/admin-layout/admin-dashboard/admin-dashboard.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout.component';
+import { AdminDashboardComponent } from './layouts/admin-layout/admin-dashboard/admin-dashboard.component';
 
 // Shared Employee Pages
 import { EmployeeListComponent } from './pages/employee/employee-list/employee-list.component';
@@ -21,6 +21,8 @@ import { EmployeeAddComponent } from './pages/employee/employee-add/employee-add
 import { EmployeeEditComponent } from './pages/employee/employee-edit/employee-edit.component';
 import { EmployeeDetailsComponent } from './pages/employee/employee-details/employee-details.component';
 import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
+import { ProfileComponent } from './pages/employee/profile/profile.component';
+
 
 // Other Pages
 import { ProductComponent } from './pages/products/product/product.component';
@@ -30,26 +32,38 @@ import { SynoptiqueComponent } from './pages/products/synoptique/synoptique.comp
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductDeleteComponent } from './pages/products/product-delete/product-delete.component';
 import { JustificationComponent } from './pages/products/justification/justification.component';
+import { GalliaListComponent } from './pages/Gallia/gallia-list/gallia-list.component';
+import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-create.component';
+import { GalliaUpdateComponent } from './pages/Gallia/gallia-update/gallia-update.component';
+import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
+
+
+
+
 
 
 const routes: Routes = [
   // Public route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'deleteP', component:ProductDeleteComponent },
   // RH Layout with nested routes
   {
     path: 'rh',
     component: RhLayoutComponent,
     children: [
-      { path: '', component: ProfileDashboardComponent },
-      { path: 'employees', children: [
-        { path: 'list', component: EmployeeListComponent },
-        { path: 'add', component: EmployeeAddComponent },
-        { path: 'edit/:mat', component: EmployeeEditComponent },
-        { path: 'details/:mat', component: EmployeeDetailsComponent },
-        { path: 'delete', component: EmployeeDeleteComponent },
-      ]},
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: ProfileDashboardComponent },
+      { path: 'profile', component: ProfileComponent },
+      { 
+        path: 'employees', 
+        children: [
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+          { path: 'list', component: EmployeeListComponent },
+          { path: 'add', component: EmployeeAddComponent },
+          { path: 'edit/:mat', component: EmployeeEditComponent },
+          { path: 'details/:mat', component: EmployeeDetailsComponent }
+        ]
+      }
     ]
   },
 
@@ -59,6 +73,51 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
+      {path : 'list', component : ProductListComponent},
+      {path : 'gallia', component : GalliaListComponent},
+      {path : 'createG', component : GalliaCreateComponent},
+
+      { 
+        path: 'products/create/serialized', 
+        component: SerializedComponent,
+        data: { isSerialized: true }, // Add route data
+        children: [
+          { path: '', redirectTo: 'product', pathMatch: 'full' },
+          { path: 'product', component: ProductComponent },
+          { path: 'deleteP', component:ProductDeleteComponent },
+          { path: 'synoptique/:ptNum', component: SynoptiqueComponent },
+          {path :'justification/:ptNum', component: JustificationComponent},
+          
+        ]
+      },
+      { 
+        path: 'products/create/non-serialized',
+        component: NonSerializedComponent,
+        data: { isSerialized: false }, // Add route data
+        children: [
+          { path: '', redirectTo: 'product', pathMatch: 'full' },
+          { path: 'product', component: ProductComponent },
+          { path: ':productCode/reference', component: ReferenceFormComponent },
+          {path :'justification/:ptNum', component: JustificationComponent},
+
+        ]
+      }
+    ]
+  },
+  
+  // Admin Layout with shared pages
+  /*{
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: AdminDashboardComponent },
+      { path: 'employees', children: [
+        { path: 'list', component: EmployeeListComponent },
+        { path: 'add', component: EmployeeAddComponent },
+        { path: 'edit/:mat', component: EmployeeEditComponent },
+        { path: 'details/:mat', component: EmployeeDetailsComponent },
+        { path: 'delete', component: EmployeeDeleteComponent },
+      ]},
       {path : 'list', component : ProductListComponent},
 
       { 
@@ -82,24 +141,6 @@ const routes: Routes = [
           { path: 'product', component: ProductComponent }
         ]
       }
-
-    ]
-  },
-  
-  // Admin Layout with shared pages
-  /*{
-    path: 'admin',
-    component: AdminLayoutComponent,
-    children: [
-      { path: '', component: AdminDashboardComponent },
-      { path: 'employees', children: [
-        { path: 'list', component: EmployeeListComponent },
-        { path: 'add', component: EmployeeAddComponent },
-        { path: 'edit/:mat', component: EmployeeEditComponent },
-        { path: 'details/:mat', component: EmployeeDetailsComponent },
-        { path: 'delete', component: EmployeeDeleteComponent },
-      ]},
-      { path: 'product', component: ProductComponent }
     ]
   },*/
 

@@ -1,31 +1,45 @@
-<nav class="sidebar" *ngIf="authService.currentUser$ | async as user" [class.open]="isOpen">
+<nav class="sidebar" *ngIf="ValidateEmployeeService.currentUser$ | async as user" [class.open]="isOpen">
   <div *ngIf="user.employeeFunction === 'RH'">
-    <div class="logo">
-      <i class="fas fa-user-tie"></i>
+    <div class="logo" routerLink="/rh/profile">
+      <div class="profile-picture-container">
+        <img [src]="user.profileImage || 'assets/default-profile.png'" 
+             alt="Profile Picture"
+             class="profile-picture">
+      </div>
       <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
     </div>
     
-
     <ul class="nav-links">
       <li>
-        <a (click)="onDashboardClick()" style="cursor: pointer">
+        <a routerLink="/rh/dashboard" routerLinkActive="active">
           <i class="fas fa-chart-line"></i>
           <span>Dashboard</span>
         </a>
       </li>
-      <li>
-        <a (click)="onEmployeeListClick()" style="cursor: pointer">
+
+      <li class="has-submenu" [class.open]="isEmployeesMenuOpen">
+        <a (click)="toggleEmployeesMenu()">
           <i class="fas fa-users"></i>
-          <span>Employees List</span>
+          <span>Employees</span>
+          <i class="dropdown-icon fas fa-chevron-down"></i>
         </a>
-      </li>
-      <li>
-        <a (click)="onAddEmployeeClick()" style="cursor: pointer">
-          <i class="fas fa-user-plus"></i>
-          <span>Add Employee</span>
-        </a>
+        <ul class="submenu">
+          <li>
+            <a routerLink="/rh/employees/list" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-list"></i>
+              <span>Employees List</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/rh/employees/add" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-user-plus"></i>
+              <span>Add Employee</span>
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
+    
     <div class="user-email">
       <i class="fas fa-envelope"></i>
       <span>{{ user?.employeeEmail || '' }}</span>
@@ -36,5 +50,4 @@
       <span>Logout</span>
     </div>
   </div>
-  
 </nav>

@@ -1,9 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { ProductService } from '../../../Services/product.service';
+import { ProductService , ProductResult} from '../../../Services/product.service';
 
 @Component({
   selector: 'app-product-delete',
-  standalone : false,
+  standalone: false,
   templateUrl: './product-delete.component.html',
   styleUrls: ['./product-delete.component.scss']
 })
@@ -31,16 +31,16 @@ export class ProductDeleteComponent {
     this.successMessage = '';
   
     this.productService.deleteProduct(code).subscribe({
-      next: (response) => {
+      next: (response: ProductResult) => {
         this.loading = false;
-        if (response.result.toLowerCase() === 'success') { // Check lowercase
-          this.successMessage = `Product ${response.productCode} deleted successfully.`;
+        if (response.Result.toLowerCase() === 'success') {
+          this.successMessage = `Product ${response.ProductCode} deleted successfully.`;
           this.productCode = '';
         } else {
-          this.error = response.message;
+          this.error = response.Message;
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading = false;
         this.error = 'Failed to communicate with server.';
       }
@@ -51,6 +51,6 @@ export class ProductDeleteComponent {
     this.productCode = '';
     this.error = '';
     this.successMessage = '';
-    this.cdr.detectChanges(); // Trigger change detection
+    this.cdr.detectChanges();
   }
 }

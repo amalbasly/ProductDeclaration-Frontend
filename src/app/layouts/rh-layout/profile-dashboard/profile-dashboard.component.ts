@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EmployeeService, PersonnelTracaDto } from '../../../Services/employee.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-dashboard',
@@ -7,29 +8,29 @@ import { EmployeeService, PersonnelTracaDto } from '../../../Services/employee.s
   templateUrl: './profile-dashboard.component.html',
   styleUrls: ['./profile-dashboard.component.scss']
 })
-export class ProfileDashboardComponent {
+export class ProfileDashboardComponent implements OnInit {
   employees: PersonnelTracaDto[] = [];
   isLoading = false;
   errorMessage: string | null = null;
+  isInitialLoad = true; // For flash prevention
 
-  userEmail = 'john.smith@example.com';
+  // Dashboard metrics
   totalEmployees = 0;
   growthRate = '5.2%';
   presentToday = 0;
   absentToday = 0;
   recentActivities: any[] = [];
 
-  showAddEmployeeForm = false;
-  showEmployeeList = false;
-
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.loadEmployees();
     this.loadDashboardData();
   }
 
-  loadEmployees(): void {
+  loadDashboardData(): void {
     this.isLoading = true;
     this.errorMessage = null;
     
@@ -37,55 +38,67 @@ export class ProfileDashboardComponent {
       next: (data: PersonnelTracaDto[]) => {
         this.employees = data;
         this.totalEmployees = data.length;
+        this.calculateMetrics();
         this.isLoading = false;
+        
+        // Prevent initial flash
+        setTimeout(() => {
+          this.isInitialLoad = false;
+          document.body.classList.add('loaded');
+        }, 50);
       },
       error: (err: any) => {
-        this.errorMessage = 'Failed to load employees. Please try again later.';
+        this.errorMessage = 'Failed to load dashboard data. Please try again.';
         this.isLoading = false;
-        console.error('Error loading employees:', err);
+        console.error('Error loading dashboard:', err);
       }
     });
   }
 
-  loadDashboardData(): void {
+  calculateMetrics(): void {
     this.presentToday = Math.floor(this.totalEmployees * 0.85);
     this.absentToday = this.totalEmployees - this.presentToday;
     
     this.recentActivities = [
-      { message: 'New employee John Doe added', timestamp: new Date(Date.now() - 3600000) },
-      { message: 'Employee profile updated', timestamp: new Date(Date.now() - 7200000) },
-      { message: 'Monthly report generated', timestamp: new Date(Date.now() - 86400000) }
+      { 
+        message: 'New employee added', 
+        timestamp: new Date(Date.now() - 3600000),
+        icon: 'fa-user-plus',
+        color: 'primary'
+      },
+      { 
+        message: 'Employee profile updated', 
+        timestamp: new Date(Date.now() - 7200000),
+        icon: 'fa-user-edit',
+        color: 'info'
+      },
+      { 
+        message: 'Monthly report generated', 
+        timestamp: new Date(Date.now() - 86400000),
+        icon: 'fa-file-alt',
+        color: 'success'
+      }
     ];
   }
 
-  toggleAddEmployeeForm(show: boolean): void {
-    this.showAddEmployeeForm = show;
-    if (show) this.showEmployeeList = false;
+  navigateToAddEmployee(): void {
+    this.router.navigate(['/rh/employees/add']);
   }
 
-  toggleEmployeeList(show: boolean): void {
-    this.showEmployeeList = show;
-    if (show) this.showAddEmployeeForm = false;
-    if (show) this.loadEmployees();
-  }
-
-  onEmployeeAdded(): void {
-    this.showAddEmployeeForm = false;
-    this.loadEmployees();
-    this.loadDashboardData();
-  }
-
-  showDashboard() {
-    this.showAddEmployeeForm = false;
-    this.showEmployeeList = false;
+  navigateToEmployeeList(): void {
+    this.router.navigate(['/rh/employees/list']);
   }
 
   refresh(): void {
-    this.loadEmployees();
     this.loadDashboardData();
   }
 
-  shouldShowDashboardContent(): boolean {
-    return !this.showAddEmployeeForm && !this.showEmployeeList;
+  getFormattedDate(): string {
+    return new Date().toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
   }
 }

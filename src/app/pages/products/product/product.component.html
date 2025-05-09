@@ -11,11 +11,11 @@
     <!-- Ligne -->
     <div class="mb-3">
       <label class="form-label">Ligne</label>
-      <select formControlName="ligne" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('ligne')?.invalid">
+      <select formControlName="ligne" class="form-select" [class.is-invalid]="isFieldInvalid('ligne')">
         <option value="">Select Ligne</option>
         <option *ngFor="let item of dropdowns.lignes" [value]="item">{{ item }}</option>
       </select>
-      <div *ngIf="formSubmitted && productForm.get('ligne')?.invalid" class="invalid-feedback">
+      <div *ngIf="isFieldInvalid('ligne')" class="invalid-feedback">
         Ligne is required
       </div>
     </div>
@@ -23,11 +23,11 @@
     <!-- Famille -->
     <div class="mb-3">
       <label class="form-label">Famille</label>
-      <select formControlName="famille" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('famille')?.invalid">
+      <select formControlName="famille" class="form-select" [class.is-invalid]="isFieldInvalid('famille')">
         <option value="">Select Famille</option>
         <option *ngFor="let item of dropdowns.famille" [value]="item">{{ item }}</option>
       </select>
-      <div *ngIf="formSubmitted && productForm.get('famille')?.invalid" class="invalid-feedback">
+      <div *ngIf="isFieldInvalid('famille')" class="invalid-feedback">
         Famille is required
       </div>
     </div>
@@ -35,34 +35,31 @@
     <!-- Sous-Famille -->
     <div class="mb-3">
       <label class="form-label">Sous-Famille</label>
-      <select formControlName="sousFamille" class="form-select" [class.is-invalid]="formSubmitted && productForm.get('sousFamille')?.invalid">
+      <select formControlName="sousFamille" class="form-select" [class.is-invalid]="isFieldInvalid('sousFamille')">
         <option value="">Select Sous-Famille</option>
         <option *ngFor="let item of dropdowns.sousFamilles" [value]="item">{{ item }}</option>
       </select>
-      <div *ngIf="formSubmitted && productForm.get('sousFamille')?.invalid" class="invalid-feedback">
+      <div *ngIf="isFieldInvalid('sousFamille')" class="invalid-feedback">
         Sous-Famille is required
       </div>
     </div>
 
     <!-- Code Produit -->
-<div class="mb-3">
-  <label class="form-label">Code Produit</label>
-  <input type="text" formControlName="codeProduit" class="form-control" 
-         [class.is-invalid]="formSubmitted && productForm.get('codeProduit')?.invalid">
-  <div *ngIf="formSubmitted && productForm.get('codeProduit')?.hasError('required')" class="invalid-feedback">
-    Code Produit is required
-  </div>
-  <div *ngIf="formSubmitted && productForm.get('codeProduit')?.hasError('pattern')" class="invalid-feedback">
-    Only alphanumeric characters allowed
-  </div>
-</div>
+    <div class="mb-3">
+      <label class="form-label">Code Produit</label>
+      <input type="text" formControlName="codeProduit" class="form-control" 
+             [class.is-invalid]="isFieldInvalid('codeProduit')">
+      <div *ngIf="isFieldInvalid('codeProduit')" class="invalid-feedback">
+        Code Produit is required and must be alphanumeric
+      </div>
+    </div>
 
     <!-- Libelle -->
     <div class="mb-3">
       <label class="form-label">Libelle</label>
       <input type="text" formControlName="libelle" class="form-control" 
-             [class.is-invalid]="formSubmitted && productForm.get('libelle')?.invalid">
-      <div *ngIf="formSubmitted && productForm.get('libelle')?.invalid" class="invalid-feedback">
+             [class.is-invalid]="isFieldInvalid('libelle')">
+      <div *ngIf="isFieldInvalid('libelle')" class="invalid-feedback">
         Libelle is required
       </div>
     </div>
@@ -95,8 +92,8 @@
     <div class="mb-3">
       <label class="form-label">Poids</label>
       <input type="number" formControlName="poids" class="form-control" min="0"
-             [class.is-invalid]="formSubmitted && productForm.get('poids')?.invalid">
-      <div *ngIf="formSubmitted && productForm.get('poids')?.invalid" class="invalid-feedback">
+             [class.is-invalid]="isFieldInvalid('poids')">
+      <div *ngIf="isFieldInvalid('poids')" class="invalid-feedback">
         Must be positive number
       </div>
     </div>
@@ -125,7 +122,7 @@
     <div class="mb-3">
       <label class="form-label">Flashable</label>
       <select formControlName="flashable" class="form-select">
-        <option value="">Select (optional)</option>
+        <option [value]="null">Select (optional)</option>
         <option [value]="1">Yes</option>
         <option [value]="0">No</option>
       </select>
@@ -133,20 +130,30 @@
 
     <!-- Action Buttons -->
     <div class="d-flex justify-content-between">
-      <!-- Create Product Button (shown for both) -->
-      <button type="button" class="btn btn-primary" 
-              (click)="onSubmit()"
-              [disabled]="isLoading">
-        <span *ngIf="!isLoading">Create Product</span>
-        <span *ngIf="isLoading">Creating...</span>
-      </button>
+  <button type="button" class="btn btn-primary" 
+          (click)="onSubmit()"
+          [disabled]="isLoading">
+    <span *ngIf="!isLoading">Create Product</span>
+    <span *ngIf="isLoading">Creating...</span>
+  </button>
 
-      <!-- Synoptique Button (only shown for serialized) -->
-      <button *ngIf="isSerializedRoute" type="button" class="btn btn-primary ms-2" 
-              (click)="goToSynoptique()"
-              [disabled]="productForm.invalid || isLoading">
-        Remplir Le synoptique de ce Produit
-      </button>
-    </div>
+  <div>
+    <!-- For Serialized Products -->
+    <button *ngIf="isSerializedRoute" type="button" class="btn btn-primary ms-2" 
+            (click)="goToSynoptique()"
+            [disabled]="productForm.invalid || isLoading">
+      Remplir Le synoptique
+    </button>
+    
+    <!-- For Non-Serialized Products -->
+    <button *ngIf="!isSerializedRoute" 
+        type="button" 
+        class="btn btn-primary ms-2" 
+        (click)="goToReference()"
+        [disabled]="productForm.invalid || isLoading">
+  Remplir Référence
+</button>
+  </div>
+</div>
   </form>
 </div>

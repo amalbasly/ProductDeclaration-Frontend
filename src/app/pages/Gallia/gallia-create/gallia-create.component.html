@@ -1,0 +1,71 @@
+<div class="gallia-create-container">
+  <div class="card">
+    <h2 class="header">Create New Gallia</h2>
+    
+    <div class="step" *ngIf="!fieldsCount">
+      <div class="form-group">
+        <label for="fieldCount">How many fields do you need?</label>
+        <div class="input-group">
+          <button class="btn-counter" (click)="decrementCount()" [disabled]="desiredFieldCount <= 1">-</button>
+          <input id="fieldCount" type="number" min="1" max="20" [(ngModel)]="desiredFieldCount" name="fieldCount" class="count-input">
+          <button class="btn-counter" (click)="incrementCount()" [disabled]="desiredFieldCount >= 20">+</button>
+        </div>
+        <small class="hint">(Between 1 and 20 fields)</small>
+      </div>
+      
+      <button class="btn-primary" (click)="setFieldsCount()">Continue</button>
+    </div>
+    
+    <form *ngIf="fieldsCount" (ngSubmit)="onSubmit()" class="dynamic-form">
+      <div class="form-group">
+        <label for="visualizationType">Visualization Type</label>
+        <select id="visualizationType" [(ngModel)]="gallia.visualizationType" name="visualizationType" required>
+          <option *ngFor="let option of visualizationOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="plib1">PLIB1</label>
+        <input id="plib1" type="text" [(ngModel)]="gallia.PLIB1" name="PLIB1" required>
+      </div>
+      
+      
+      <div class="form-group">
+        <label for="qlib3">QLIB3</label>
+        <input id="qlib3" type="text" [(ngModel)]="gallia.QLIB3" name="QLIB3" required>
+      </div>
+      
+      <div class="dynamic-fields-container">
+        <div class="dynamic-field" *ngFor="let field of dynamicFields; let i = index">
+          <div class="form-group">
+            <label [for]="'lib' + (i + 1)">LIB{{i + 1}}</label>
+            <input [id]="'lib' + (i + 1)" type="text" 
+                   [(ngModel)]="gallia['LIB' + (i + 1)]" 
+                   [name]="'LIB' + (i + 1)" required>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="supplierName">Supplier Name</label>
+        <input id="supplierName" type="text" [(ngModel)]="gallia.SupplierName" name="SupplierName" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="labelDate">Label Date</label>
+        <input id="labelDate" type="date" [(ngModel)]="gallia.LabelDate" name="LabelDate" required>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="resetForm()" [disabled]="isLoading">
+          Start Over
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Creating...' : 'Create Gallia' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

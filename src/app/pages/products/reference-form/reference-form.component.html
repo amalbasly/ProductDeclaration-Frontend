@@ -1,0 +1,63 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Display product code (read-only) -->
+  <div class="form-group">
+    <label>Product Number (pt_num)</label>
+    <input type="text" [value]="productCode" class="form-control" readonly>
+  </div>
+
+  <!-- Client Reference Field -->
+  <div class="form-group">
+    <label>Client Reference</label>
+    <input type="text" formControlName="clientReference" class="form-control"
+           [class.is-invalid]="form.get('clientReference')?.invalid && form.get('clientReference')?.touched">
+    <div *ngIf="form.get('clientReference')?.invalid && form.get('clientReference')?.touched" 
+         class="invalid-feedback">
+      Client Reference is required
+    </div>
+  </div>
+
+  <!-- Client Index Field -->
+  <div class="form-group">
+    <label>Client Index</label>
+    <input type="text" formControlName="clientIndex" class="form-control"
+           [class.is-invalid]="form.get('clientIndex')?.invalid && form.get('clientIndex')?.touched">
+    <div *ngIf="form.get('clientIndex')?.invalid && form.get('clientIndex')?.touched" 
+         class="invalid-feedback">
+      Client Index is required
+    </div>
+  </div>
+
+  <!-- Client Field -->
+  <div class="form-group">
+    <label>Client</label>
+    <input type="text" formControlName="client" class="form-control"
+           [class.is-invalid]="form.get('client')?.invalid && form.get('client')?.touched">
+    <div *ngIf="form.get('client')?.invalid && form.get('client')?.touched" 
+         class="invalid-feedback">
+      Client is required
+    </div>
+  </div>
+
+  <!-- Referentiel Field -->
+  <div class="form-group">
+    <label>Referentiel</label>
+    <input type="text" formControlName="referentiel" class="form-control"
+           [class.is-invalid]="form.get('referentiel')?.invalid && form.get('referentiel')?.touched">
+    <div *ngIf="form.get('referentiel')?.invalid && form.get('referentiel')?.touched" 
+         class="invalid-feedback">
+      Referentiel is required
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-3">
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isLoading">
+      {{ isEditMode ? 'Update' : 'Save' }} Reference
+    </button>
+    
+    <button type="button" class="btn btn-success" 
+            (click)="saveAndGoToJustification()"
+            [disabled]="form.invalid || isLoading">
+      Save and Go to Justification
+    </button>
+  </div>
+</form>
