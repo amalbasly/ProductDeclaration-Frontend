@@ -1,5 +1,5 @@
 <div class="synoptique-container">
-  <h2>Synoptique Ranking for Product: {{ productCode }}</h2>
+  <h2>{{ isUpdateMode ? 'Update' : 'Create' }} Synoptique Ranking for Product: {{ productCode }}</h2>
   <p class="text-muted mb-4">Select modes and assign their ranking order</p>
 
   <!-- Loading Indicator -->
@@ -13,7 +13,7 @@
   <!-- Error Message -->
   <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
     {{ errorMessage }}
-    <button *ngIf="isLoading" class="btn btn-sm btn-outline-danger ms-3" (click)="loadModes()">
+    <button *ngIf="!isLoading" class="btn btn-sm btn-outline-danger ms-3" (click)="loadData()">
       Retry
     </button>
   </div>
@@ -34,12 +34,13 @@
                      (change)="toggleModeSelection(item)">
               <label class="form-check-label" [for]="'mode-' + item.mode.id">
                 {{ item.mode.nomMode }}
+                <span *ngIf="item.isExisting" class="badge bg-info ms-2">Existing</span>
               </label>
             </div>
 
             <!-- Rank Selector - Only shown when selected -->
             <div *ngIf="item.selected" class="d-flex align-items-center">
-              <span class="me-2"></span>
+              <span class="me-2">Rank:</span>
               <select class="form-select form-select-sm"
                       [(ngModel)]="item.order"
                       (change)="onOrderChange(item, item.order)"
@@ -60,6 +61,7 @@
              *ngFor="let item of getSortedRankedModes()">
           <span class="badge bg-primary me-3">{{ item.order }}</span>
           {{ item.mode.nomMode }}
+          <span *ngIf="item.isExisting" class="badge bg-info ms-auto">Existing</span>
         </div>
       </div>
     </div>
@@ -87,12 +89,12 @@
       </button>
 
       <button class="btn btn-primary"
-              (click)="saveSynoptique()"
+              (click)="saveOrUpdate()"
               [disabled]="isSaving || rankedModes.length === 0">
-        <span *ngIf="!isSaving">Save Synoptique</span>
+        <span *ngIf="!isSaving">{{ isUpdateMode ? 'Update' : 'Save' }} Synoptique</span>
         <span *ngIf="isSaving">
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Saving...
+          {{ isUpdateMode ? 'Updating...' : 'Saving...' }}
         </span>
       </button>
     </div>

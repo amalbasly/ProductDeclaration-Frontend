@@ -182,40 +182,42 @@ export class ProductComponent implements OnInit {
   }
 
   goToSynoptique(): void {
-    this.formSubmitted = true;
-    if (this.productForm.invalid) return;
+  this.formSubmitted = true;
+  if (this.productForm.invalid) return;
 
-    this.isLoading = true;
-    const formData = {
-      ...this.productForm.value,
-      codeProduit: this.isUpdateMode ? this.currentProduct?.PtNum : this.productForm.value.codeProduit,
-      isSerialized: this.productForm.value.isSerialized || false
-    };
+  this.isLoading = true;
+  const formData = {
+    ...this.productForm.value,
+    codeProduit: this.isUpdateMode ? this.currentProduct?.PtNum : this.productForm.value.codeProduit,
+    isSerialized: this.productForm.value.isSerialized || false
+  };
 
-    const operation = this.isUpdateMode
-      ? this.productService.updateProduct(formData)
-      : this.productService.createProduct(formData);
+  const operation = this.isUpdateMode 
+    ? this.productService.updateProduct({
+        ...formData,
+        pt_num: this.currentProduct?.PtNum
+      })
+    : this.productService.createProduct(formData);
 
-    operation.subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        if (response.result === 'Success') {
-          // Navigate to synoptique with update flag
-          this.router.navigate(
-            ['../synoptique', response.productCode],
-            {
-              relativeTo: this.route,
-              queryParams: { update: true }
-            }
-          );
-        }
-      },
-      error: (error) => {
-        this.isLoading = false;
-        alert(error.error?.message || 'Failed to process product');
+  operation.subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      if (response.result === 'Success') {
+        this.router.navigate(
+          ['../synoptique', response.productCode], 
+          { 
+            relativeTo: this.route,
+            queryParams: { update: this.isUpdateMode } 
+          }
+        );
       }
-    });
-  }
+    },
+    error: (error) => {
+      this.isLoading = false;
+      alert(error.error?.message || 'Failed to process product');
+    }
+  });
+}
 
   private resetForm(): void {
     this.productForm.reset({
