@@ -41,6 +41,7 @@ import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-creat
 import { GalliaUpdateComponent } from './pages/Gallia/gallia-update/gallia-update.component';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -87,7 +88,8 @@ import { ReferenceFormComponent } from './pages/products/reference-form/referenc
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxBarcode6Module
+    NgxBarcode6Module,
+    DragDropModule
   ],
   providers: [EmployeeService , ],
   bootstrap: [AppComponent]

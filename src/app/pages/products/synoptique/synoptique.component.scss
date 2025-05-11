@@ -1,84 +1,145 @@
+// ALL Circuits Brand Colors
+$primary-red: #E00034;
+$secondary-grey: #6C6F70;
+$light-grey: #f5f5f5;
+$border-grey: #ccc;
+
 .synoptique-container {
-  background: white;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  max-width: 800px;
-  margin: 0 auto;
-  margin-top: 30px;
-  .gap-2 {
-    gap: 0.5rem;}
+  max-width: 700px;
+  margin: 2rem auto;
+  font-family: 'Fjalla One', Calibri, Arial, sans-serif;
+}
 
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.75rem;
-  }
+h2 {
+  color: $secondary-grey;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
 
-  .list-group {
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+.text-muted {
+  font-size: 0.95rem;
+  color: #888;
+}
 
-    &-item {
-      padding: 1rem 1.25rem;
-      border-color: rgba(0, 0, 0, 0.08);
-      transition: background-color 0.2s;
+.spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+}
 
-      &:not(:last-child) {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      }
+.alert-danger {
+  background-color: #fff5f5;
+  color: darkred;
+  border-left: 4px solid darkred;
+}
 
-      &:hover {
-        background-color: #f8f9fa;
-      }
-    }
-  }
+.list-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  border-bottom: 1px solid $border-grey;
+  padding: 1rem 0;
+  transition: background-color 0.3s ease;
+}
 
-  .form-select {
-    border: 1px solid #ced4da;
-    box-shadow: none;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+.list-group-item:last-child {
+  border-bottom: none;
+}
 
-    &:focus {
-      border-color: #86b7fe;
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-  }
+.list-group-item:hover {
+  background-color: #fdf6f8;
+}
 
-  .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    padding: 0.5rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.2s;
+.form-check-label {
+  margin-left: 0.75rem;
+  font-weight: normal;
+  font-size: 1rem;
+}
 
-    &:hover {
-      background-color: #0b5ed7;
-      border-color: #0a58ca;
-    }
+.form-check-input {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  border-color: $border-grey;
+  transition: all 0.3s ease-in-out;
+}
 
-    &:disabled {
-      opacity: 0.65;
-    }
-  }
+.form-check-input:checked {
+  background-color: $primary-red;
+  border-color: $primary-red;
+}
 
-  .alert {
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
+.form-select-sm {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 30px;
+  border: 1px solid $border-grey;
+  width: 80px;
+  transition: all 0.3s ease-in-out;
+}
 
-    &-danger {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
+.form-select-sm:focus {
+  border-color: $primary-red;
+  box-shadow: 0 0 0 0.2rem rgba($primary-red, 0.15);
+}
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.badge.bg-primary {
+  background-color: $primary-red !important;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 50%;
+  min-width: 24px;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: $primary-red;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.4rem 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: darken($primary-red, 10%);
+}
+
+.btn-secondary {
+  background-color: $secondary-grey;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.4rem 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: darken($secondary-grey, 10%);
+}
+
+.btn-outline-secondary {
+  border-color: $secondary-grey;
+  color: $secondary-grey;
+  border-radius: 30px;
+}
+
+.btn-outline-secondary:hover {
+  background-color: $secondary-grey;
+  color: white;
+}
+
+.rank-unselected {
+  opacity: 0.6;
+  color: $secondary-grey;
 }

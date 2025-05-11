@@ -1,0 +1,128 @@
+// ALL Circuits Brand Colors
+$primary-red: #E00034;
+$secondary-grey: #6C6F70;
+$light-grey: #f5f5f5;
+$border-grey: #ccc;
+
+.justification-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  max-width: 650px;
+  margin: 2rem auto;
+  font-family: 'Fjalla One', Calibri, Arial, sans-serif;
+}
+
+h2 {
+  color: $secondary-grey;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+  background-color: #fff5f5;
+  color: darkred;
+  border-left: 4px solid darkred;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  font-weight: bold;
+  color: $secondary-grey;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-control {
+  border-radius: 30px;
+  border: 1px solid $border-grey;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: $primary-red;
+  box-shadow: 0 0 0 0.2rem rgba($primary-red, 0.15);
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23E00034' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px 12px;
+}
+
+small.text-muted {
+  color: #888 !important;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.btn {
+  border-radius: 30px;
+  padding: 0.5rem 1.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: $primary-red;
+  color: white;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-primary:hover {
+  background-color: darken($primary-red, 10%);
+}
+
+.btn-outline-secondary {
+  background-color: transparent;
+  color: $secondary-grey;
+  border: 2px solid $secondary-grey;
+  font-family: inherit;
+}
+
+.btn-outline-secondary:hover {
+  background-color: $secondary-grey;
+  color: white;
+  border-color: $secondary-grey;
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

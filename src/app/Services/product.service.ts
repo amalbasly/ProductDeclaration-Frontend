@@ -119,6 +119,39 @@ export class ProductService {
       Message: errorMessage
     }));
   }
+  updateProduct(productData: any): Observable<any> {
+  const formData = new FormData();
+  
+  // Required field
+  formData.append('Code Produit', productData.codeProduit || '');
+
+  // Optional fields
+  if (productData.ligne) formData.append('Ligne', productData.ligne);
+  if (productData.famille) formData.append('Famille', productData.famille);
+  if (productData.sousFamille) formData.append('Sous-Famille', productData.sousFamille);
+  if (productData.libelle) formData.append('Libellé', productData.libelle);
+  if (productData.isSerialized !== undefined) 
+    formData.append('Serialisé', String(productData.isSerialized));
+  
+  // Other optional fields
+  if (productData.type) formData.append('Type', productData.type);
+  if (productData.libelle2) formData.append('Libellé 2', productData.libelle2);
+  if (productData.statut) formData.append('Statut', productData.statut);
+  if (productData.codeProduitClientC264) 
+    formData.append('Code Client (C264)', productData.codeProduitClientC264);
+  if (productData.poids !== undefined && productData.poids !== null) 
+    formData.append('Poids (kg)', productData.poids.toString());
+  if (productData.createur) 
+    formData.append('Créé par', productData.createur);
+  if (productData.tolerance) 
+    formData.append('Tolerance', productData.tolerance);
+  if (productData.flashable !== undefined && productData.flashable !== null) 
+    formData.append('Flashable', productData.flashable.toString());
+
+  return this.http.put<any>(`${this.apiUrl}/UpdateProduct`, formData).pipe(
+    catchError(this.handleError)
+  );
+}
 }
 
 export interface CreateProductFormData {

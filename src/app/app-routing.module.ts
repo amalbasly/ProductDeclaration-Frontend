@@ -68,38 +68,34 @@ const routes: Routes = [
   },
 
   {
-    path: 'prep',
+  path: 'prep',
     component: PrepLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
-      {path : 'list', component : ProductListComponent},
-      {path : 'gallia', component : GalliaListComponent},
-      {path : 'createG', component : GalliaCreateComponent},
-
+      { path: 'list', component: ProductListComponent },
+      { path: 'gallia', component: GalliaListComponent },
+      { path: 'createG', component: GalliaCreateComponent },
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,
-        data: { isSerialized: true }, // Add route data
+        data: { isSerialized: true },
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
-          { path: 'deleteP', component:ProductDeleteComponent },
           { path: 'synoptique/:ptNum', component: SynoptiqueComponent },
-          {path :'justification/:ptNum', component: JustificationComponent},
-          
+          { path: 'justification/:ptNum', component: JustificationComponent }
         ]
       },
       { 
         path: 'products/create/non-serialized',
         component: NonSerializedComponent,
-        data: { isSerialized: false }, // Add route data
+        data: { isSerialized: false },
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
           { path: ':productCode/reference', component: ReferenceFormComponent },
-          {path :'justification/:ptNum', component: JustificationComponent},
-
+          { path: 'justification/:ptNum', component: JustificationComponent }
         ]
       }
     ]

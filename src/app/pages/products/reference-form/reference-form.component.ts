@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-reference-form',
-  standalone : false,
+  standalone: false,
   templateUrl: './reference-form.component.html',
   styleUrls: ['./reference-form.component.scss']
 })
@@ -32,7 +32,7 @@ export class ReferenceFormComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.productCode = params.get('productCode') || '';
-      
+
       // Load existing reference if available
       if (this.productCode) {
         this.loadExistingReference();
@@ -40,22 +40,27 @@ export class ReferenceFormComponent implements OnInit {
     });
   }
 
-  loadExistingReference(): void {
-    this.isLoading = true;
-    this.refService.getByPtNumAsync(this.productCode).subscribe({
-      next: (reference) => {
-        if (reference) {
-          this.isEditMode = true;
-          this.form.patchValue(reference);
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        alert(err.error);
+  private loadExistingReference(): void {
+  this.isLoading = true;
+  this.refService.getByPtNumAsync(this.productCode).subscribe({
+    next: (reference) => {
+      if (reference) {
+        this.isEditMode = true;
+        this.form.patchValue(reference);
       }
-    });
-  }
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.isLoading = false;
+
+      // Only alert for errors other than 404
+      if (err.status !== 404) {
+        this.showError(err);
+      }
+    }
+  });
+}
+
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -81,7 +86,7 @@ export class ReferenceFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        alert(err.error);
+        this.showError(err);
       }
     });
   }
@@ -109,8 +114,14 @@ export class ReferenceFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        alert(err.error);
+        this.showError(err);
       }
     });
+  }
+
+  // ✅ Helper to show better error messages
+  private showError(error: any): void {
+    const message = error?.error?.message || error?.message || 'An unexpected error occurred';
+    alert(message);
   }
 }

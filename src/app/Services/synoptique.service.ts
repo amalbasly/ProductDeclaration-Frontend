@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, of ,map} from 'rxjs';
+import { catchError, concatMap, toArray } from 'rxjs/operators';
 
 export interface ModeDto {
   id: number;
@@ -22,12 +22,26 @@ export interface SynoptiqueSaveRequest {
   entries: SynoptiqueEntryDto[];
 }
 
+export interface SynoptiqueUpdateRequest {
+  modeID: number;
+  ptNum: string;
+  nomMvt: string;
+  ordre: number;
+  matricule?: string;
+}
+
 export interface SynoptiqueSaveResult {
   success: boolean;
   message: string;
   productCode: string;
   deletedEntries?: number;
   insertedEntries?: number;
+}
+
+export interface SynoptiqueUpdateResult {
+  success: boolean;
+  message: string;
+  productCode: string;
 }
 
 @Injectable({
@@ -62,14 +76,58 @@ export class SynoptiqueService {
     );
   }
 
+  updateSynoptique(request: SynoptiqueSaveRequest): Observable<SynoptiqueSaveResult> {
+    if (!request.entries.length) {
+      return of({
+        success: false,
+        message: 'No entries to update',
+        productCode: request.ptNum
+      } as SynoptiqueSaveResult);
+    }
+
+    return of(request.entries).pipe(
+      concatMap(entries => entries),
+      concatMap(entry =>
+        this.http.put<SynoptiqueUpdateResult>(`${this.apiUrl}/update_synoptique`, {
+          modeID: entry.modeID,
+          ptNum: request.ptNum,
+          nomMvt: entry.nomMvt,
+          ordre: entry.ordre,
+          matricule: request.matricule ?? 'SYSTEM'
+        } as SynoptiqueUpdateRequest).pipe(
+          catchError(err => of({
+            success: false,
+            message: err.message || 'Failed to update entry',
+            productCode: request.ptNum
+          } as SynoptiqueUpdateResult))
+        )
+      ),
+      toArray(),
+      map(results => {
+        const allSuccessful = results.every(result => result.success);
+        return {
+          success: allSuccessful,
+          message: allSuccessful ? 'Synoptique updated successfully' : 'Some entries failed to update',
+          productCode: request.ptNum,
+          insertedEntries: allSuccessful ? results.length : 0
+        } as SynoptiqueSaveResult;
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      return throwError(() => new Error('Network error occurred. Please try again.'));
-    } else {
-      // Server-side error
-      return throwError(() => new Error(error.error?.message || 'Server error occurred. Please try again later.'));
+    let errorMessage = 'Server error occurred. Please try again later.';
+    
+    if (error.status === 405) {
+      errorMessage = 'Method not allowed. Please check the API endpoint configuration.';
+    } else if (error.status === 0) {
+      errorMessage = 'Unable to connect to the server. Please check if the backend is running.';
+    } else if (error.error?.message) {
+      errorMessage = error.error.message;
     }
+
+    return throwError(() => new Error(errorMessage));
   }
 }

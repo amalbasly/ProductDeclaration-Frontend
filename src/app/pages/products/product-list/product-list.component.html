@@ -1,60 +1,71 @@
-<div *ngIf="loading" class="loading">
-  Loading products...
-</div>
+<div class="container mt-4" role="main">
+  <!-- Status Messages -->
+  <div *ngIf="loading" class="status-message loading" role="alert" aria-live="polite">
+    Loading products...
+  </div>
+  <div *ngIf="error" class="status-message error" role="alert" aria-live="assertive">
+    {{ error }}
+  </div>
+  <div *ngIf="successMessage" class="status-message success" role="status" aria-live="polite">
+    {{ successMessage }}
+  </div>
 
-<div *ngIf="error" class="error">
-  {{ error }}
-</div>
+  <!-- Filters -->
+  <div class="filter-controls" aria-label="Product filters">
+    <input [(ngModel)]="codeProduitFilter" placeholder="Product Code" type="text" aria-label="Filter by Product Code">
+    <input [(ngModel)]="statusFilter" placeholder="Status" type="text" aria-label="Filter by Status">
+    <select [(ngModel)]="isSerializedFilter" aria-label="Filter by Serialization">
+      <option value="">All</option>
+      <option value="true">Serialized</option>
+      <option value="false">Not Serialized</option>
+    </select>
+    <button (click)="onSearch()" title="Apply filters">
+      Search
+    </button>
+    <button (click)="onClearFilters()" title="Clear all filters">
+      Clear
+    </button>
+  </div>
 
-<div *ngIf="successMessage" class="success">
-  {{ successMessage }}
-</div>
+  <!-- Table -->
+  <table *ngIf="!loading && products.length > 0" class="product-table" aria-label="Product List">
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Code</th>
+        <th>Libellé</th>
+        <th>Famille</th>
+        <th>Sous Famille</th>
+        <th>Status</th>
+        <th>Serialized</th>
+        <th>Poids</th>
+        <th>Date Creation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td class="actions">
+          <button class="delete-btn" (click)="deleteProduct(p.PtNum)" title="Delete product" aria-label="Delete product">
+            <i class="material-icons">delete</i>
+          </button>
+          <button class="edit-btn" (click)="onUpdateProduct(p)" title="Edit product" aria-label="Edit product">
+            <i class="material-icons">edit</i>
+          </button>
+        </td>
+        <td>{{ p.PtNum }}</td>
+        <td>{{ p.PtLib }}</td>
+        <td>{{ p.FpCod }}</td>
+        <td>{{ p.SpCod }}</td>
+        <td>{{ p.SpId || '-' }}</td>
+        <td>{{ p.IsSerialized ? 'Yes' : 'No' }}</td>
+        <td>{{ p.PtPoids || '-' }}</td>
+        <td>{{ p.PtDcreat ? (p.PtDcreat | date: 'short') : '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-<div class="filter-controls">
-  <input [(ngModel)]="codeProduitFilter" placeholder="Product Code">
-  <input [(ngModel)]="statusFilter" placeholder="Status">
-  <select [(ngModel)]="isSerializedFilter">
-    <option value="">All</option>
-    <option value="true">Serialized</option>
-    <option value="false">Not Serialized</option>
-  </select>
-  <button (click)="onSearch()">Search</button>
-  <button (click)="onClearFilters()">Clear</button>
-</div>
-
-<table *ngIf="!loading && products.length > 0" class="product-table">
-  <thead>
-    <tr>
-      <th>Action</th>
-      <th>Code</th>
-      <th>Libellé</th>
-      <th>Famille</th>
-      <th>Sous Famille</th>
-      <th>Status</th>
-      <th>Serialized</th>
-      <th>Poids</th>
-      <th>Date Creation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let p of products">
-      <td>
-        <button class="delete-btn" (click)="deleteProduct(p.PtNum)" title="Delete product">
-          <i class="material-icons">delete</i>
-        </button>
-      </td>
-      <td>{{ p.PtNum }}</td>
-      <td>{{ p.PtLib }}</td>
-      <td>{{ p.FpCod }}</td>
-      <td>{{ p.SpCod }}</td>
-      <td>{{ p.SpId || '-' }}</td>
-      <td>{{ p.IsSerialized ? 'Yes' : 'No' }}</td>
-      <td>{{ p.PtPoids || '-' }}</td>
-      <td>{{ p.PtDcreat ? (p.PtDcreat | date: 'short') : '-' }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<div *ngIf="!loading && products.length === 0" class="no-products">
-  No products found matching your criteria.
+  <!-- Empty State -->
+  <div *ngIf="!loading && products.length === 0" class="no-products">
+    No products found matching your criteria.
+  </div>
 </div>

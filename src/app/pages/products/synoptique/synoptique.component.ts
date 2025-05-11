@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SynoptiqueService, ModeDto, SynoptiqueEntryDto, SynoptiqueSaveRequest, SynoptiqueSaveResult } from '../../../Services/synoptique.service';
+import { SynoptiqueService, ModeDto, SynoptiqueSaveRequest } from '../../../Services/synoptique.service';
 import { ActivatedRoute, Router } from '@angular/router';
+
+interface RankableMode {
+  mode: ModeDto;
+  selected: boolean;
+  order: number;
+}
 
 @Component({
   selector: 'app-synoptique',
@@ -9,13 +15,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./synoptique.component.scss']
 })
 export class SynoptiqueComponent implements OnInit {
-  modes: ModeDto[] = [];
-  rankedModes: { mode: ModeDto, order: number }[] = [];
+  allModes: RankableMode[] = [];
+  rankedModes: RankableMode[] = [];
   productCode: string = '';
   isLoading = false;
   errorMessage: string | null = null;
   isSaving = false;
-  orderOptions: number[] = [];
 
   constructor(
     private synoptiqueService: SynoptiqueService,
@@ -36,36 +41,99 @@ export class SynoptiqueComponent implements OnInit {
 
     this.synoptiqueService.getAllModes().subscribe({
       next: (modes) => {
-        this.modes = modes;
-        this.initializeRanking();
+        this.allModes = modes.map(mode => ({
+          mode,
+          selected: false,
+          order: 0
+        }));
+        this.rankedModes = [];
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = err.message;
+        this.errorMessage = err.message || 'Failed to load modes';
         this.isLoading = false;
       }
     });
   }
 
-  initializeRanking(): void {
-    this.orderOptions = Array.from({ length: this.modes.length }, (_, i) => i + 1);
-    this.rankedModes = this.modes.map((mode, index) => ({
-      mode,
-      order: index + 1
-    }));
+  toggleModeSelection(modeItem: RankableMode): void {
+    modeItem.selected = !modeItem.selected;
+    
+    if (modeItem.selected) {
+      modeItem.order = this.getNextAvailableOrder();
+      this.rankedModes.push({...modeItem});
+    } else {
+      const index = this.rankedModes.findIndex(m => m.mode.id === modeItem.mode.id);
+      if (index !== -1) {
+        this.rankedModes.splice(index, 1);
+      }
+      modeItem.order = 0;
+    }
+    
+    this.reassignOrders();
   }
 
-  onRankChange(): void {
+  getNextAvailableOrder(): number {
+    if (this.rankedModes.length === 0) return 1;
+    return Math.max(...this.rankedModes.map(m => m.order)) + 1;
+  }
+
+  reassignOrders(): void {
+    // Sort ranked modes by current order
     this.rankedModes.sort((a, b) => a.order - b.order);
-    this.rankedModes.forEach((item, index) => {
-      item.order = index + 1;
+    
+    // Assign sequential orders
+    this.rankedModes.forEach((mode, index) => {
+      mode.order = index + 1;
+      // Update order in allModes array
+      const originalMode = this.allModes.find(m => m.mode.id === mode.mode.id);
+      if (originalMode) {
+        originalMode.order = index + 1;
+      }
     });
+  }
+
+  onOrderChange(modeItem: RankableMode, newOrder: number): void {
+    if (newOrder < 1 || newOrder > this.rankedModes.length) return;
+
+    const existingItem = this.rankedModes.find(m => m.order === newOrder && m.mode.id !== modeItem.mode.id);
+    
+    if (existingItem) {
+      existingItem.order = modeItem.order;
+      const originalExisting = this.allModes.find(m => m.mode.id === existingItem.mode.id);
+      if (originalExisting) originalExisting.order = modeItem.order;
+    }
+
+    modeItem.order = newOrder;
+    const originalMode = this.allModes.find(m => m.mode.id === modeItem.mode.id);
+    if (originalMode) originalMode.order = newOrder;
+    
+    this.reassignOrders();
+  }
+
+  getAvailableOrders(): number[] {
+  const count = this.rankedModes.length;
+  return count > 0 ? Array.from({ length: count }, (_, i) => i + 1) : [];
+}
+
+  getSortedRankedModes() {
+  return [...this.allModes]
+    .filter(item => item.selected)
+    .sort((a, b) => a.order - b.order);
+}
+
+  resetSelection(): void {
+    this.allModes.forEach(mode => {
+      mode.selected = false;
+      mode.order = 0;
+    });
+    this.rankedModes = [];
   }
 
   prepareSaveRequest(): SynoptiqueSaveRequest {
     return {
       ptNum: this.productCode,
-      matricule: 'SYSTEM', // Default value matching your backend
+      matricule: 'SYSTEM',
       entries: this.rankedModes.map(item => ({
         modeID: item.mode.id,
         ptNum: this.productCode,
@@ -76,8 +144,8 @@ export class SynoptiqueComponent implements OnInit {
   }
 
   saveSynoptique(): void {
-    if (!this.productCode) {
-      this.errorMessage = 'Product code is required';
+    if (this.rankedModes.length === 0) {
+      this.errorMessage = 'Please select at least one mode to rank';
       return;
     }
 
@@ -88,22 +156,22 @@ export class SynoptiqueComponent implements OnInit {
       next: (result) => {
         this.isSaving = false;
         if (result.success) {
-          alert(result.message);
+          alert('Ranking saved successfully!');
           this.router.navigate(['/prep/dashboard']);
         } else {
-          this.errorMessage = result.message;
+          this.errorMessage = result.message || 'Failed to save ranking';
         }
       },
       error: (err) => {
         this.isSaving = false;
-        this.errorMessage = err.message;
+        this.errorMessage = err.message || 'Failed to save ranking';
       }
     });
   }
 
   saveAndGoToJustification(): void {
-    if (!this.productCode) {
-      this.errorMessage = 'Product code is required';
+    if (this.rankedModes.length === 0) {
+      this.errorMessage = 'Please select at least one mode to rank';
       return;
     }
 
@@ -116,12 +184,12 @@ export class SynoptiqueComponent implements OnInit {
         if (result.success) {
           this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
         } else {
-          this.errorMessage = result.message;
+          this.errorMessage = result.message || 'Failed to save ranking';
         }
       },
       error: (err) => {
         this.isSaving = false;
-        this.errorMessage = err.message;
+        this.errorMessage = err.message || 'Failed to save ranking';
       }
     });
   }

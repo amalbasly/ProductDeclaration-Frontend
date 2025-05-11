@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../Services/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ProduitSerialiséDto } from '../../../models/product';
 
 @Component({
   selector: 'app-product',
-  standalone : false,
+  standalone: false,
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
@@ -21,6 +22,8 @@ export class ProductComponent implements OnInit {
   isLoading = false;
   formSubmitted = false;
   isSerializedRoute = false;
+  isUpdateMode = false;
+  currentProduct: ProduitSerialiséDto | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -48,10 +51,32 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Get route data (serialized/non-serialized)
     this.route.parent?.data.subscribe(data => {
       this.isSerializedRoute = data['isSerialized'] || false;
       this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
     });
+
+    // Check for product data in multiple ways (navigation state and history state)
+    const navigation = this.router.getCurrentNavigation();
+    const navState = navigation?.extras.state as {
+      productData: ProduitSerialiséDto,
+      isUpdateMode: boolean
+    };
+
+    const historyState = history.state as {
+      productData: ProduitSerialiséDto,
+      isUpdateMode: boolean
+    };
+
+    const state = navState || historyState;
+
+    if (state?.productData) {
+      this.isUpdateMode = true; // Force update mode when we have product data
+      this.currentProduct = state.productData;
+      this.loadProductData(this.currentProduct);
+    }
+
     this.loadDropdownOptions();
   }
 
@@ -69,7 +94,7 @@ export class ProductComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading options:', error);
+        console.error('Error loading dropdown options:', error);
         this.isLoading = false;
         this.dropdowns = {
           lignes: [],
@@ -82,54 +107,112 @@ export class ProductComponent implements OnInit {
     });
   }
 
+  loadProductData(product: ProduitSerialiséDto): void {
+    // First reset the form to clear any previous values
+    this.productForm.reset({
+      isSerialized: this.isSerializedRoute
+    });
+
+    // Then patch all values including ligne
+    this.productForm.patchValue({
+      ligne: product.LpNum || '',
+      famille: product.FpCod || '',
+      sousFamille: product.SpCod || '',
+      codeProduit: product.PtNum,
+      libelle: product.PtLib || '',
+      type: product.TpCod || '',
+      libelle2: product.PtLib2 || '',
+      statut: product.SpId || '',
+      codeProduitClientC264: product.PtSpecifT14 || '',
+      poids: product.PtPoids || null,
+      createur: product.PtCreateur || '',
+      dateCreation: product.PtDcreat || null,
+      tolerance: product.PtSpecifT15 || '',
+      flashable: product.PtFlasher || null,
+      isSerialized: product.IsSerialized
+    });
+
+    if (this.isUpdateMode) {
+      const codeControl = this.productForm.get('codeProduit');
+      codeControl?.disable();
+      codeControl?.setValue(product.PtNum);
+    }
+  }
+
   onSubmit(): void {
     this.formSubmitted = true;
     if (this.productForm.invalid) return;
-  
+
     this.isLoading = true;
-    // Ensure isSerialized has a value
+
+    // Prepare form data - ensure we use the original product code for updates
+    const formValue = this.productForm.getRawValue(); // Gets disabled values too
     const formData = {
-      ...this.productForm.value,
-      isSerialized: this.productForm.value.isSerialized || false
+      ...formValue,
+      codeProduit: this.isUpdateMode ? this.currentProduct?.PtNum : formValue.codeProduit,
+      isSerialized: this.isSerializedRoute
     };
-  
-    this.productService.createProduct(formData).subscribe({
+
+    const operation = this.isUpdateMode
+      ? this.productService.updateProduct({
+          ...formData,
+          pt_num: this.currentProduct?.PtNum // Explicitly pass the original product code
+        })
+      : this.productService.createProduct(formData);
+
+    operation.subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.result === 'Success') {
-          alert(`Product created successfully! Code: ${response.productCode}`);
-          if (!this.isSerializedRoute) this.resetForm();
+          const action = this.isUpdateMode ? 'updated' : 'created';
+          alert(`Product ${action} successfully! Code: ${response.productCode}`);
+
+          if (!this.isSerializedRoute && !this.isUpdateMode) {
+            this.resetForm();
+          }
         }
       },
       error: (error) => {
         this.isLoading = false;
-        alert(error.error?.message || 'Failed to create product');
+        const action = this.isUpdateMode ? 'update' : 'create';
+        alert(error.error?.message || `Failed to ${action} product`);
+        console.error('Error:', error);
       }
     });
   }
-  
+
   goToSynoptique(): void {
     this.formSubmitted = true;
     if (this.productForm.invalid) return;
-  
+
     this.isLoading = true;
     const formData = {
       ...this.productForm.value,
+      codeProduit: this.isUpdateMode ? this.currentProduct?.PtNum : this.productForm.value.codeProduit,
       isSerialized: this.productForm.value.isSerialized || false
     };
-  
-    this.productService.createProduct(formData).subscribe({
+
+    const operation = this.isUpdateMode
+      ? this.productService.updateProduct(formData)
+      : this.productService.createProduct(formData);
+
+    operation.subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.result === 'Success') {
-          this.router.navigate(['../synoptique', response.productCode], { 
-            relativeTo: this.route 
-          });
+          // Navigate to synoptique with update flag
+          this.router.navigate(
+            ['../synoptique', response.productCode],
+            {
+              relativeTo: this.route,
+              queryParams: { update: true }
+            }
+          );
         }
       },
       error: (error) => {
         this.isLoading = false;
-        alert(error.error?.message || 'Failed to create product');
+        alert(error.error?.message || 'Failed to process product');
       }
     });
   }
@@ -145,35 +228,38 @@ export class ProductComponent implements OnInit {
     const control = this.productForm.get(field);
     return !!control && control.invalid && (control.touched || this.formSubmitted);
   }
+
   goToReference(): void {
-  this.formSubmitted = true;
-  if (this.productForm.invalid) return;
+    this.formSubmitted = true;
+    if (this.productForm.invalid) return;
 
-  this.isLoading = true;
-  const formData = {
-    ...this.productForm.value,
-    isSerialized: false // Explicitly set for non-serialized
-  };
+    this.isLoading = true;
+    const formData = {
+      ...this.productForm.value,
+      codeProduit: this.isUpdateMode ? this.currentProduct?.PtNum : this.productForm.value.codeProduit,
+      isSerialized: false // Explicitly set for non-serialized
+    };
 
-  this.productService.createProduct(formData).subscribe({
-    next: (response) => {
-      this.isLoading = false;
-      if (response.result === 'Success') {
-        this.router.navigate(['../', response.productCode, 'reference'], { 
-          relativeTo: this.route
-        });
-      } else {
-        // Only show alert if there's an issue with navigation
-        alert(response.message || 'Product created but unable to navigate to reference');
+    const operation = this.isUpdateMode
+      ? this.productService.updateProduct(formData)
+      : this.productService.createProduct(formData);
+
+    operation.subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.result === 'Success') {
+          this.router.navigate(['../', response.productCode, 'reference'], {
+            relativeTo: this.route
+          });
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage = typeof error.error === 'object'
+          ? error.error.message || 'Failed to process product'
+          : error.error || 'Failed to process product';
+        alert(errorMessage);
       }
-    },
-    error: (error) => {
-      this.isLoading = false;
-      const errorMessage = typeof error.error === 'object' 
-        ? error.error.message || 'Failed to create product'
-        : error.error || 'Failed to create product';
-      alert(errorMessage);
-    }
-  });
-}
+    });
+  }
 }

@@ -2,24 +2,37 @@
   <h2>Submit Justification for Product: {{ productCode }}</h2>
 
   <!-- Error Message -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-circle me-1"></i>
+    {{ errorMessage }}
   </div>
 
   <!-- Justification Form -->
-  <form #justificationForm="ngForm" (ngSubmit)="submitJustification()">
+  <form #justificationForm="ngForm" (ngSubmit)="submitJustification()" novalidate>
     <div class="form-group">
       <label for="justificationText">Justification *</label>
-      <textarea id="justificationText" class="form-control" rows="5"
-                [(ngModel)]="justificationText" name="justificationText"
+      <textarea id="justificationText"
+                class="form-control"
+                rows="5"
+                [(ngModel)]="justificationText"
+                name="justificationText"
                 placeholder="Please explain why this product is needed (minimum 10 characters)..."
-                required minlength="10"></textarea>
+                required
+                minlength="10"
+                ngModel></textarea>
+      <small class="text-muted" *ngIf="justificationText && justificationText.length < 10">
+        Must be at least 10 characters.
+      </small>
     </div>
 
     <div class="form-group">
       <label for="urgencyLevel">Urgency Level</label>
-      <select id="urgencyLevel" class="form-control"
-              [(ngModel)]="urgencyLevel" name="urgencyLevel" required>
+      <select id="urgencyLevel"
+              class="form-control"
+              [(ngModel)]="urgencyLevel"
+              name="urgencyLevel"
+              required
+              ngModel>
         <option value="Low">Low Priority</option>
         <option value="Medium" selected>Medium Priority</option>
         <option value="High">High Priority</option>
@@ -27,17 +40,16 @@
     </div>
 
     <div class="action-buttons">
-      <button type="button" class="btn btn-outline-secondary"
-              (click)="navigateToProducts()">
+      <button type="button" class="btn btn-outline-secondary" (click)="navigateToProducts()">
         Cancel
       </button>
       <button type="submit" class="btn btn-primary"
               [disabled]="isSubmitting || !justificationText || justificationText.length < 10">
         <span *ngIf="!isSubmitting">
-          <i class="bi bi-send"></i> Submit
+          <i class="bi bi-send me-1"></i> Submit
         </span>
         <span *ngIf="isSubmitting">
-          <i class="bi bi-hourglass"></i> Submitting...
+          <i class="bi bi-hourglass me-1"></i> Submitting...
         </span>
       </button>
     </div>

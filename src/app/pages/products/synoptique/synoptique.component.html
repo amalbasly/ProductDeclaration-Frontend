@@ -1,5 +1,6 @@
 <div class="synoptique-container">
-  <h2 class="mb-4">Synoptique Ranking for Product: {{productCode}}</h2>
+  <h2>Synoptique Ranking for Product: {{ productCode }}</h2>
+  <p class="text-muted mb-4">Select modes and assign their ranking order</p>
 
   <!-- Loading Indicator -->
   <div *ngIf="isLoading" class="text-center py-5">
@@ -10,53 +11,90 @@
   </div>
 
   <!-- Error Message -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
     {{ errorMessage }}
-    <button *ngIf="isLoading" class="btn btn-sm btn-outline-danger ms-3" (click)="loadModes()">Retry</button>
+    <button *ngIf="isLoading" class="btn btn-sm btn-outline-danger ms-3" (click)="loadModes()">
+      Retry
+    </button>
   </div>
 
-  <!-- Ranking Interface -->
+  <!-- Main Content -->
   <div *ngIf="!isLoading && !errorMessage">
-    <div *ngIf="rankedModes.length === 0" class="alert alert-info">
-      No modes available for ranking.
-    </div>
-
-    <div *ngIf="rankedModes.length > 0">
-      <div class="list-group mb-4">
-        <div class="list-group-item" *ngFor="let item of rankedModes; let i = index">
+    <!-- Available Modes -->
+    <div class="mb-4">
+      <h5>Available Modes</h5>
+      <div class="list-group">
+        <div class="list-group-item" *ngFor="let item of allModes">
           <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <span class="badge bg-primary me-2">#{{item.order}}</span>
-              <span>{{item.mode.nomMode}}</span>
+            <div class="form-check d-flex align-items-center">
+              <input class="form-check-input me-2"
+                     type="checkbox"
+                     [id]="'mode-' + item.mode.id"
+                     [(ngModel)]="item.selected"
+                     (change)="toggleModeSelection(item)">
+              <label class="form-check-label" [for]="'mode-' + item.mode.id">
+                {{ item.mode.nomMode }}
+              </label>
             </div>
-            <div>
-              <select class="form-select form-select-sm" 
-                      [(ngModel)]="item.order" 
-                      (change)="onRankChange()"
+
+            <!-- Rank Selector - Only shown when selected -->
+            <div *ngIf="item.selected" class="d-flex align-items-center">
+              <span class="me-2"></span>
+              <select class="form-select form-select-sm"
+                      [(ngModel)]="item.order"
+                      (change)="onOrderChange(item, item.order)"
                       style="width: 80px;">
-                <option *ngFor="let num of orderOptions" [value]="num">{{num}}</option>
+                <option *ngFor="let num of getAvailableOrders()" [value]="num">{{ num }}</option>
               </select>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-secondary" (click)="saveAndGoToJustification()" [disabled]="isSaving">
-          <span *ngIf="!isSaving">Go to Justification</span>
-          <span *ngIf="isSaving">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Saving...
-          </span>
-        </button>
-        <button class="btn btn-primary" (click)="saveSynoptique()" [disabled]="isSaving">
-          <span *ngIf="!isSaving">Save Synoptique</span>
-          <span *ngIf="isSaving">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Saving...
-          </span>
-        </button>
-      </div>
+    <!-- Ranked Modes Summary -->
+    <div class="mb-4" *ngIf="rankedModes.length > 0">
+      <h5>Current Ranking</h5>
+      <div class="list-group">
+        <div class="list-group-item d-flex align-items-center" 
+             *ngFor="let item of getSortedRankedModes()">
+          <span class="badge bg-primary me-3">{{ item.order }}</span>
+          {{ item.mode.nomMode }}
+        </div>
       </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="text-muted">
+        Selected: {{ rankedModes.length }} mode(s)
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" (click)="resetSelection()">
+        Reset Selection
+      </button>
+    </div>
+
+    <!-- Save Buttons -->
+    <div class="d-flex justify-content-end gap-2">
+      <button class="btn btn-secondary" 
+              (click)="saveAndGoToJustification()" 
+              [disabled]="isSaving || rankedModes.length === 0">
+        <span *ngIf="!isSaving">Go to Justification</span>
+        <span *ngIf="isSaving">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Saving...
+        </span>
+      </button>
+
+      <button class="btn btn-primary"
+              (click)="saveSynoptique()"
+              [disabled]="isSaving || rankedModes.length === 0">
+        <span *ngIf="!isSaving">Save Synoptique</span>
+        <span *ngIf="isSaving">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Saving...
+        </span>
+      </button>
+    </div>
   </div>
+</div>

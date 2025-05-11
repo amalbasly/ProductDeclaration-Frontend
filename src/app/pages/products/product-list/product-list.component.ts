@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../../Services/product.service';
 import { ProduitSerialiséDto } from '../../../models/product';
+import { Router, ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-product-list',
@@ -17,7 +19,10 @@ export class ProductListComponent implements OnInit {
   error = '';
   successMessage = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.getProducts();
@@ -72,6 +77,22 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
+ onUpdateProduct(product: ProduitSerialiséDto): void {
+  // Determine the correct base path based on product type
+  const basePath = product.IsSerialized ? 'serialized' : 'non-serialized';
+  
+  // Navigate to the product form with state
+  this.router.navigate(
+    ['/prep/products/create', basePath, 'product'],
+    {
+      state: {
+        productData: product,
+        isUpdateMode: true
+      }
+    }
+  );
+}
+  
 
   onSearch() {
     this.getProducts();
