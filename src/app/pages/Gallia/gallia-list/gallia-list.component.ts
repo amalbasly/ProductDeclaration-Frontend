@@ -2,20 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { GalliaService } from '../../../Services/gallia.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GalliaDto } from '../../../models/GalliaDto';
-import QRCode from 'qrcode'; // Import the correct QR code generator
-
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-gallia-list',
-  standalone: false,
+  standalone : false,
   templateUrl: './gallia-list.component.html',
   styleUrls: ['./gallia-list.component.scss']
 })
 export class GalliaListComponent implements OnInit {
   gallias: GalliaDto[] = [];
+  qrCodes: { [key: number]: string } = {};
   isLoading = false;
-  errorMessage = '';
-  qrCodes: { [key: number]: string } = {}; // Map of Gallia IDs to QR code URLs
+  deletingIds: number[] = []; // Track which items are being deleted
 
   constructor(
     private galliaService: GalliaService,
@@ -28,16 +27,14 @@ export class GalliaListComponent implements OnInit {
 
   loadGallias(): void {
     this.isLoading = true;
-    this.errorMessage = '';
-
     this.galliaService.getAllGallias().subscribe({
       next: (data) => {
         this.gallias = data;
-        this.generateQRCodes(); // Generate QR codes after loading data
+        this.generateQRCodes();
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = 'Failed to load Gallias.';
+        this.snackBar.open('Failed to load Gallias. Please try again.', 'Close', { duration: 3000 });
         this.isLoading = false;
         console.error('Error loading Gallias:', err);
       }
@@ -46,38 +43,40 @@ export class GalliaListComponent implements OnInit {
 
   generateQRCodes(): void {
     this.gallias.forEach((gallia) => {
-      // Generate QR code from Gallia object
       QRCode.toDataURL(JSON.stringify(gallia))
-        .then((url: string) => {  // Explicitly type 'url' as string
-          // Store the generated QR code URL
-          this.qrCodes[gallia.galliaId] = url;
-        })
-        .catch((err: any) => {  // Explicitly type 'err' as any for errors
-          console.error('Error generating QR code:', err);
-        });
+        .then((url: string) => this.qrCodes[gallia.galliaId] = url)
+        .catch(() => this.qrCodes[gallia.galliaId] = '');
     });
   }
-  
 
   deleteGallia(id: number): void {
-    if (confirm('Are you sure you want to delete this Gallia?')) {
-      this.isLoading = true;
+    if (confirm('Are you sure you want to delete this Gallia record?')) {
+      this.deletingIds.push(id); // Mark this ID as being deleted
+      
       this.galliaService.deleteGallia(id).subscribe({
         next: () => {
-          this.snackBar.open('Gallia deleted successfully', 'Close', {
-            duration: 3000
-          });
+          // Remove from deletingIds array
+          this.deletingIds = this.deletingIds.filter(i => i !== id);
+          
+          // Show success message
+          this.snackBar.open('Gallia deleted successfully', 'Close', { duration: 3000 });
+          
+          // Refresh the list
           this.loadGallias();
         },
         error: (err) => {
-          this.isLoading = false;
-          this.snackBar.open('Failed to delete Gallia.', 'Close', {
-            duration: 3000,
-            panelClass: ['error-snackbar']
-          });
+          // Remove from deletingIds array
+          this.deletingIds = this.deletingIds.filter(i => i !== id);
+          
+          // Show error message
+          this.snackBar.open('Failed to delete Gallia. Please try again.', 'Close', { duration: 3000 });
           console.error('Error deleting Gallia:', err);
         }
       });
     }
+  }
+
+  isDeleting(id: number): boolean {
+    return this.deletingIds.includes(id);
   }
 }

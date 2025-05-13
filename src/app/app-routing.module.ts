@@ -34,7 +34,6 @@ import { ProductDeleteComponent } from './pages/products/product-delete/product-
 import { JustificationComponent } from './pages/products/justification/justification.component';
 import { GalliaListComponent } from './pages/Gallia/gallia-list/gallia-list.component';
 import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-create.component';
-import { GalliaUpdateComponent } from './pages/Gallia/gallia-update/gallia-update.component';
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
 
 

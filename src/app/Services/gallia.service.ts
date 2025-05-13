@@ -1,34 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GalliaDto , CreateGalliaDto , UpdateGalliaDto} from '../models/GalliaDto';
+import { CreateGalliaDto, UpdateGalliaDto,LabelImageDto } from '../models/GalliaDto';
+import { GalliaDto } from '../models/GalliaDto';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class GalliaService {
   private apiUrl = 'http://localhost:5201/api/Gallia';
 
   constructor(private http: HttpClient) {}
 
-  // Match the backend endpoint exactly
   getAllGallias(): Observable<GalliaDto[]> {
-    return this.http.get<GalliaDto[]>(`${this.apiUrl}/Get_Gallia`);
+    return this.http.get<GalliaDto[]>(`${this.apiUrl}/GetAll`);
   }
 
   getGalliaById(id: number): Observable<GalliaDto> {
     return this.http.get<GalliaDto>(`${this.apiUrl}/${id}`);
   }
 
-  createGallia(gallia: CreateGalliaDto): Observable<GalliaDto> {
-    return this.http.post<GalliaDto>(`${this.apiUrl}/Create_Gallia`, gallia);
+  createGallia(dto: CreateGalliaDto): Observable<GalliaDto> {
+    return this.http.post<GalliaDto>(`${this.apiUrl}/Create`, dto);
   }
 
-  updateGallia(gallia: UpdateGalliaDto): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${gallia.GalliaId}`, gallia);
-}
+  updateGallia(dto: UpdateGalliaDto): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Update/${dto.galliaId}`, dto);
+  }
 
-  deleteGallia(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/Delete/${id}`);
+  deleteGallia(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/Delete/${id}`);
+  }
+
+  saveLabelImage(dto: LabelImageDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/save-image`, dto);
   }
 }

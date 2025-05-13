@@ -38,7 +38,6 @@ import { JustificationComponent } from './pages/products/justification/justifica
 import { ProfileComponent } from './pages/employee/profile/profile.component';
 import { GalliaListComponent } from './pages/Gallia/gallia-list/gallia-list.component';
 import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-create.component';
-import { GalliaUpdateComponent } from './pages/Gallia/gallia-update/gallia-update.component';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -79,7 +78,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ProfileComponent,
     GalliaListComponent,
     GalliaCreateComponent,
-    GalliaUpdateComponent,
     ReferenceFormComponent
   ],
   imports: [
