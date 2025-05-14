@@ -1,6 +1,6 @@
 <div class="gallia-create-container">
   <div class="card">
-    <h2>Create New Gallia Label</h2>
+    <h2>{{ gallia.labelName === 'Etiquette' ? 'Create Label' : 'Create New Gallia Label' }}</h2>
 
     <!-- Field Count Selection -->
     <div *ngIf="!gallia.fields.length" class="step">

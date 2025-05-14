@@ -73,8 +73,26 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
       { path: 'list', component: ProductListComponent },
-      { path: 'gallia', component: GalliaListComponent },
-      { path: 'createG', component: GalliaCreateComponent },
+      { 
+      path: 'gallia',
+      component: GalliaListComponent,
+      data: { labelType: 'Gallia' }
+    },
+    { 
+      path: 'etiquette',
+      component: GalliaListComponent,
+      data: { labelType: 'Etiquette' }
+    },
+    { 
+      path: 'createG', 
+      component: GalliaCreateComponent,
+      data: { labelType: 'Gallia' }
+    },
+    { 
+      path: 'create-etiquette', 
+      component: GalliaCreateComponent,
+      data: { labelType: 'Etiquette' }
+    },
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,

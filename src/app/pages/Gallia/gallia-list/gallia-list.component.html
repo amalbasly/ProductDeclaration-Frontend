@@ -1,7 +1,9 @@
 <div class="gallia-list-container">
   <div class="header">
-    <h2>Gallia Labels</h2>
-    <button mat-raised-button color="primary" routerLink="/gallia/create">Create New Label</button>
+    <h2>{{ labelName === 'Etiquette' ? 'Label List' : 'Gallia Labels' }}</h2>
+    <button mat-raised-button color="primary" [routerLink]="labelName === 'Etiquette' ? '/prep/create-etiquette' : '/prep/createG'">
+      {{ labelName === 'Etiquette' ? 'Create New Label' : 'Create New Gallia Label' }}
+    </button>
   </div>
 
   <div *ngIf="isLoading" class="loading-spinner">
@@ -29,14 +31,14 @@
 
       <!-- Date Column -->
       <ng-container matColumnDef="date">
-  <th mat-header-cell *matHeaderCellDef>Label Date</th>
-  <td mat-cell *matCellDef="let element">
-    <span *ngIf="element.labelDate; else noDate">
-      {{ element.labelDate | date:'shortDate' }}
-    </span>
-    <ng-template #noDate>N/A</ng-template>
-  </td>
-</ng-container>
+        <th mat-header-cell *matHeaderCellDef>Label Date</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.labelDate; else noDate">
+            {{ element.labelDate | date:'shortDate' }}
+          </span>
+          <ng-template #noDate>N/A</ng-template>
+        </td>
+      </ng-container>
 
       <!-- Created Column -->
       <ng-container matColumnDef="created">

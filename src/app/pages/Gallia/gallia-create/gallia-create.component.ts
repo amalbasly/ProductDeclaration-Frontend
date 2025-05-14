@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
 import { GalliaService } from '../../../Services/gallia.service';
 import { CreateGalliaDto } from '../../../models/GalliaDto';
 import QRCode from 'qrcode';
@@ -15,16 +15,18 @@ import { PreviewDialogComponent } from '../preview-dialog/preview-dialog.compone
   templateUrl: './gallia-create.component.html',
   styleUrls: ['./gallia-create.component.scss']
 })
-export class GalliaCreateComponent {
+export class GalliaCreateComponent implements OnInit {
   gallia: CreateGalliaDto = {
     labelDate: null,
-    fields: []
+    fields: [],
+    labelName: ''
   };
 
   desiredFieldCount = 4;
   previews: { [key: number]: string } = {};
   isLoading = false;
-  savePath: string = "C:\\Users\\21629\\My Pc\\Desktop\\Gallia";
+  savePath: string = 'C:\\Users\\21629\\My Pc\\Desktop\\Gallia';
+  labelType: string = 'Gallia'; // Default labelType
 
   visualizationOptions = [
     { value: 'qrcode', label: 'QR Code' },
@@ -36,8 +38,22 @@ export class GalliaCreateComponent {
     private galliaService: GalliaService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    // Set labelName and labelType based on route
+    this.route.url.subscribe((segments: UrlSegment[]) => {
+      if (segments.some((segment: UrlSegment) => segment.path === 'create-etiquette')) {
+        this.gallia.labelName = 'Etiquette';
+        this.labelType = 'Etiquette';
+      } else {
+        this.gallia.labelName = 'Gallia';
+        this.labelType = 'Gallia';
+      }
+    });
+  }
 
   setFieldsCount(): void {
     if (this.desiredFieldCount < 1 || this.desiredFieldCount > 20) {
@@ -70,8 +86,8 @@ export class GalliaCreateComponent {
       switch (field.visualizationType) {
         case 'qrcode':
           QRCode.toDataURL(fieldValue)
-            .then((url: string) => this.previews[index] = url)
-            .catch(() => this.previews[index] = '');
+            .then((url: string) => (this.previews[index] = url))
+            .catch(() => (this.previews[index] = ''));
           break;
         case 'barcode':
           const canvas = document.createElement('canvas');
@@ -94,7 +110,7 @@ export class GalliaCreateComponent {
     });
 
     const result = await dialogRef.afterClosed().toPromise();
-    
+
     if (result?.action === 'save') {
       await this.onSubmit(result.element);
     } else if (result?.action === 'print') {
@@ -104,23 +120,25 @@ export class GalliaCreateComponent {
 
   async onSubmit(previewElement?: HTMLElement): Promise<void> {
     this.isLoading = true;
-    if (this.gallia.fields.some(f => !f.fieldValue)) {
+    if (this.gallia.fields.some((f) => !f.fieldValue)) {
       this.snackBar.open('All field values are required.', 'Close', { duration: 3000 });
       this.isLoading = false;
       return;
     }
 
     try {
-      const createdGallia = await this.galliaService.createGallia(this.gallia).toPromise();
+      const createdGallia = await this.galliaService
+        .createGallia(this.gallia, this.labelType)
+        .toPromise();
       if (createdGallia && createdGallia.galliaId) {
         await this.saveLabelImage(createdGallia.galliaId, previewElement);
       }
 
-      this.snackBar.open('Gallia created successfully!', 'Close', { duration: 3000 });
-      this.router.navigate(['/prep/gallia']);
+      this.snackBar.open(`${this.labelType} created successfully!`, 'Close', { duration: 3000 });
+      this.router.navigate([`/prep/${this.labelType.toLowerCase()}`]);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error occurred';
-      this.snackBar.open('Failed to create Gallia: ' + message, 'Close', { duration: 3000 });
+      this.snackBar.open(`Failed to create ${this.labelType}: ` + message, 'Close', { duration: 3000 });
       console.error('Error:', err);
     } finally {
       this.isLoading = false;
@@ -131,7 +149,7 @@ export class GalliaCreateComponent {
     try {
       const defaultPath = 'C:\\Users\\Public\\Documents\\GalliaLabels';
       const newPath = prompt('Enter the folder path to save the label:', this.savePath || defaultPath);
-      
+
       if (!newPath) {
         console.log('User cancelled path input');
         return;
@@ -140,7 +158,9 @@ export class GalliaCreateComponent {
       const normalizedPath = newPath.replace(/\//g, '\\').trim();
 
       if (!this.isValidWindowsPath(normalizedPath)) {
-        this.snackBar.open('Invalid Windows path format. Example: C:\\Folder\\Subfolder', 'Close', { duration: 5000 });
+        this.snackBar.open('Invalid Windows path format. Example: C:\\Folder\\Subfolder', 'Close', {
+          duration: 5000
+        });
         return;
       }
 
@@ -165,21 +185,30 @@ export class GalliaCreateComponent {
       });
 
       try {
-        const response = await this.galliaService.saveLabelImage({
-          galliaId,
-          base64Image: cleanBase64,
-          savePath: normalizedPath
-        }).toPromise();
+        const response = await this.galliaService
+          .saveLabelImage(
+            {
+              galliaId,
+              base64Image: cleanBase64,
+              savePath: normalizedPath
+            },
+            this.labelType
+          )
+          .toPromise();
 
         savingSnackbar.dismiss();
 
         if (response?.savedToDisk) {
-          this.snackBar.open(`Label saved to ${normalizedPath}`, 'Open Folder', { duration: 5000 })
-            .onAction().subscribe(() => {
+          this.snackBar
+            .open(`Label saved to ${normalizedPath}`, 'Open Folder', { duration: 5000 })
+            .onAction()
+            .subscribe(() => {
               window.open(`file:///${normalizedPath}`, '_blank');
             });
         } else if (response?.diskError) {
-          this.snackBar.open(`Saved to DB but disk error: ${response.diskError}`, 'Close', { duration: 5000 });
+          this.snackBar.open(`Saved to DB but disk error: ${response.diskError}`, 'Close', {
+            duration: 5000
+          });
         } else {
           this.snackBar.open('Label saved to database only', 'Close', { duration: 3000 });
         }
@@ -218,7 +247,7 @@ export class GalliaCreateComponent {
 
     const contentClone = element.cloneNode(true) as HTMLElement;
     const elementsToRemove = contentClone.querySelectorAll('mat-dialog-actions, button, iframe');
-    elementsToRemove.forEach(el => el.remove());
+    elementsToRemove.forEach((el) => el.remove());
 
     captureDiv.appendChild(contentClone);
     return captureDiv;
@@ -227,7 +256,8 @@ export class GalliaCreateComponent {
   resetForm(): void {
     this.gallia = {
       labelDate: null,
-      fields: []
+      fields: [],
+      labelName: this.gallia.labelName // Preserve labelName
     };
     this.previews = {};
     this.desiredFieldCount = 4;
@@ -249,7 +279,7 @@ export class GalliaCreateComponent {
         <!DOCTYPE html>
         <html>
           <head>
-            <title>Gallia Label Print</title>
+            <title>${this.labelType} Label Print</title>
             <style>
               body { font-family: Arial; margin: 0; padding: 20px; }
               img { max-width: 100%; height: auto; }
@@ -271,7 +301,7 @@ export class GalliaCreateComponent {
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Unknown error';
       console.error('Error printing:', e);
-      this.snackBar.open('Error printing label: ' + message, 'Close', { duration: 3000 });
+      this.snackBar.open(`Error printing ${this.labelType.toLowerCase()} label: ` + message, 'Close', { duration: 3000 });
     }
   }
 }

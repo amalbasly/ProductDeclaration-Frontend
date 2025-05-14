@@ -1,13 +1,16 @@
 import { SafeUrl } from '@angular/platform-browser';
 
+// Returned Gallia object (read/view mode)
 export interface GalliaDto {
   galliaId: number;
   labelDate: Date | null;
   createdAt: Date;
   fields: GalliaFieldDto[];
   labelImage?: SafeUrl;
+  labelName: string;  // "Gallia" or "Etiquette"
 }
 
+// Field structure for returned Gallia
 export interface GalliaFieldDto {
   galliaFieldId?: number;
   galliaId?: number;
@@ -17,6 +20,7 @@ export interface GalliaFieldDto {
   visualizationType: string;
 }
 
+// Field structure for creating Gallia
 export interface CreateGalliaFieldDto {
   fieldValue: string;
   displayOrder: number;
@@ -24,19 +28,24 @@ export interface CreateGalliaFieldDto {
   fieldName?: string | null;
 }
 
+// Used when creating a Gallia or Etiquette
 export interface CreateGalliaDto {
   labelDate?: Date | null;
   fields: CreateGalliaFieldDto[];
+  labelName: string; // Must be "Gallia" or "Etiquette"
 }
 
+// Used when updating a Gallia or Etiquette
 export interface UpdateGalliaDto {
   galliaId: number;
   labelDate?: Date | null;
   fields: GalliaFieldDto[];
+  labelName: string; // Must be preserved or updated
 }
 
+// Structure for storing the label image
 export interface LabelImageDto {
   galliaId: number;
   base64Image: string;
-  savePath: string;  // Add this property
+  savePath: string;
 }

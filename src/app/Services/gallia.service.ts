@@ -12,49 +12,53 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class GalliaService {
-  private apiUrl = 'http://localhost:5201/api/Gallia';
+  private baseUrl = 'http://localhost:5201/api/Gallia';
 
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer
   ) {}
 
-  getAllGallias(): Observable<GalliaDto[]> {
-    return this.http.get<GalliaDto[]>(`${this.apiUrl}/GetAll`).pipe(
+  getAllGallias(labelType: string): Observable<GalliaDto[]> {
+    return this.http.get<GalliaDto[]>(`${this.baseUrl}/${labelType}/GetAll`).pipe(
       map(gallias => gallias.map(g => this.sanitizeGalliaImage(g)))
     );
   }
 
-  getGalliaById(id: number): Observable<GalliaDto> {
-    return this.http.get<GalliaDto>(`${this.apiUrl}/${id}`).pipe(
+  getGalliaById(id: number, labelType: string): Observable<GalliaDto> {
+    return this.http.get<GalliaDto>(`${this.baseUrl}/${labelType}/${id}`).pipe(
       map(gallia => this.sanitizeGalliaImage(gallia))
     );
   }
 
-  createGallia(dto: CreateGalliaDto): Observable<GalliaDto> {
-    return this.http.post<GalliaDto>(`${this.apiUrl}/Create`, dto);
+  createGallia(dto: CreateGalliaDto, labelType: string): Observable<GalliaDto> {
+    // Ensure labelName matches the endpoint
+    dto.labelName = labelType;
+    return this.http.post<GalliaDto>(`${this.baseUrl}/${labelType}/Create`, dto);
   }
 
-  updateGallia(dto: UpdateGalliaDto): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Update/${dto.galliaId}`, dto);
+  updateGallia(dto: UpdateGalliaDto, labelType: string): Observable<any> {
+    // Ensure labelName matches the endpoint
+    dto.labelName = labelType;
+    return this.http.put(`${this.baseUrl}/${labelType}/Update/${dto.galliaId}`, dto);
   }
 
-  deleteGallia(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/Delete/${id}`, {
+  deleteGallia(id: number, labelType: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${labelType}/Delete/${id}`, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     });
   }
 
-  saveLabelImage(dto: LabelImageDto): Observable<any> {
+  saveLabelImage(dto: LabelImageDto, labelType: string): Observable<any> {
     const payload = {
       galliaId: dto.galliaId,
       base64Image: dto.base64Image,
       savePath: dto.savePath
     };
 
-    return this.http.post(`${this.apiUrl}/save-image`, payload, {
+    return this.http.post(`${this.baseUrl}/${labelType}/save-image`, payload, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
