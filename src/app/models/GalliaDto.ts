@@ -7,7 +7,8 @@ export interface GalliaDto {
   createdAt: Date;
   fields: GalliaFieldDto[];
   labelImage?: SafeUrl;
-  labelName: string;  // "Gallia" or "Etiquette"
+  labelName: string;
+  galliaName?: string | null; // Add galliaName
 }
 
 // Field structure for returned Gallia
@@ -33,6 +34,7 @@ export interface CreateGalliaDto {
   labelDate?: Date | null;
   fields: CreateGalliaFieldDto[];
   labelName: string; // Must be "Gallia" or "Etiquette"
+  galliaName?: string | null; // Add galliaName
 }
 
 // Used when updating a Gallia or Etiquette
@@ -41,6 +43,7 @@ export interface UpdateGalliaDto {
   labelDate?: Date | null;
   fields: GalliaFieldDto[];
   labelName: string; // Must be preserved or updated
+  galliaName?: string | null; // Add galliaName
 }
 
 // Structure for storing the label image

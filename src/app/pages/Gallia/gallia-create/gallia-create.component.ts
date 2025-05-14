@@ -8,6 +8,7 @@ import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 import JsBarcode from 'jsbarcode';
 import { PreviewDialogComponent } from '../preview-dialog/preview-dialog.component';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gallia-create',
@@ -19,7 +20,8 @@ export class GalliaCreateComponent implements OnInit {
   gallia: CreateGalliaDto = {
     labelDate: null,
     fields: [],
-    labelName: ''
+    labelName: '',
+    galliaName: '' // Initialize as empty string for user input
   };
 
   desiredFieldCount = 4;
@@ -43,7 +45,6 @@ export class GalliaCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Set labelName and labelType based on route
     this.route.url.subscribe((segments: UrlSegment[]) => {
       if (segments.some((segment: UrlSegment) => segment.path === 'create-etiquette')) {
         this.gallia.labelName = 'Etiquette';
@@ -120,8 +121,15 @@ export class GalliaCreateComponent implements OnInit {
 
   async onSubmit(previewElement?: HTMLElement): Promise<void> {
     this.isLoading = true;
+
     if (this.gallia.fields.some((f) => !f.fieldValue)) {
       this.snackBar.open('All field values are required.', 'Close', { duration: 3000 });
+      this.isLoading = false;
+      return;
+    }
+
+    if (!this.gallia.galliaName || this.gallia.galliaName.trim() === '') {
+      this.snackBar.open(`${this.gallia.labelName === 'Etiquette' ? 'Label Name' : 'Gallia Name'} is required.`, 'Close', { duration: 3000 });
       this.isLoading = false;
       return;
     }
@@ -257,7 +265,8 @@ export class GalliaCreateComponent implements OnInit {
     this.gallia = {
       labelDate: null,
       fields: [],
-      labelName: this.gallia.labelName // Preserve labelName
+      labelName: this.gallia.labelName,
+      galliaName: ''
     };
     this.previews = {};
     this.desiredFieldCount = 4;

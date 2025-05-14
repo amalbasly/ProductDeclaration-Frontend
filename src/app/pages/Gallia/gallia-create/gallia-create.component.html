@@ -14,8 +14,27 @@
     <!-- Label Creation Form -->
     <form *ngIf="gallia.fields.length" (ngSubmit)="showPreview()" #f="ngForm">
       <div class="form-group">
-        <label>Label Date</label>
-        <input type="date" [(ngModel)]="gallia.labelDate" name="labelDate" class="form-control" required>
+        <label for="galliaName">{{ gallia.labelName === 'Etiquette' ? 'Label Name' : 'Gallia Name' }}</label>
+        <input
+          type="text"
+          id="galliaName"
+          [(ngModel)]="gallia.galliaName"
+          name="galliaName"
+          class="form-control"
+          required
+          [placeholder]="gallia.labelName === 'Etiquette' ? 'Enter Label Name' : 'Enter Gallia Name'"
+        >
+      </div>
+      <div class="form-group">
+        <label for="labelDate">Label Date</label>
+        <input
+          type="date"
+          id="labelDate"
+          [(ngModel)]="gallia.labelDate"
+          name="labelDate"
+          class="form-control"
+          required
+        >
       </div>
 
       <!-- Dynamic Fields -->
@@ -28,20 +47,38 @@
 
           <div class="field-row">
             <div class="form-group">
-              <label>Field Name</label>
-              <input type="text" [(ngModel)]="field.fieldName" [name]="'fieldName' + i" class="form-control">
+              <label for="fieldName{{i}}">Field Name</label>
+              <input
+                type="text"
+                id="fieldName{{i}}"
+                [(ngModel)]="field.fieldName"
+                [name]="'fieldName' + i"
+                class="form-control"
+              >
             </div>
 
             <div class="form-group">
-              <label>Field Value</label>
-              <input type="text" [(ngModel)]="field.fieldValue" [name]="'fieldValue' + i" class="form-control" required
-                     (input)="onFieldChange(i)">
+              <label for="fieldValue{{i}}">Field Value</label>
+              <input
+                type="text"
+                id="fieldValue{{i}}"
+                [(ngModel)]="field.fieldValue"
+                [name]="'fieldValue' + i"
+                class="form-control"
+                required
+                (input)="onFieldChange(i)"
+              >
             </div>
 
             <div class="form-group">
-              <label>Visualization Type</label>
-              <select [(ngModel)]="field.visualizationType" [name]="'vizType' + i" class="form-control"
-                      (change)="onFieldChange(i)">
+              <label for="vizType{{i}}">Visualization Type</label>
+              <select
+                id="vizType{{i}}"
+                [(ngModel)]="field.visualizationType"
+                [name]="'vizType' + i"
+                class="form-control"
+                (change)="onFieldChange(i)"
+              >
                 <option *ngFor="let opt of visualizationOptions" [value]="opt.value">{{ opt.label }}</option>
               </select>
             </div>

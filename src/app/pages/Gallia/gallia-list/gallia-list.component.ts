@@ -16,7 +16,7 @@ export class GalliaListComponent implements OnInit {
   gallias: GalliaDto[] = [];
   labelName: string | null = null;
   isLoading = true;
-  displayedColumns: string[] = ['thumbnail', 'id', 'date', 'created', 'actions'];
+  displayedColumns: string[] = ['thumbnail', 'id', 'galliaName', 'date', 'created', 'actions'];
   labelType = 'Gallia'; // Default labelType
 
   constructor(
@@ -27,17 +27,16 @@ export class GalliaListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Check the route to determine labelName
-    this.route.url.subscribe((segments) => {
-      if (segments.some((segment) => segment.path === 'etiquette')) {
-        this.labelName = 'Etiquette';
-        this.labelType = 'Etiquette'; // Adjust labelType for Etiquette
-      } else {
-        this.labelName = 'Gallia';
-      }
-      this.loadGallias();
-    });
-  }
+  this.route.url.subscribe((segments) => {
+    if (segments.some((segment) => segment.path === 'etiquette')) {
+      this.labelName = 'Etiquette';
+      this.labelType = 'Etiquette';
+    } else {
+      this.labelName = 'Gallia';
+    }
+    this.loadGallias();
+  });
+}
 
   loadGallias(): void {
     this.isLoading = true;
