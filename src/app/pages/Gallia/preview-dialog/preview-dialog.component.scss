@@ -1,0 +1,190 @@
+// src/app/pages/Gallia/preview-dialog/preview-dialog.component.scss
+// Import Google Fonts for Lato
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+
+// Define ALL Circuits colors
+$all-red: #E00034; // Red
+$all-gray: #6C6F70; // Gray
+$all-dark-gray: #404040; // Dark Gray
+$all-blue: #096683; // Blue
+$all-yellow: #FFC000; // Yellow
+
+// Define font stacks
+$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
+$font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
+
+// Dialog Preview
+:host ::ng-deep .mat-dialog-container {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid $all-dark-gray;
+}
+
+h1[mat-dialog-title] {
+  font-family: $font-title;
+  font-size: 1.5rem;
+  color: $all-red;
+  margin: 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-bottom: 2px solid $all-red;
+  text-transform: uppercase;
+}
+
+.label-preview {
+  font-family: $font-primary;
+  padding: 1.5rem;
+  background-color: #fff;
+
+  .label-container {
+    border: 2px solid $all-dark-gray;
+    border-radius: 6px;
+    padding: 1rem;
+
+    .label-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid $all-red;
+
+      .label-title {
+        font-family: $font-title;
+        font-size: 1.3rem;
+        color: $all-blue;
+        text-transform: uppercase;
+      }
+
+      .label-date {
+        font-family: $font-primary;
+        font-size: 0.85rem;
+        color: $all-gray;
+      }
+    }
+
+    .fields-grid {
+      display: flex;
+      flex-direction: column; // Stack fields vertically
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .field-section {
+        border: 1px solid $all-gray;
+        border-radius: 4px;
+        padding: 0.8rem;
+        background-color: #fafafa;
+
+        .field-name {
+          font-family: $font-title;
+          font-size: 0.9rem;
+          color: $all-dark-gray;
+          margin-bottom: 0.4rem;
+        }
+
+        .field-value {
+          font-family: $font-primary;
+          font-size: 0.85rem;
+          color: $all-dark-gray;
+          margin-bottom: 0.4rem;
+        }
+
+        .visualization-type {
+          font-family: $font-primary;
+          font-size: 0.85rem;
+          color: $all-gray;
+          margin-bottom: 0.4rem;
+        }
+
+        .visualization {
+          text-align: center;
+          padding-top: 0.5rem;
+
+          .visualization-image {
+            max-width: 80px;
+            height: auto;
+            border: 1px solid $all-dark-gray;
+            padding: 0.2rem;
+            background-color: #fff;
+          }
+
+          .text-visualization {
+            font-family: $font-primary;
+            font-size: 0.85rem;
+            color: $all-dark-gray;
+            padding: 0.4rem;
+            border: 1px solid $all-gray;
+            border-radius: 4px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+
+    .label-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 2px solid $all-red;
+      padding-top: 0.8rem;
+
+      .label-id,
+      .print-date {
+        font-family: $font-primary;
+        font-size: 0.85rem;
+        color: $all-gray;
+      }
+    }
+  }
+}
+
+.mat-dialog-actions {
+  padding: 0.8rem;
+  background-color: $all-gray;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+
+  button {
+    font-family: $font-primary;
+    font-weight: 700;
+    color: #fff;
+    background-color: $all-red;
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+
+    &:hover {
+      background-color: darken($all-red, 10%);
+    }
+
+    mat-icon {
+      font-size: 0.9rem;
+    }
+
+    &[mat-button][color="primary"] {
+      background-color: $all-blue;
+
+      &:hover {
+        background-color: darken($all-blue, 10%);
+      }
+    }
+  }
+}
+
+// Print-specific styles
+@media print {
+  .mat-dialog-actions {
+    display: none;
+  }
+
+  .label-preview {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+
+    .label-container {
+      border: 2px solid $all-dark-gray;
+      padding: 0.8rem;
+    }
+  }
+}

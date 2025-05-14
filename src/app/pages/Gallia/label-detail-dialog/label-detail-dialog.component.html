@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Gallia Label Details</h1>
+<div mat-dialog-content class="label-detail-container">
+  <div class="label-image-container">
+    <img *ngIf="data.gallia.labelImage" [src]="data.gallia.labelImage" alt="Full Label" class="full-label-image">
+    <div *ngIf="!data.gallia.labelImage" class="no-image">No Image Available</div>
+  </div>
+  
+  <div class="label-details">
+    <h2>Label Information</h2>
+    <p><strong>ID:</strong> {{ data.gallia.galliaId }}</p>
+    <p><strong>Date:</strong> {{ data.gallia.labelDate | date:'mediumDate' }}</p>
+    <p><strong>Created:</strong> {{ data.gallia.createdAt | date:'medium' }}</p>
+    
+    <h3>Fields:</h3>
+    <div *ngFor="let field of data.gallia.fields" class="field-detail">
+      <p><strong>{{ field.fieldName || ('Field ' + field.displayOrder) }}:</strong> {{ field.fieldValue }}</p>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="print()">Print</button>
+  <button mat-button (click)="close()" color="primary">Close</button>
+</div>

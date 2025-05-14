@@ -1,28 +1,66 @@
-<div class="gallia-grid">
-  <div *ngFor="let gallia of gallias" class="gallia-card">
-    <div class="qr-wrapper">
-      <img [src]="qrCodes[gallia.galliaId]" alt="QR Code" *ngIf="qrCodes[gallia.galliaId]" />
-      <p *ngIf="!qrCodes[gallia.galliaId]">Generating...</p>
-    </div>
-
-    <div class="info-section">
-      <h3>ID: {{ gallia.galliaId }}</h3>
-      <p><strong>Date:</strong> {{ gallia.labelDate | date }}</p>
-      <p><strong>Created:</strong> {{ gallia.createdAt | date }}</p>
-    </div>
-
-    <div class="card-actions">
-      <button 
-        (click)="deleteGallia(gallia.galliaId)" 
-        [disabled]="isLoading || isDeleting(gallia.galliaId)"
-        class="delete-btn"
-      >
-        {{ isDeleting(gallia.galliaId) ? 'Deleting...' : 'Delete' }}
-      </button>
-    </div>
+<div class="gallia-list-container">
+  <div class="header">
+    <h2>Gallia Labels</h2>
+    <button mat-raised-button color="primary" routerLink="/gallia/create">Create New Label</button>
   </div>
-</div>
 
-<div *ngIf="isLoading && gallias.length === 0" class="loading-message">
-  Loading Gallias...
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <table mat-table [dataSource]="gallias" class="mat-elevation-z8">
+      <!-- Thumbnail Column -->
+      <ng-container matColumnDef="thumbnail">
+        <th mat-header-cell *matHeaderCellDef>Preview</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="thumbnail-container">
+            <img *ngIf="element.labelImage" [src]="element.labelImage" (click)="viewDetails(element)" class="thumbnail-image">
+            <div *ngIf="!element.labelImage" class="no-thumbnail">No Image</div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.galliaId }}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+  <th mat-header-cell *matHeaderCellDef>Label Date</th>
+  <td mat-cell *matCellDef="let element">
+    <span *ngIf="element.labelDate; else noDate">
+      {{ element.labelDate | date:'shortDate' }}
+    </span>
+    <ng-template #noDate>N/A</ng-template>
+  </td>
+</ng-container>
+
+      <!-- Created Column -->
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.createdAt | date:'short' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="viewDetails(element)" matTooltip="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteGallia(element.galliaId)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
 </div>

@@ -1,152 +1,179 @@
+// src/app/pages/Gallia/gallia-create/gallia-create.component.scss
+// Import Google Fonts for Lato
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+
+// Define ALL Circuits colors
+$all-red: #E00034; // Red
+$all-gray: #6C6F70; // Gray
+$all-dark-gray: #404040; // Dark Gray
+$all-blue: #096683; // Blue
+$all-yellow: #FFC000; // Yellow
+
+// Define font stacks
+$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
+$font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
+
+// Base styles
 .gallia-create-container {
-    display: flex;
-    justify-content: center;
-    padding: 2rem;
-    
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-      width: 100%;
-      max-width: 800px;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #fff;
+
+  .card {
+    width: 100%;
+    max-width: 800px; // Increased width to accommodate side-by-side layout
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid $all-gray;
+
+    h2 {
+      font-family: $font-title;
+      font-size: 1.5rem;
+      color: $all-red;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
     }
-    
-    .header {
-      color: #2c3e50;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-size: 1.8rem;
-    }
-    
+
     .step {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      max-width: 300px;
+      margin: 0 auto;
     }
-    
+
     .form-group {
-      margin-bottom: 1.5rem;
-      
+      margin-bottom: 1rem;
+
       label {
+        font-family: $font-primary;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: $all-dark-gray;
+        margin-bottom: 0.4rem;
         display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: #34495e;
       }
-      
-      input {
+
+      input,
+      select {
         width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd;
+        padding: 0.6rem;
+        border: 1px solid $all-gray;
         border-radius: 4px;
-        font-size: 1rem;
-        transition: border-color 0.3s;
-        
+        font-family: $font-primary;
+        font-size: 0.9rem;
+        color: $all-dark-gray;
+
         &:focus {
           outline: none;
-          border-color: #3498db;
-          box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+          border-color: $all-blue;
+          box-shadow: 0 0 4px rgba($all-blue, 0.2);
         }
       }
     }
-    
-    .input-group {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .btn-counter {
-      width: 40px;
-      height: 40px;
-      border: 1px solid #ddd;
-      background: #f8f9fa;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      
-      &:hover:not(:disabled) {
-        background: #e9ecef;
+
+    .fields-section {
+      margin-bottom: 1.5rem;
+
+      h3 {
+        font-family: $font-title;
+        font-size: 1.3rem;
+        color: $all-blue;
+        margin-bottom: 1rem;
       }
-      
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
-    
-    .count-input {
-      text-align: center;
-      max-width: 80px;
-    }
-    
-    .hint {
-      color: #7f8c8d;
-      font-size: 0.85rem;
-    }
-    
-    .btn-primary {
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s;
-      
-      &:hover {
-        background: #2980b9;
-      }
-      
-      &:disabled {
-        background: #bdc3c7;
-        cursor: not-allowed;
-      }
-    }
-    
-    .btn-secondary {
-      background: #f8f9fa;
-      color: #2c3e50;
-      border: 1px solid #ddd;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      
-      &:hover {
-        background: #e9ecef;
-      }
-      
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+
+      .field-container {
+        border: 1px solid $all-gray;
+        border-radius: 4px;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
+        background-color: #fafafa;
+
+        .field-header {
+          h4 {
+            font-family: $font-title;
+            font-size: 1.1rem;
+            color: $all-dark-gray;
+            margin-bottom: 0.8rem;
+          }
+        }
+
+        // Side-by-side layout for field name, value, and visualization type
+        .field-row {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap; // Ensures responsiveness
+
+          .form-group {
+            flex: 1;
+            min-width: 200px; // Ensures fields don't get too narrow
+          }
+        }
+
+        .preview-container {
+          margin-top: 0.8rem;
+          text-align: center;
+          padding: 0.5rem;
+          border-top: 1px solid $all-gray;
+
+          .preview-image {
+            max-width: 80px;
+            height: auto;
+            border: 1px solid $all-dark-gray;
+            padding: 0.2rem;
+            background-color: #fff;
+          }
+
+          .text-preview {
+            font-family: $font-primary;
+            font-size: 0.85rem;
+            color: $all-dark-gray;
+            padding: 0.4rem;
+            border: 1px solid $all-gray;
+            border-radius: 4px;
+            display: inline-block;
+          }
+        }
       }
     }
-    
+
     .form-actions {
       display: flex;
+      gap: 0.8rem;
       justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    
-    .dynamic-fields-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    
-    .dynamic-field {
-      animation: fadeIn 0.3s ease-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        font-family: $font-primary;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+
+        &.btn-primary {
+          background-color: $all-red;
+          color: #fff;
+          border: none;
+
+          &:hover {
+            background-color: darken($all-red, 10%);
+          }
+
+          &[disabled] {
+            background-color: $all-gray;
+            cursor: not-allowed;
+          }
+        }
+
+        &.btn-secondary {
+          background-color: $all-gray;
+          color: #fff;
+          border: none;
+
+          &:hover {
+            background-color: darken($all-gray, 10%);
+          }
+        }
+      }
     }
   }
+}

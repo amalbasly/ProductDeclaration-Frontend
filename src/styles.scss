@@ -2,3 +2,60 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// src/styles.scss
+// Import Google Fonts for Lato
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+
+// Define ALL Circuits colors
+$all-red: #E00034; // Red
+$all-gray: #6C6F70; // Gray
+$all-dark-gray: #404040; // Dark Gray
+$all-blue: #096683; // Blue
+
+// Define font stacks
+$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
+
+// Global styles
+body {
+  margin: 0;
+  font-family: $font-primary;
+  color: $all-dark-gray;
+  background-color: #f5f5f5;
+}
+
+// Override Bootstrap styles
+.btn-primary {
+  background-color: $all-red !important;
+  border-color: $all-red !important;
+  font-family: $font-primary !important;
+
+  &:hover {
+    background-color: darken($all-red, 10%) !important;
+    border-color: darken($all-red, 10%) !important;
+  }
+}
+
+.btn-secondary {
+  background-color: $all-gray !important;
+  border-color: $all-gray !important;
+  font-family: $font-primary !important;
+
+  &:hover {
+    background-color: darken($all-gray, 10%) !important;
+    border-color: darken($all-gray, 10%) !important;
+  }
+}
+
+// Override Material styles
+.mat-mdc-button.mat-primary {
+  background-color: $all-blue !important;
+  font-family: $font-primary !important;
+
+  &:hover {
+    background-color: darken($all-blue, 10%) !important;
+  }
+}
+
+.mat-mdc-dialog-container {
+  border: 1px solid $all-dark-gray !important;
+}

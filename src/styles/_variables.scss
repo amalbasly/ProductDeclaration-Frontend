@@ -1,0 +1,15 @@
+// src/styles/_variables.scss
+// Import ALL Circuits fonts
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+
+// Define ALL Circuits colors
+$all-red: #E00034; // R224 V0 B52
+$all-gray: #6C6F70; // R108 V111 B112
+$all-dark-gray: #404040; // R64 V64 B64
+$all-blue: #096683; // R9 V102 B131
+$all-yellow: #FFC000; // R255 V192 B0
+
+// Define font stacks
+$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
+$font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
+$font-accent: 'Northwell', 'Calibri', 'Arial', sans-serif;

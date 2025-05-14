@@ -1,10 +1,11 @@
-// gallia.dto.ts
+import { SafeUrl } from '@angular/platform-browser';
+
 export interface GalliaDto {
   galliaId: number;
   labelDate: Date | null;
   createdAt: Date;
   fields: GalliaFieldDto[];
-  labelImage?: string;
+  labelImage?: SafeUrl;
 }
 
 export interface GalliaFieldDto {
@@ -34,9 +35,8 @@ export interface UpdateGalliaDto {
   fields: GalliaFieldDto[];
 }
 
-export class LabelImageDto {
-  constructor(
-    public galliaId: number,
-    public base64Image: string
-  ) {}
+export interface LabelImageDto {
+  galliaId: number;
+  base64Image: string;
+  savePath: string;  // Add this property
 }
