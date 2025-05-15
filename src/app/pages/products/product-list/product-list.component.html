@@ -19,53 +19,57 @@
       <option value="true">Serialized</option>
       <option value="false">Not Serialized</option>
     </select>
-    <button (click)="onSearch()" title="Apply filters">
+    <button (click)="onSearch()" title="Apply filters" aria-label="Apply filters">
       Search
     </button>
-    <button (click)="onClearFilters()" title="Clear all filters">
+    <button (click)="onClearFilters()" title="Clear all filters" aria-label="Clear all filters">
       Clear
     </button>
   </div>
 
-  <!-- Table -->
-  <table *ngIf="!loading && products.length > 0" class="product-table" aria-label="Product List">
-    <thead>
-      <tr>
-        <th>Action</th>
-        <th>Code</th>
-        <th>Libellé</th>
-        <th>Famille</th>
-        <th>Sous Famille</th>
-        <th>Status</th>
-        <th>Serialized</th>
-        <th>Poids</th>
-        <th>Date Creation</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of products">
-        <td class="actions">
-          <button class="delete-btn" (click)="deleteProduct(p.PtNum)" title="Delete product" aria-label="Delete product">
-            <i class="material-icons">delete</i>
-          </button>
-          <button class="edit-btn" (click)="onUpdateProduct(p)" title="Edit product" aria-label="Edit product">
-            <i class="material-icons">edit</i>
-          </button>
-        </td>
-        <td>{{ p.PtNum }}</td>
-        <td>{{ p.PtLib }}</td>
-        <td>{{ p.FpCod }}</td>
-        <td>{{ p.SpCod }}</td>
-        <td>{{ p.SpId || '-' }}</td>
-        <td>{{ p.IsSerialized ? 'Yes' : 'No' }}</td>
-        <td>{{ p.PtPoids || '-' }}</td>
-        <td>{{ p.PtDcreat ? (p.PtDcreat | date: 'short') : '-' }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- Table Wrapper with Scroll Only When Needed -->
+  <div class="table-responsive">
+    <table *ngIf="!loading && products.length > 0" class="product-table" aria-label="Product List">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Code</th>
+          <th>Libellé</th>
+          <th>Famille</th>
+          <th>Sous Famille</th>
+          <th>Status</th>
+          <th>Serialized</th>
+          <th>Poids</th>
+          <th>Date Creation</th>
+          <th>Gallia Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td class="actions">
+            <button class="delete-btn" (click)="deleteProduct(p.PtNum)" title="Delete product" aria-label="Delete product">
+              <i class="material-icons">delete</i>
+            </button>
+            <button class="edit-btn" (click)="onUpdateProduct(p)" title="Edit product" aria-label="Edit product">
+              <i class="material-icons">edit</i>
+            </button>
+          </td>
+          <td>{{ p.PtNum }}</td>
+          <td>{{ p.PtLib }}</td>
+          <td>{{ p.FpCod }}</td>
+          <td>{{ p.SpCod }}</td>
+          <td>{{ p.SpId || '-' }}</td>
+          <td>{{ p.IsSerialized ? 'Yes' : 'No' }}</td>
+          <td>{{ p.PtPoids || '-' }}</td>
+          <td>{{ p.PtDcreat ? (p.PtDcreat | date: 'short') : '-' }}</td>
+          <td>{{ p.GalliaName || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && products.length === 0" class="no-products">
+  <div *ngIf="!loading && products.length === 0" class="no-products" role="region" aria-live="polite">
     No products found matching your criteria.
   </div>
 </div>

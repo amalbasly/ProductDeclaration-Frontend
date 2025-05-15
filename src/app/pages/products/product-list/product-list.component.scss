@@ -1,4 +1,4 @@
-// ALL Circuits Brand Colors
+// Brand Colors
 $primary-red: #E00034;
 $secondary-grey: #6C6F70;
 $light-grey: #f5f5f5;
@@ -98,6 +98,11 @@ body {
   background-color: darken($primary-red, 10%);
 }
 
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .product-table {
   width: 100%;
   border-collapse: collapse;
@@ -115,39 +120,24 @@ body {
 
 .product-table th,
 .product-table td {
-  padding: 1.25rem 1rem; // Increased for better spacing
+  padding: 1rem 0.75rem;
   vertical-align: middle;
   font-family: 'Lato', Calibri, Arial, sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
 }
 
 .product-table th {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .product-table tr:hover {
   background-color: #fafafa;
   transition: background-color 0.3s ease;
-}
-
-// Ensure header stays red even on hover
-.product-table thead tr,
-.product-table thead th {
-  background-color: $primary-red !important;
-  color: white !important;
-  pointer-events: auto !important;
-}
-
-.product-table thead tr:hover,
-.product-table thead tr:hover *,
-.product-table thead *:hover,
-.product-table thead *:hover * {
-  background-color: $primary-red !important;
-  color: white !important;
 }
 
 .actions {
@@ -182,4 +172,15 @@ body {
   font-style: italic;
   color: $secondary-grey;
   font-size: 1.1rem;
+}
+@media (max-width: 992px) {
+  .product-table th,
+  .product-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .product-table th {
+    font-size: 0.75rem;
+  }
 }

@@ -17,6 +17,7 @@ export interface ProduitSerialiséDto {
   PtCreateur?: string | null; // Créé par
   PtSpecifT15?: string | null; // Tolerance
   PtFlasher?: number | null; // Flashable
+  GalliaName?: string;
 }
 
 /* Response Interfaces */

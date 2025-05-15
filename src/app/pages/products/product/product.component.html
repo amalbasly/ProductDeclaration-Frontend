@@ -1,146 +1,172 @@
 <div class="container mt-4">
   <form [formGroup]="productForm">
-    <!-- Loading Indicator -->
-    <div *ngIf="isLoading" class="text-center mb-3">
-      <div class="spinner-border text-primary" role="status">
+    
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center mb-4">
+      <div class="spinner-border text-danger" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
       <p>Loading...</p>
     </div>
 
-    <!-- Ligne, Famille, Sous-Famille in one row -->
-    <div class="row-inline">
-      <!-- Ligne -->
-      <div class="mb-3">
-        <label class="form-label">Ligne</label>
-        <select formControlName="ligne" class="form-select" [class.is-invalid]="isFieldInvalid('ligne')">
-          <option value="">Select Ligne</option>
-          <option *ngFor="let item of dropdowns.lignes" [value]="item">{{ item }}</option>
-        </select>
-        <div *ngIf="isFieldInvalid('ligne')" class="invalid-feedback">
-          Ligne is required
-        </div>
+    <!-- Product Identification -->
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-bold">
+        🔍 Identification
       </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Ligne</label>
+            <select formControlName="ligne" class="form-select" [class.is-invalid]="isFieldInvalid('ligne')">
+              <option value="">Select Ligne</option>
+              <option *ngFor="let item of dropdowns.lignes" [value]="item">{{ item }}</option>
+            </select>
+            <div *ngIf="isFieldInvalid('ligne')" class="invalid-feedback">Ligne is required</div>
+          </div>
 
-      <!-- Famille -->
-      <div class="mb-3">
-        <label class="form-label">Famille</label>
-        <select formControlName="famille" class="form-select" [class.is-invalid]="isFieldInvalid('famille')">
-          <option value="">Select Famille</option>
-          <option *ngFor="let item of dropdowns.famille" [value]="item">{{ item }}</option>
-        </select>
-        <div *ngIf="isFieldInvalid('famille')" class="invalid-feedback">
-          Famille is required
-        </div>
-      </div>
+          <div class="col-md-4">
+            <label class="form-label">Famille</label>
+            <select formControlName="famille" class="form-select" [class.is-invalid]="isFieldInvalid('famille')">
+              <option value="">Select Famille</option>
+              <option *ngFor="let item of dropdowns.famille" [value]="item">{{ item }}</option>
+            </select>
+            <div *ngIf="isFieldInvalid('famille')" class="invalid-feedback">Famille is required</div>
+          </div>
 
-      <!-- Sous-Famille -->
-      <div class="mb-3">
-        <label class="form-label">Sous-Famille</label>
-        <select formControlName="sousFamille" class="form-select" [class.is-invalid]="isFieldInvalid('sousFamille')">
-          <option value="">Select Sous-Famille</option>
-          <option *ngFor="let item of dropdowns.sousFamilles" [value]="item">{{ item }}</option>
-        </select>
-        <div *ngIf="isFieldInvalid('sousFamille')" class="invalid-feedback">
-          Sous-Famille is required
+          <div class="col-md-4">
+            <label class="form-label">Sous-Famille</label>
+            <select formControlName="sousFamille" class="form-select" [class.is-invalid]="isFieldInvalid('sousFamille')">
+              <option value="">Select Sous-Famille</option>
+              <option *ngFor="let item of dropdowns.sousFamilles" [value]="item">{{ item }}</option>
+            </select>
+            <div *ngIf="isFieldInvalid('sousFamille')" class="invalid-feedback">Sous-Famille is required</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Remaining fields -->
-    <div class="row-inline">
-      <!-- Code Produit -->
-      <div class="mb-3">
-        <label class="form-label">Code Produit</label>
-        <input type="text" formControlName="codeProduit" class="form-control"
-               [class.is-invalid]="isFieldInvalid('codeProduit')">
-        <div *ngIf="isFieldInvalid('codeProduit')" class="invalid-feedback">
-          Code Produit is required and must be alphanumeric
+    <!-- Product Details -->
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-bold">
+        📝 Détails Produit
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Code Produit</label>
+            <input type="text" formControlName="codeProduit" class="form-control"
+                   [class.is-invalid]="isFieldInvalid('codeProduit')">
+            <div *ngIf="isFieldInvalid('codeProduit')" class="invalid-feedback">
+              Code Produit is required and must be alphanumeric
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Libelle</label>
+            <input type="text" formControlName="libelle" class="form-control"
+                   [class.is-invalid]="isFieldInvalid('libelle')">
+            <div *ngIf="isFieldInvalid('libelle')" class="invalid-feedback">Libelle is required</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Type</label>
+            <select formControlName="type" class="form-select">
+              <option value="">Select Type (optional)</option>
+              <option *ngFor="let item of dropdowns.types" [value]="item">{{ item }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label">Libelle 2</label>
+          <input type="text" formControlName="libelle2" class="form-control">
         </div>
       </div>
+    </div>
 
-      <!-- Libelle -->
-      <div class="mb-3">
-        <label class="form-label">Libelle</label>
-        <input type="text" formControlName="libelle" class="form-control"
-               [class.is-invalid]="isFieldInvalid('libelle')">
-        <div *ngIf="isFieldInvalid('libelle')" class="invalid-feedback">
-          Libelle is required
+    <!-- Technical Info -->
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-bold">
+        ⚙️ Informations Techniques
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Statut</label>
+            <select formControlName="statut" class="form-select">
+              <option value="">Select Statut (optional)</option>
+              <option *ngFor="let item of dropdowns.statuts" [value]="item">{{ item }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Poids</label>
+            <input type="number" formControlName="poids" class="form-control" min="0"
+                   [class.is-invalid]="isFieldInvalid('poids')">
+            <div *ngIf="isFieldInvalid('poids')" class="invalid-feedback">Must be positive number</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Tolerance</label>
+            <input type="text" formControlName="tolerance" class="form-control">
+          </div>
         </div>
-      </div>
 
-      <!-- Type -->
-      <div class="mb-3">
-        <label class="form-label">Type</label>
-        <select formControlName="type" class="form-select">
-          <option value="">Select Type (optional)</option>
-          <option *ngFor="let item of dropdowns.types" [value]="item">{{ item }}</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Libelle 2 -->
-    <div class="mb-3">
-      <label class="form-label">Libelle 2</label>
-      <input type="text" formControlName="libelle2" class="form-control">
-    </div>
-
-    <!-- Statut -->
-    <div class="mb-3">
-      <label class="form-label">Statut</label>
-      <select formControlName="statut" class="form-select">
-        <option value="">Select Statut (optional)</option>
-        <option *ngFor="let item of dropdowns.statuts" [value]="item">{{ item }}</option>
-      </select>
-    </div>
-
-    <!-- Poids -->
-    <div class="mb-3">
-      <label class="form-label">Poids</label>
-      <input type="number" formControlName="poids" class="form-control" min="0"
-             [class.is-invalid]="isFieldInvalid('poids')">
-      <div *ngIf="isFieldInvalid('poids')" class="invalid-feedback">
-        Must be positive number
+        <div class="mt-3">
+          <label class="form-label">Flashable</label>
+          <select formControlName="flashable" class="form-select">
+            <option [value]="null">Select (optional)</option>
+            <option [value]="1">Yes</option>
+            <option [value]="0">No</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <!-- Additional Fields -->
-    <div class="row-inline">
-      <div class="mb-3">
-        <label class="form-label">Code Produit Client C264</label>
-        <input type="text" formControlName="codeProduitClientC264" class="form-control">
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-bold">
+        🧾 Champs Additionnels
       </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Code Produit Client C264</label>
+            <input type="text" formControlName="codeProduitClientC264" class="form-control">
+          </div>
 
-      <div class="mb-3">
-        <label class="form-label">Createur</label>
-        <input type="text" formControlName="createur" class="form-control">
-      </div>
+          <div class="col-md-4">
+            <label class="form-label">Createur</label>
+            <input type="text" formControlName="createur" class="form-control">
+          </div>
 
-      <div class="mb-3">
-        <label class="form-label">Date Creation</label>
-        <input type="date" formControlName="dateCreation" class="form-control">
-      </div>
-    </div>
-
-    <!-- Tolerance & Flashable -->
-    <div class="row-inline">
-      <div class="mb-3">
-        <label class="form-label">Tolerance</label>
-        <input type="text" formControlName="tolerance" class="form-control">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Flashable</label>
-        <select formControlName="flashable" class="form-select">
-          <option [value]="null">Select (optional)</option>
-          <option [value]="1">Yes</option>
-          <option [value]="0">No</option>
-        </select>
+          <div class="col-md-4">
+            <label class="form-label">Date Creation</label>
+            <input type="date" formControlName="dateCreation" class="form-control">
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Action Buttons Section -->
-    <div class="d-flex justify-content-between">
+    <!-- Gallia Name -->
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-bold">
+        🏷️ Gallia Name
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Gallia Name</label>
+          <select formControlName="galliaName" class="form-select">
+            <option value="">Select Gallia Name</option>
+            <option *ngFor="let name of dropdowns.galliaNames" [value]="name">{{ name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-4">
       <button type="button" class="btn btn-primary"
               (click)="onSubmit()"
               [disabled]="isLoading">
@@ -152,21 +178,20 @@
         </span>
       </button>
 
-      <div>
-        <!-- For Serialized Products -->
-        <button *ngIf="isSerializedRoute" type="button" class="btn btn-primary ms-2"
+      <div class="d-flex gap-2">
+        <button *ngIf="isSerializedRoute" type="button" class="btn btn-outline-primary ms-2"
                 (click)="goToSynoptique()"
                 [disabled]="productForm.invalid || isLoading">
           {{ isUpdateMode ? 'Update Synoptique' : 'Remplir Synoptique' }}
         </button>
 
-        <!-- For Non-Serialized Products -->
-        <button *ngIf="!isSerializedRoute" type="button" class="btn btn-primary ms-2"
+        <button *ngIf="!isSerializedRoute" type="button" class="btn btn-outline-primary ms-2"
                 (click)="goToReference()"
                 [disabled]="productForm.invalid || isLoading">
           {{ isUpdateMode ? 'Update Reference' : 'Remplir Reference' }}
         </button>
       </div>
     </div>
+
   </form>
 </div>

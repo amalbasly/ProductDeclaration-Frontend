@@ -75,4 +75,9 @@ export class GalliaService {
   private sanitizeImage(base64: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(`data:image/png;base64,${base64}`);
   }
+  getGalliaNames(): Observable<string[]> {
+  const defaultLabelType = 'Gallia';
+  return this.http.get<string[]>(`${this.baseUrl}/${defaultLabelType}/names`);
+}
+
 }
