@@ -1,5 +1,4 @@
 <nav class="sidebar" *ngIf="authService.currentUser$ | async as user" [class.open]="isOpen">
-  <!-- Préparateur Sidebar -->
   <div *ngIf="user.employeeFunction === 'préparateur'">
     <div class="logo">
       <i class="fas fa-user-tie"></i>
@@ -69,7 +68,20 @@
           <span>Create Label</span>
         </a>
       </li>
+      <li>
+        <a routerLink="/prep/flanC" routerLinkActive="active">
+          <i class="fas fa-tag"></i> 
+          <span>Create Flan</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/prep/flanList" routerLinkActive="active">
+          <i class="fas fa-tag"></i> 
+          <span>Flan List</span>
+        </a>
+      </li>
     </ul>
+    
   
     <div class="user-email">
       <i class="fas fa-envelope"></i>

@@ -35,6 +35,9 @@ import { JustificationComponent } from './pages/products/justification/justifica
 import { GalliaListComponent } from './pages/Gallia/gallia-list/gallia-list.component';
 import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-create.component';
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
+import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
+import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
+import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/flan-decoupe-details.component';
 
 
 
@@ -45,6 +48,8 @@ const routes: Routes = [
   // Public route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  {path : 'flanD', component : FlanDecoupeDetailsComponent},
+  
   // RH Layout with nested routes
   {
     path: 'rh',
@@ -93,6 +98,9 @@ const routes: Routes = [
       component: GalliaCreateComponent,
       data: { labelType: 'Etiquette' }
     },
+      {path:'flanC', component: FlanDecoupeCreateComponent},
+      {path : 'flanList', component : FlanDecoupeListComponent},
+
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,

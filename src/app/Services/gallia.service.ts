@@ -79,5 +79,14 @@ export class GalliaService {
   const defaultLabelType = 'Gallia';
   return this.http.get<string[]>(`${this.baseUrl}/${defaultLabelType}/names`);
 }
-
+getLabelNames(): Observable<string[]> {
+  const labelType = 'Etiquette';
+  return this.http.get<string[]>(`${this.baseUrl}/${labelType}/names`).pipe(
+    map(names => {
+      return names.filter(name => name && name.trim() !== '');
+    })
+  );
 }
+}
+
+

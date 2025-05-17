@@ -60,6 +60,9 @@ import { EmployeeService } from './Services/employee.service';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LabelDetailDialogComponent } from './pages/Gallia/label-detail-dialog/label-detail-dialog.component';
+import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
+import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
+import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/flan-decoupe-details.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +99,10 @@ import { LabelDetailDialogComponent } from './pages/Gallia/label-detail-dialog/l
     TracaDashboardComponent,
     TracaLayoutComponent,
     TracaSidebarComponent,
-    LabelDetailDialogComponent
+    LabelDetailDialogComponent,
+    FlanDecoupeCreateComponent,
+    FlanDecoupeListComponent,
+    FlanDecoupeDetailsComponent,
   ],
   imports: [
     BrowserModule,
