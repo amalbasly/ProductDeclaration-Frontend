@@ -1,190 +1,95 @@
-// src/app/pages/Gallia/preview-dialog/preview-dialog.component.scss
-// Import Google Fonts for Lato
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+$primary-color: #166a33;
+$secondary-color: #f8fafc;
+$text-color: #1e293b;
+$border-color: #cbd5e1;
+$white: #ffffff;
 
-// Define ALL Circuits colors
-$all-red: #E00034; // Red
-$all-gray: #6C6F70; // Gray
-$all-dark-gray: #404040; // Dark Gray
-$all-blue: #096683; // Blue
-$all-yellow: #FFC000; // Yellow
-
-// Define font stacks
-$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
-$font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
-
-// Dialog Preview
-:host ::ng-deep .mat-dialog-container {
-  padding: 0;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid $all-dark-gray;
+:host {
+  display: block;
 }
 
 h1[mat-dialog-title] {
-  font-family: $font-title;
-  font-size: 1.5rem;
-  color: $all-red;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $primary-color;
+  padding: 1rem 1.5rem;
   margin: 0;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-bottom: 2px solid $all-red;
-  text-transform: uppercase;
+  border-bottom: 1px solid $border-color;
+  background-color: $secondary-color;
 }
 
-.label-preview {
-  font-family: $font-primary;
+.mat-dialog-content {
   padding: 1.5rem;
-  background-color: #fff;
+  margin: 0;
+  background-color: $white;
+  max-height: 80vh;
+  overflow: auto;
+}
 
-  .label-container {
-    border: 2px solid $all-dark-gray;
-    border-radius: 6px;
-    padding: 1rem;
+.preview-wrapper {
+  display: flex;
+  justify-content: center;
+}
 
-    .label-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid $all-red;
+.label-container {
+  width: 595px;
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 
-      .label-title {
-        font-family: $font-title;
-        font-size: 1.3rem;
-        color: $all-blue;
-        text-transform: uppercase;
-      }
+  .label-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
 
-      .label-date {
-        font-family: $font-primary;
-        font-size: 0.85rem;
-        color: $all-gray;
-      }
-    }
-
-    .fields-grid {
-      display: flex;
-      flex-direction: column; // Stack fields vertically
-      gap: 1rem;
-      margin-bottom: 1rem;
-
-      .field-section {
-        border: 1px solid $all-gray;
-        border-radius: 4px;
-        padding: 0.8rem;
-        background-color: #fafafa;
-
-        .field-name {
-          font-family: $font-title;
-          font-size: 0.9rem;
-          color: $all-dark-gray;
-          margin-bottom: 0.4rem;
-        }
-
-        .field-value {
-          font-family: $font-primary;
-          font-size: 0.85rem;
-          color: $all-dark-gray;
-          margin-bottom: 0.4rem;
-        }
-
-        .visualization-type {
-          font-family: $font-primary;
-          font-size: 0.85rem;
-          color: $all-gray;
-          margin-bottom: 0.4rem;
-        }
-
-        .visualization {
-          text-align: center;
-          padding-top: 0.5rem;
-
-          .visualization-image {
-            max-width: 80px;
-            height: auto;
-            border: 1px solid $all-dark-gray;
-            padding: 0.2rem;
-            background-color: #fff;
-          }
-
-          .text-visualization {
-            font-family: $font-primary;
-            font-size: 0.85rem;
-            color: $all-dark-gray;
-            padding: 0.4rem;
-            border: 1px solid $all-gray;
-            border-radius: 4px;
-            display: inline-block;
-          }
-        }
-      }
-    }
-
-    .label-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 2px solid $all-red;
-      padding-top: 0.8rem;
-
-      .label-id,
-      .print-date {
-        font-family: $font-primary;
-        font-size: 0.85rem;
-        color: $all-gray;
-      }
-    }
+  .error-message {
+    padding: 2rem;
+    text-align: center;
+    color: #e63946;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
   }
 }
 
 .mat-dialog-actions {
-  padding: 0.8rem;
-  background-color: $all-gray;
+  padding: 1rem 1.5rem;
+  margin: 0;
+  border-top: 1px solid $border-color;
   display: flex;
   justify-content: flex-end;
-  gap: 0.8rem;
+  gap: 0.75rem;
 
   button {
-    font-family: $font-primary;
-    font-weight: 700;
-    color: #fff;
-    background-color: $all-red;
-    border-radius: 4px;
-    padding: 0.4rem 0.8rem;
-
-    &:hover {
-      background-color: darken($all-red, 10%);
+    font-family: 'Roboto', sans-serif;
+    &[color="primary"] {
+      background-color: $primary-color;
+      color: $white;
     }
 
     mat-icon {
-      font-size: 0.9rem;
-    }
-
-    &[mat-button][color="primary"] {
-      background-color: $all-blue;
-
-      &:hover {
-        background-color: darken($all-blue, 10%);
-      }
+      margin-right: 0.5rem;
     }
   }
 }
 
-// Print-specific styles
+@media (max-width: 768px) {
+  .label-container {
+    width: 100%;
+  }
+}
+
 @media print {
-  .mat-dialog-actions {
-    display: none;
+  .mat-dialog-actions,
+  .mat-dialog-title {
+    display: none !important;
   }
 
-  .label-preview {
-    box-shadow: none;
+  .label-container {
     border: none;
-    padding: 0;
-
-    .label-container {
-      border: 2px solid $all-dark-gray;
-      padding: 0.8rem;
-    }
+    box-shadow: none;
   }
 }

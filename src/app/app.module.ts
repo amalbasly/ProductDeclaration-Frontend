@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule, provideRouter } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -51,6 +52,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 
 
 // Services
@@ -62,7 +65,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LabelDetailDialogComponent } from './pages/Gallia/label-detail-dialog/label-detail-dialog.component';
 import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
-import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/flan-decoupe-details.component';
+import { PrepHeaderComponent } from './layouts/prep-layout/prep-header/prep-header.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +105,7 @@ import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/f
     LabelDetailDialogComponent,
     FlanDecoupeCreateComponent,
     FlanDecoupeListComponent,
-    FlanDecoupeDetailsComponent,
+    PrepHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,7 +121,11 @@ import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/f
     MatDialogModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatTableModule
+    MatTableModule,
+    NgbModule,
+    MatCardModule, // For mat-card, mat-card-header, mat-card-title, mat-card-content
+    MatListModule, // For mat-list, mat-list-item
+    MatButtonModule
   ],
   providers: [EmployeeService],
   bootstrap: [AppComponent]

@@ -5,8 +5,8 @@
     <!-- Field Count Selection -->
     <div *ngIf="!gallia.fields.length" class="step">
       <div class="form-group">
-        <label>Number of Fields:</label>
-        <input type="number" [(ngModel)]="desiredFieldCount" min="1" max="20" class="form-control">
+        <label>Number of Fields (1–20):</label>
+        <input type="number" [(ngModel)]="desiredFieldCount" min="1" max="20" class="form-control" required>
       </div>
       <button type="button" (click)="setFieldsCount()" class="btn btn-primary">Continue</button>
     </div>
@@ -37,58 +37,61 @@
         >
       </div>
 
-      <!-- Dynamic Fields -->
+      <!-- Dynamic Fields in Grid Layout -->
       <div class="fields-section">
         <h3>Label Fields</h3>
-        <div *ngFor="let field of gallia.fields; let i = index" class="field-container">
-          <div class="field-header">
-            <h4>Field {{i + 1}}</h4>
-          </div>
-
-          <div class="field-row">
-            <div class="form-group">
-              <label for="fieldName{{i}}">Field Name</label>
-              <input
-                type="text"
-                id="fieldName{{i}}"
-                [(ngModel)]="field.fieldName"
-                [name]="'fieldName' + i"
-                class="form-control"
-              >
+        <div class="fields-grid">
+          <div *ngFor="let field of gallia.fields; let i = index" class="field-container">
+            <div class="field-header">
+              <h4>{{ field.fieldName || 'Field ' + (i + 1) }}</h4>
             </div>
 
-            <div class="form-group">
-              <label for="fieldValue{{i}}">Field Value</label>
-              <input
-                type="text"
-                id="fieldValue{{i}}"
-                [(ngModel)]="field.fieldValue"
-                [name]="'fieldValue' + i"
-                class="form-control"
-                required
-                (input)="onFieldChange(i)"
-              >
+            <div class="field-row">
+              <div class="form-group">
+                <label for="fieldName{{i}}">Field Name</label>
+                <input
+                  type="text"
+                  id="fieldName{{i}}"
+                  [(ngModel)]="field.fieldName"
+                  [name]="'fieldName' + i"
+                  class="form-control"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="fieldValue{{i}}">Field Value</label>
+                <input
+                  type="text"
+                  id="fieldValue{{i}}"
+                  [(ngModel)]="field.fieldValue"
+                  [name]="'fieldValue' + i"
+                  class="form-control"
+                  required
+                  (input)="onFieldChange(i)"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="vizType{{i}}">Visualization Type</label>
+                <select
+                  id="vizType{{i}}"
+                  [(ngModel)]="field.visualizationType"
+                  [name]="'vizType' + i"
+                  class="form-control"
+                  (change)="onFieldChange(i)"
+                >
+                  <option *ngFor="let opt of visualizationOptions" [value]="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="vizType{{i}}">Visualization Type</label>
-              <select
-                id="vizType{{i}}"
-                [(ngModel)]="field.visualizationType"
-                [name]="'vizType' + i"
-                class="form-control"
-                (change)="onFieldChange(i)"
-              >
-                <option *ngFor="let opt of visualizationOptions" [value]="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="preview-container">
-            <img *ngIf="field.visualizationType === 'qrcode' && previews[i]" [src]="previews[i]" class="preview-image">
-            <img *ngIf="field.visualizationType === 'barcode' && previews[i]" [src]="previews[i]" class="preview-image">
-            <div *ngIf="field.visualizationType === 'datametrics' && field.fieldValue" class="text-preview">
-              {{ field.fieldValue }}
+            <div class="preview-container">
+              <img *ngIf="field.visualizationType === 'qrcode' && previews[i]" [src]="previews[i]" class="preview-image">
+              <img *ngIf="field.visualizationType === 'barcode' && previews[i]" [src]="previews[i]" class="preview-image">
+              <div *ngIf="field.visualizationType === 'datametrics' && field.fieldValue" class="text-preview">
+                {{ field.fieldValue }}
+              </div>
             </div>
           </div>
         </div>

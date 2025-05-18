@@ -1,53 +1,64 @@
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Metrics Section -->
-      <section class="metrics-section">
-        <div class="metric-card">
-          <h3>Total Products</h3>
-          <p class="metric-value">120</p>
-        </div>
-        <div class="metric-card">
-          <h3>Pending Orders</h3>
-          <p class="metric-value">15</p>
-        </div>
-        <div class="metric-card">
-          <h3>Completed Tasks</h3>
-          <p class="metric-value">95</p>
-        </div>
-        <div class="metric-card">
-          <h3>Active Users</h3>
-          <p class="metric-value">45</p>
-        </div>
-      </section>
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <header class="header">
+    <h2>PCB Preparation Dashboard</h2>
+    <button mat-raised-button color="primary">Export Data</button>
+  </header>
 
-      <!-- Charts Section -->
-      <section class="charts-section">
-        <div class="chart-card">
-          <h3>Monthly Sales</h3>
-          <canvas id="salesChart"></canvas>
-        </div>
-        <div class="chart-card">
-          <h3>Product Categories</h3>
-          <canvas id="categoriesChart"></canvas>
-        </div>
-      </section>
+  <!-- Metrics Section: Displays PCB metrics with staggered animations -->
+  <section class="metrics-section">
+    <mat-card 
+      class="metric-card" 
+      *ngFor="let metric of metrics; let i = index" 
+      @cardAnimation 
+      [style.animation-delay]="i * 0.1 + 's'"
+    >
+      <mat-card-header>
+        <mat-card-title>{{ metric.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="metric-value">{{ metric.value }}</p>
+        <p class="metric-subtext">{{ metric.subtext }}</p>
+      </mat-card-content>
+    </mat-card>
+  </section>
 
-      <!-- Action Items Section -->
-      <section class="action-items-section">
-        <h2>Action Items</h2>
-        <ul class="action-list">
-          <li>
-            <span class="task-title">Review Pending Orders</span>
-            <button class="action-btn">View</button>
-          </li>
-          <li>
-            <span class="task-title">Update Product Inventory</span>
-            <button class="action-btn">Edit</button>
-          </li>
-          <li>
-            <span class="task-title">Generate Monthly Report</span>
-            <button class="action-btn">Download</button>
-          </li>
-        </ul>
-      </section>
-    </main>
+  <!-- Charts Section: Displays Chart.js line and doughnut charts -->
+  <section class="charts-section">
+    <mat-card class="chart-card" @chartAnimation>
+      <mat-card-header>
+        <mat-card-title>Monthly PCB Production</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas id="productionChart"></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="chart-card" @chartAnimation>
+      <mat-card-header>
+        <mat-card-title>PCB Type Distribution</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas id="typeChart"></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Action Items Section: Lists actionable tasks with buttons -->
+  <section class="action-items-section">
+    <h2>Action Items</h2>
+    <mat-card class="action-list">
+      <mat-list>
+        <mat-list-item *ngFor="let action of actions">
+          <span matListItemTitle>{{ action.title }}</span>
+          <button mat-raised-button [color]="action.color" class="action-btn">
+            {{ action.buttonText }}
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </mat-card>
+  </section>
+</div>

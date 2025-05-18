@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue&display=swap ');
+
+// Colors
+$bg-header: #2d2d3f;
+$text-light: #e0e0e0;
+$accent: #929aab;
+$hover-bg: rgba(146, 154, 171, 0.15);
+$logout-hover: #e63946;
+$border-separator: rgba(255, 255, 255, 0.05);
+
+// Font
+$font-main: 'Helvetica Neue LT Std', 'Helvetica Neue', Arial, sans-serif;
+
+// Mixin
+@mixin transition($prop: all, $time: 0.25s, $ease: ease) {
+  transition: $prop $time $ease;
+}
+
+// Animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: $bg-header;
+  color: $text-light;
+  height: 48px;
+  font-family: $font-main;
+  border-bottom: 1px solid $border-separator;
+  animation: fadeIn 0.5s ease forwards;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+
+  .app-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i {
+      font-size: 1.2rem;
+      color: $accent;
+    }
+
+    h1 {
+      font-family: $font-main;
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: $text-light;
+      margin: 0;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .profile-btn,
+    .logout-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      color: $accent;
+      @include transition(background-color, color, transform);
+      position: relative;
+
+      &:hover {
+        background: $hover-bg;
+        color: lighten($accent, 10%);
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      i {
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+    }
+
+    .logout-btn:hover {
+      color: $logout-hover;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .app-title {
+      h1 {
+        font-size: 1rem;
+      }
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .action-buttons {
+      gap: 0.3rem;
+
+      .profile-btn,
+      .logout-btn {
+        width: 28px;
+        height: 28px;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

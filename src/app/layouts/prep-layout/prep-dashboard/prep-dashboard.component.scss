@@ -1,168 +1,305 @@
-/* General Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$pcb-green-dark: #0e3b16;
+$pcb-green: #166a33;
+$pcb-copper: #b87333;
+$neutral-100: #f8fafc;
+$neutral-300: #cbd5e1;
+$neutral-800: #1e293b;
+$white: #ffffff;
+
+$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+@mixin transition($prop: all, $time: 0.25s, $ease: ease) {
+  transition: $prop $time $ease;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  line-height: 1.6;
+@mixin focus-ring {
+  &:focus {
+    outline: 2px solid rgba($pcb-copper, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDelayed {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-container {
-  display: flex;
-  flex-direction: column;
+  padding: 1.5rem;
+  background: $neutral-100;
   min-height: 100vh;
-}
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #007bff;
-  color: white;
-}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-.header h1 {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
+    h2 {
+      font-family: $font-family-base;
+      font-weight: $font-weight-bold;
+      font-size: 1.75rem;
+      color: $pcb-green-dark;
+      margin: 0;
+      position: relative;
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+      &:after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: $pcb-copper;
+        border-radius: 2px;
+        margin-top: 0.35rem;
+      }
+    }
 
-.logout-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
+    button[mat-raised-button] {
+      font-family: $font-family-base;
+      font-weight: $font-weight-bold;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: $pcb-green;
+      color: $white;
+      @include transition(background-color);
 
-.logout-btn:hover {
-  background-color: #e60000;
-}
+      &:hover {
+        background: lighten($pcb-green, 10%);
+      }
 
-/* Main Content */
-.main-content {
-  flex: 1;
-  padding: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
+      &[color="primary"] {
+        background: $pcb-green;
 
-/* Metrics Section */
-.metrics-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
+        &:hover {
+          background: lighten($pcb-green, 10%);
+        }
+      }
+    }
+  }
 
-.metric-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1.5rem;
-  text-align: center;
-  flex: 1;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
+  .metrics-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-.metric-card:hover {
-  transform: translateY(-5px);
-}
+    .metric-card {
+      background: $white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      padding: 1rem;
+      @include transition(transform, box-shadow);
 
-.metric-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      }
 
-.metric-value {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #007bff;
-}
+      mat-card-header {
+        padding: 0.5rem 1rem 0;
 
-/* Charts Section */
-.charts-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
+        mat-card-title {
+          font-family: $font-family-base;
+          font-weight: $font-weight-medium;
+          font-size: 1.1rem;
+          color: $neutral-800;
+        }
+      }
 
-.chart-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1.5rem;
-  flex: 1;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
+      mat-card-content {
+        padding: 1rem;
 
-.chart-card:hover {
-  transform: translateY(-5px);
-}
+        .metric-value {
+          font-family: $font-family-base;
+          font-weight: $font-weight-bold;
+          font-size: 2rem;
+          color: $pcb-green;
+          margin: 0.5rem 0;
+        }
 
-.chart-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
+        .metric-subtext {
+          font-family: $font-family-base;
+          font-size: 0.85rem;
+          color: $neutral-300;
+        }
+      }
+    }
+  }
 
-/* Action Items Section */
-.action-items-section {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  .charts-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-.action-items-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
+    .chart-card {
+      background: $white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      padding: 1rem;
 
-.action-list {
-  list-style: none;
-}
+      mat-card-header {
+        padding: 0 0 0.5rem;
 
-.action-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid #eee;
-}
+        mat-card-title {
+          font-family: $font-family-base;
+          font-weight: $font-weight-medium;
+          font-size: 1.1rem;
+          color: $neutral-800;
+        }
+      }
 
-.action-list li:last-child {
-  border-bottom: none;
-}
+      mat-card-content {
+        padding: 0;
 
-.task-title {
-  font-size: 1rem;
-}
+        .chart-container {
+          position: relative;
+          width: 100%;
+          height: 300px;
+        }
 
-.action-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
+        canvas {
+          max-height: 300px;
+          width: 100%;
+        }
+      }
+    }
+  }
 
-.action-btn:hover {
-  background-color: #0056b3;
+  .action-items-section {
+    h2 {
+      font-family: $font-family-base;
+      font-weight: $font-weight-bold;
+      font-size: 1.5rem;
+      color: $pcb-green-dark;
+      margin-bottom: 1rem;
+      position: relative;
+
+      &:after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: $pcb-copper;
+        border-radius: 2px;
+        margin-top: 0.35rem;
+      }
+    }
+
+    .action-list {
+      background: $white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+
+      mat-list {
+        padding: 0;
+
+        mat-list-item {
+          padding: 0.8rem 1rem;
+          border-bottom: 1px solid $neutral-300;
+          @include transition(background-color);
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background: lighten($neutral-100, 1%);
+          }
+
+          span {
+            font-family: $font-family-base;
+            font-weight: $font-weight-medium;
+            color: $neutral-800;
+          }
+
+          .action-btn {
+            font-family: $font-family-base;
+            font-weight: $font-weight-bold;
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+            @include transition(transform, background-color);
+
+            &:hover {
+              transform: scale(1.05);
+            }
+
+            &[color="primary"] {
+              background: $pcb-green;
+              color: $white;
+
+              &:hover {
+                background: lighten($pcb-green, 10%);
+              }
+            }
+
+            &[color="accent"] {
+              background: $pcb-copper;
+              color: $white;
+
+              &:hover {
+                background: lighten($pcb-copper, 10%);
+              }
+            }
+
+            &[color="warn"] {
+              background: #e63946;
+              color: $white;
+
+              &:hover {
+                background: darken(#e63946, 10%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .metrics-section {
+      grid-template-columns: 1fr;
+    }
+
+    .charts-section {
+      grid-template-columns: 1fr;
+    }
+
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      button[mat-raised-button] {
+        width: 100%;
+      }
+    }
+
+    .chart-container {
+      height: 250px;
+    }
+  }
 }

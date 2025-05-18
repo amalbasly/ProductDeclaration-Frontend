@@ -7,7 +7,7 @@ import { ValidateEmployeeService, User } from '../../../Services/validate-employ
   selector: 'app-profile',
   standalone: false,
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   isLoading: boolean = false;
+  imageError: string | null = null;
   currentUser: User | null = null;
 
   constructor(
@@ -25,7 +26,7 @@ export class ProfileComponent implements OnInit {
   ) {
     this.profileForm = this.fb.group({
       pl_nom: ['', Validators.required],
-      pl_prenom: ['', Validators.required]
+      pl_prenom: ['', Validators.required],
     });
   }
 
@@ -48,51 +49,87 @@ export class ProfileComponent implements OnInit {
       next: (data) => {
         this.profileForm.patchValue({
           pl_nom: data.pl_nom,
-          pl_prenom: data.pl_prenom
+          pl_prenom: data.pl_prenom,
         });
         if (data.img) {
           this.profileImageUrl = `assets/profile-images/${data.img}`;
         }
         this.isLoading = false;
       },
-      error: () => {
-        this.errorMessage = 'Failed to load profile data';
+      error: (err) => {
+        this.errorMessage = 'Échec du chargement des données du profil';
+        console.error('❌ Load profile error:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+
+      if (!validTypes.includes(file.type)) {
+        this.imageError = 'Veuillez sélectionner une image valide (JPEG, PNG, GIF)';
+        this.selectedFile = null;
+        this.profileImageUrl = this.currentUser?.profileImage ? `assets/profile-images/${this.currentUser.profileImage}` : '';
+        return;
+      }
+
+      if (file.size > maxSize) {
+        this.imageError = 'La taille de l\'image doit être inférieure à 5 Mo';
+        this.selectedFile = null;
+        this.profileImageUrl = this.currentUser?.profileImage ? `assets/profile-images/${this.currentUser.profileImage}` : '';
+        return;
+      }
+
+      this.imageError = null;
+      this.selectedFile = file;
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.profileImageUrl = e.target.result;
       };
-      reader.readAsDataURL(this.selectedFile);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedFile = null;
+    this.profileImageUrl = this.currentUser?.profileImage ? `assets/profile-images/${this.currentUser.profileImage}` : '';
+    this.imageError = null;
+  }
+
+  resetForm(): void {
+    this.profileForm.reset();
+    this.selectedFile = null;
+    this.profileImageUrl = this.currentUser?.profileImage ? `assets/profile-images/${this.currentUser.profileImage}` : '';
+    this.imageError = null;
+    this.successMessage = '';
+    this.errorMessage = '';
+    if (this.currentUser?.pl_matric) {
+      this.loadProfileData(this.currentUser.pl_matric);
     }
   }
 
   onSubmit(): void {
-    if (this.isLoading) return;
+    if (this.profileForm.invalid || this.isLoading) return;
 
+    if (!this.currentUser || !this.currentUser.pl_matric) {
+      this.errorMessage = 'Utilisateur non connecté ou matricule manquant';
+      return;
+    }
+
+    const confirmUpdate = confirm('Êtes-vous sûr de vouloir mettre à jour votre profil ?');
+    if (!confirmUpdate) return;
+
+    this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.currentUser || !this.currentUser.pl_matric) {
-      this.errorMessage = 'User not logged in or missing matricule';
-      return;
-    }
-
     const { pl_nom, pl_prenom } = this.profileForm.value;
-
-    if (!pl_nom || !pl_prenom) {
-      this.errorMessage = 'Name and surname are required';
-      return;
-    }
-
-    this.isLoading = true;
 
     this.profileService.updateProfile(
       this.currentUser.pl_matric,
@@ -101,14 +138,15 @@ export class ProfileComponent implements OnInit {
       this.selectedFile
     ).subscribe({
       next: () => {
-        this.successMessage = 'Profile updated successfully!';
+        this.successMessage = 'Profil mis à jour avec succès !';
         this.isLoading = false;
+        this.resetForm();
       },
       error: (err) => {
-        console.error('Update profile error:', err);
-        this.errorMessage = 'Error updating profile';
+        console.error('❌ Update profile error:', err);
+        this.errorMessage = 'Erreur lors de la mise à jour du profil';
         this.isLoading = false;
-      }
+      },
     });
   }
 }

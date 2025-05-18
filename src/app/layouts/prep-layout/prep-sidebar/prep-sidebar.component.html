@@ -1,18 +1,24 @@
 <nav class="sidebar" *ngIf="authService.currentUser$ | async as user" [class.open]="isOpen">
   <div *ngIf="user.employeeFunction === 'préparateur'">
+
+    <!-- Logo & User Info -->
     <div class="logo">
       <i class="fas fa-user-tie"></i>
       <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
     </div>
 
+    <!-- Navigation Links -->
     <ul class="nav-links">
+
+      <!-- Dashboard -->
       <li>
         <a routerLink="/prep/dashboard" routerLinkActive="active">
           <i class="fas fa-chart-line"></i>
           <span>Dashboard</span>
         </a>
       </li>
-  
+
+      <!-- Add Product Submenu -->
       <li class="has-submenu" [class.open]="isSubmenuOpen">
         <a (click)="toggleSubmenu()">
           <i class="fas fa-plus-circle"></i>
@@ -34,63 +40,91 @@
           </li>
         </ul>
       </li>
-  
+
       <!-- Product List -->
       <li>
         <a routerLink="/prep/list" routerLinkActive="active">
           <i class="fas fa-list"></i>
           <span>Product List</span>
-      </a>
-      </li>
-      
-      <!-- Gallia List -->
-      <li>
-        <a routerLink="/prep/gallia" routerLinkActive="active">
-          <i class="fas fa-wine-bottle"></i>
-          <span>Gallia List</span>
         </a>
       </li>
-      <li>
-        <a routerLink="/prep/createG" routerLinkActive="active">
-          <i class="fas fa-wine-bottle"></i> 
-          <span>Create Gallia</span>
+
+      <!-- Gallia Section -->
+      <li class="has-submenu" [class.open]="isGalliaSubmenuOpen">
+        <a (click)="toggleGalliaSubmenu()">
+          <i class="fas fa-layer-group"></i> <!-- New icon for Gallia -->
+          <span>Gallia</span>
+          <i class="dropdown-icon fas fa-chevron-down"></i>
         </a>
+        <ul class="submenu">
+          <li>
+            <a routerLink="/prep/createG" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-plus"></i>
+              <span>Create Gallia</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/prep/gallia" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-list"></i>
+              <span>Gallia List</span>
+            </a>
+          </li>
+        </ul>
       </li>
-      <li>
-        <a [routerLink]="['/prep/etiquette']" routerLinkActive="active">
+
+      <!-- Label Section -->
+      <li class="has-submenu" [class.open]="isLabelSubmenuOpen">
+        <a (click)="toggleLabelSubmenu()">
           <i class="fas fa-tag"></i>
-          <span>Label List</span>
+          <span>Label</span>
+          <i class="dropdown-icon fas fa-chevron-down"></i>
         </a>
+        <ul class="submenu">
+          <li>
+            <a routerLink="/prep/create-etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-plus"></i>
+              <span>Create Label</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/prep/etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-list"></i>
+              <span>Label List</span>
+            </a>
+          </li>
+        </ul>
       </li>
-      <li>
-        <a routerLink="/prep/create-etiquette" routerLinkActive="active">
-          <i class="fas fa-tag"></i> 
-          <span>Create Label</span>
+
+      <!-- Flan Section -->
+      <li class="has-submenu" [class.open]="isFlanSubmenuOpen">
+        <a (click)="toggleFlanSubmenu()">
+          <i class="fas fa-cut"></i>
+          <span>Flan</span>
+          <i class="dropdown-icon fas fa-chevron-down"></i>
         </a>
+        <ul class="submenu">
+          <li>
+            <a routerLink="/prep/flanC" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-plus"></i>
+              <span>Create Flan</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/prep/flanList" routerLinkActive="active" (click)="$event.stopPropagation()">
+              <i class="fas fa-list"></i>
+              <span>Flan List</span>
+            </a>
+          </li>
+        </ul>
       </li>
-      <li>
-        <a routerLink="/prep/flanC" routerLinkActive="active">
-          <i class="fas fa-tag"></i> 
-          <span>Create Flan</span>
-        </a>
-      </li>
-      <li>
-        <a routerLink="/prep/flanList" routerLinkActive="active">
-          <i class="fas fa-tag"></i> 
-          <span>Flan List</span>
-        </a>
-      </li>
+
     </ul>
-    
-  
+
+    <!-- Email Footer -->
     <div class="user-email">
       <i class="fas fa-envelope"></i>
       <span>{{ user?.employeeEmail || '' }}</span>
     </div>
 
-    <div class="logout" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      <span>Logout</span>
-    </div>
   </div>
 </nav>

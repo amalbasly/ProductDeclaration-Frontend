@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SynoptiqueService, ModeDto, SynoptiqueSaveRequest, SynoptiqueEntryDto, SynoptiqueUpdateRequest, SynoptiqueUpdateResult } from '../../../Services/synoptique.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,7 +12,7 @@ interface RankableMode {
 
 @Component({
   selector: 'app-synoptique',
-  standalone : false,
+  standalone: false,
   templateUrl: './synoptique.component.html',
   styleUrls: ['./synoptique.component.scss']
 })
@@ -24,11 +24,13 @@ export class SynoptiqueComponent implements OnInit {
   errorMessage: string | null = null;
   isSaving = false;
   isUpdateMode = false;
+  private isUpdatingOrder = false; // Flag to prevent recursive onOrderChange
 
   constructor(
     private synoptiqueService: SynoptiqueService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -56,11 +58,13 @@ export class SynoptiqueComponent implements OnInit {
           this.loadExistingSynoptique();
         } else {
           this.isLoading = false;
+          this.cdr.detectChanges(); // Manually trigger change detection
         }
       },
       error: (err: Error) => {
         this.errorMessage = err.message || 'Failed to load modes';
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -74,11 +78,12 @@ export class SynoptiqueComponent implements OnInit {
             existingMode.selected = true;
             existingMode.order = entry.ordre;
             existingMode.isExisting = true;
-            this.rankedModes.push({...existingMode});
+            this.rankedModes.push({ ...existingMode });
           }
         });
         this.reassignOrders();
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
@@ -88,16 +93,17 @@ export class SynoptiqueComponent implements OnInit {
           this.errorMessage = err.message || 'Failed to load existing synoptique configuration';
         }
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   toggleModeSelection(modeItem: RankableMode): void {
     modeItem.selected = !modeItem.selected;
-    
+
     if (modeItem.selected) {
       modeItem.order = this.getNextAvailableOrder();
-      this.rankedModes.push({...modeItem});
+      this.rankedModes.push({ ...modeItem });
     } else {
       const index = this.rankedModes.findIndex(m => m.mode.id === modeItem.mode.id);
       if (index !== -1) {
@@ -105,8 +111,9 @@ export class SynoptiqueComponent implements OnInit {
       }
       modeItem.order = 0;
     }
-    
+
     this.reassignOrders();
+    this.cdr.detectChanges();
   }
 
   getNextAvailableOrder(): number {
@@ -115,21 +122,25 @@ export class SynoptiqueComponent implements OnInit {
   }
 
   reassignOrders(): void {
-    this.rankedModes.sort((a, b) => a.order - b.order);
+    // Create a deep copy to avoid modifying bound objects directly
+    this.rankedModes = [...this.rankedModes].sort((a, b) => a.order - b.order);
     this.rankedModes.forEach((mode, index) => {
       mode.order = index + 1;
       const originalMode = this.allModes.find(m => m.mode.id === mode.mode.id);
       if (originalMode) {
         originalMode.order = index + 1;
+        originalMode.selected = true; // Ensure consistency
       }
     });
   }
 
   onOrderChange(modeItem: RankableMode, newOrder: number): void {
+    if (this.isUpdatingOrder) return; // Prevent recursive calls
     if (newOrder < 1 || newOrder > this.rankedModes.length) return;
 
+    this.isUpdatingOrder = true;
+
     const existingItem = this.rankedModes.find(m => m.order === newOrder && m.mode.id !== modeItem.mode.id);
-    
     if (existingItem) {
       existingItem.order = modeItem.order;
       const originalExisting = this.allModes.find(m => m.mode.id === existingItem.mode.id);
@@ -139,12 +150,14 @@ export class SynoptiqueComponent implements OnInit {
     modeItem.order = newOrder;
     const originalMode = this.allModes.find(m => m.mode.id === modeItem.mode.id);
     if (originalMode) originalMode.order = newOrder;
-    
+
     this.reassignOrders();
+    this.isUpdatingOrder = false;
+    this.cdr.detectChanges();
   }
 
   getAvailableOrders(): number[] {
-    return Array.from({length: this.rankedModes.length}, (_, i) => i + 1);
+    return Array.from({ length: this.rankedModes.length }, (_, i) => i + 1);
   }
 
   getSortedRankedModes(): RankableMode[] {
@@ -157,6 +170,7 @@ export class SynoptiqueComponent implements OnInit {
       mode.order = 0;
     });
     this.rankedModes = [];
+    this.cdr.detectChanges();
   }
 
   prepareSaveRequest(): SynoptiqueSaveRequest {
@@ -185,6 +199,7 @@ export class SynoptiqueComponent implements OnInit {
   async saveOrUpdate(): Promise<void> {
     if (this.rankedModes.length === 0) {
       this.errorMessage = 'Please select at least one mode to rank';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -199,113 +214,115 @@ export class SynoptiqueComponent implements OnInit {
       }
     } catch (err) {
       this.errorMessage = (err as Error).message || 'Operation failed';
-    } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
   private async saveSynoptique(): Promise<void> {
     const request = this.prepareSaveRequest();
     const result = await this.synoptiqueService.saveSynoptique(request).toPromise();
-    
+
     if (result?.success) {
       alert('Synoptique saved successfully!');
       this.router.navigate(['/prep/dashboard']);
     } else {
       throw new Error(result?.message || 'Failed to save synoptique');
     }
+    this.isSaving = false;
+    this.cdr.detectChanges();
   }
 
   private async updateSynoptique(): Promise<void> {
-    // Prepare the complete new configuration
     const saveRequest = this.prepareSaveRequest();
-    
-    try {
-        // First try to update using the save endpoint (which handles delete+insert)
-        const result = await this.synoptiqueService.saveSynoptique(saveRequest).toPromise();
-        
-        if (result?.success) {
-            alert('Synoptique updated successfully!');
-            this.router.navigate(['/prep/dashboard']);
-        } else {
-            throw new Error(result?.message || 'Failed to update synoptique');
-        }
-    } catch (err) {
-        const httpError = err as HttpErrorResponse;
-        if (httpError.status === 400) {
-            // If batch update fails, try updating entries individually
-            await this.updateEntriesIndividually();
-        } else {
-            throw err;
-        }
-    }
-}
 
-private async updateEntriesIndividually(): Promise<void> {
+    try {
+      const result = await this.synoptiqueService.saveSynoptique(saveRequest).toPromise();
+      
+      if (result?.success) {
+        alert('Synoptique updated successfully!');
+        this.router.navigate(['/prep/dashboard']);
+      } else {
+        throw new Error(result?.message || 'Failed to update synoptique');
+      }
+    } catch (err) {
+      const httpError = err as HttpErrorResponse;
+      if (httpError.status === 400) {
+        await this.updateEntriesIndividually();
+      } else {
+        throw err;
+      }
+    } finally {
+      this.isSaving = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  private async updateEntriesIndividually(): Promise<void> {
     const requests = this.prepareUpdateRequests();
     const results: SynoptiqueUpdateResult[] = [];
-    
+
     for (const request of requests) {
-        try {
-            const result = await this.synoptiqueService.updateSynoptiqueEntry(request).toPromise();
-            if (result) {
-                results.push(result);
-            } else {
-                results.push({
-                    success: false,
-                    message: 'No response from server',
-                    productCode: request.ptNum
-                });
-            }
-        } catch (err) {
-            const error = err as HttpErrorResponse;
-            results.push({
-                success: false,
-                message: error.error?.message || error.message || 'Update failed',
-                productCode: request.ptNum
-            });
-            
-            // If entry doesn't exist, try creating it
-            if (error.status === 404) {
-                try {
-                    const createResult = await this.synoptiqueService.saveSynoptique({
-                        ptNum: request.ptNum,
-                        matricule: request.matricule,
-                        entries: [{
-                            modeID: request.modeID,
-                            ptNum: request.ptNum,
-                            nomMvt: request.nomMvt,
-                            ordre: request.ordre
-                        }]
-                    }).toPromise();
-                    
-                    if (createResult?.success) {
-                        results[results.length - 1] = {
-                            success: true,
-                            message: 'Entry created successfully',
-                            productCode: request.ptNum
-                        };
-                    }
-                } catch (createErr) {
-                    // Ignore create error, we'll show the original error
-                }
-            }
+      try {
+        const result = await this.synoptiqueService.updateSynoptiqueEntry(request).toPromise();
+        if (result) {
+          results.push(result);
+        } else {
+          results.push({
+            success: false,
+            message: 'No response from server',
+            productCode: request.ptNum
+          });
         }
+      } catch (err) {
+        const error = err as HttpErrorResponse;
+        results.push({
+          success: false,
+          message: error.error?.message || error.message || 'Update failed',
+          productCode: request.ptNum
+        });
+
+        if (error.status === 404) {
+          try {
+            const createResult = await this.synoptiqueService.saveSynoptique({
+              ptNum: request.ptNum,
+              matricule: request.matricule,
+              entries: [{
+                modeID: request.modeID,
+                ptNum: request.ptNum,
+                nomMvt: request.nomMvt,
+                ordre: request.ordre
+              }]
+            }).toPromise();
+
+            if (createResult?.success) {
+              results[results.length - 1] = {
+                success: true,
+                message: 'Entry created successfully',
+                productCode: request.ptNum
+              };
+            }
+          } catch (createErr) {
+            // Ignore create error, we'll show the original error
+          }
+        }
+      }
     }
-    
+
     const failedUpdates = results.filter(r => !r.success);
     if (failedUpdates.length > 0) {
-        const errorMessages = failedUpdates.map(r => r.message);
-        throw new Error(`Some updates failed: ${errorMessages.join(', ')}`);
+      const errorMessages = failedUpdates.map(r => r.message);
+      throw new Error(`Some updates failed: ${errorMessages.join(', ')}`);
     }
-    
+
     alert('Synoptique updated successfully!');
     this.router.navigate(['/prep/dashboard']);
-}
+  }
 
   async saveAndGoToJustification(): Promise<void> {
     if (this.rankedModes.length === 0) {
       this.errorMessage = 'Please select at least one mode to rank';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -314,99 +331,26 @@ private async updateEntriesIndividually(): Promise<void> {
 
     try {
       if (this.isUpdateMode) {
-        await this.updateAndGoToJustification();
+        await this.updateSynoptique();
       } else {
-        await this.saveAndGoToJustification();
+        await this.saveSynoptique();
       }
+      this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
     } catch (err) {
       this.errorMessage = (err as Error).message || 'Operation failed';
     } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
   private async updateAndGoToJustification(): Promise<void> {
-    // Prepare the complete new configuration
-    const saveRequest = this.prepareSaveRequest();
-    
-    try {
-        // First try to update using the save endpoint (which handles delete+insert)
-        const result = await this.synoptiqueService.saveSynoptique(saveRequest).toPromise();
-        
-        if (result?.success) {
-            this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
-        } else {
-            throw new Error(result?.message || 'Failed to update synoptique');
-        }
-    } catch (err) {
-        const httpError = err as HttpErrorResponse;
-        if (httpError.status === 400) {
-            // If batch update fails, try updating entries individually
-            await this.updateEntriesIndividuallyForJustification();
-        } else {
-            throw err;
-        }
-    }
-}
+    await this.updateSynoptique(); // Reuse updateSynoptique to avoid duplication
+    this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
+  }
 
-private async updateEntriesIndividuallyForJustification(): Promise<void> {
-    const requests = this.prepareUpdateRequests();
-    const results: SynoptiqueUpdateResult[] = [];
-    
-    for (const request of requests) {
-        try {
-            const result = await this.synoptiqueService.updateSynoptiqueEntry(request).toPromise();
-            if (result) {
-                results.push(result);
-            } else {
-                results.push({
-                    success: false,
-                    message: 'No response from server',
-                    productCode: request.ptNum
-                });
-            }
-        } catch (err) {
-            const error = err as HttpErrorResponse;
-            results.push({
-                success: false,
-                message: error.error?.message || error.message || 'Update failed',
-                productCode: request.ptNum
-            });
-            
-            // If entry doesn't exist, try creating it
-            if (error.status === 404) {
-                try {
-                    const createResult = await this.synoptiqueService.saveSynoptique({
-                        ptNum: request.ptNum,
-                        matricule: request.matricule,
-                        entries: [{
-                            modeID: request.modeID,
-                            ptNum: request.ptNum,
-                            nomMvt: request.nomMvt,
-                            ordre: request.ordre
-                        }]
-                    }).toPromise();
-                    
-                    if (createResult?.success) {
-                        results[results.length - 1] = {
-                            success: true,
-                            message: 'Entry created successfully',
-                            productCode: request.ptNum
-                        };
-                    }
-                } catch (createErr) {
-                    // Ignore create error, we'll show the original error
-                }
-            }
-        }
-    }
-    
-    const failedUpdates = results.filter(r => !r.success);
-    if (failedUpdates.length > 0) {
-        const errorMessages = failedUpdates.map(r => r.message);
-        throw new Error(`Some updates failed: ${errorMessages.join(', ')}`);
-    }
-    
+  private async updateEntriesIndividuallyForJustification(): Promise<void> {
+    await this.updateEntriesIndividually(); // Reuse updateEntriesIndividually
     this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
   }
 }

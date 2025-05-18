@@ -4,13 +4,16 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-prep-sidebar',
-  standalone : false,
+  standalone: false,
   templateUrl: './prep-sidebar.component.html',
   styleUrls: ['./prep-sidebar.component.scss']
 })
 export class PrepSidebarComponent {
-  isOpen = false;
+  isOpen = true; // Keep open by default on desktop
   isSubmenuOpen = false;
+  isGalliaSubmenuOpen = false;
+  isLabelSubmenuOpen = false;
+  isFlanSubmenuOpen = false;
 
   constructor(
     public authService: ValidateEmployeeService,
@@ -20,8 +23,17 @@ export class PrepSidebarComponent {
   toggleSubmenu(): void {
     this.isSubmenuOpen = !this.isSubmenuOpen;
   }
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+
+  toggleGalliaSubmenu(): void {
+    this.isGalliaSubmenuOpen = !this.isGalliaSubmenuOpen;
   }
+
+  toggleLabelSubmenu(): void {
+    this.isLabelSubmenuOpen = !this.isLabelSubmenuOpen;
+  }
+
+  toggleFlanSubmenu(): void {
+    this.isFlanSubmenuOpen = !this.isFlanSubmenuOpen;
+  }
+
 }

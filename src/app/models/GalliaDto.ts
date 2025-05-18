@@ -6,9 +6,9 @@ export interface GalliaDto {
   labelDate: Date | null;
   createdAt: Date;
   fields: GalliaFieldDto[];
-  labelImage?: SafeUrl;
+  labelImage?: SafeUrl | string; // Support both SafeUrl and base64 string
   labelName: string;
-  galliaName?: string | null; // Add galliaName
+  galliaName?: string | null;
 }
 
 // Field structure for returned Gallia
@@ -18,23 +18,23 @@ export interface GalliaFieldDto {
   fieldName?: string | null;
   fieldValue: string;
   displayOrder: number;
-  visualizationType: string;
+  visualizationType: 'qrcode' | 'barcode' | 'datametrics';
 }
 
 // Field structure for creating Gallia
 export interface CreateGalliaFieldDto {
   fieldValue: string;
   displayOrder: number;
-  visualizationType: string;
+  visualizationType: 'qrcode' | 'barcode' | 'datametrics';
   fieldName?: string | null;
 }
 
 // Used when creating a Gallia or Etiquette
 export interface CreateGalliaDto {
-  labelDate?: Date | null;
+  labelDate: string; // YYYY-MM-DD format
   fields: CreateGalliaFieldDto[];
   labelName: string; // Must be "Gallia" or "Etiquette"
-  galliaName?: string | null; // Add galliaName
+  galliaName?: string | null;
 }
 
 // Used when updating a Gallia or Etiquette
@@ -42,8 +42,8 @@ export interface UpdateGalliaDto {
   galliaId: number;
   labelDate?: Date | null;
   fields: GalliaFieldDto[];
-  labelName: string; // Must be preserved or updated
-  galliaName?: string | null; // Add galliaName
+  labelName: string;
+  galliaName?: string | null;
 }
 
 // Structure for storing the label image

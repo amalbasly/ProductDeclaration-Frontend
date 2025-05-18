@@ -1,6 +1,12 @@
-// preview-dialog.component.ts
-import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CreateGalliaDto } from '../../../models/GalliaDto';
+
+interface PreviewDialogData {
+  gallia: CreateGalliaDto & { action?: string }; // Allow action property
+  previews: { [key: number]: string };
+  generateLabelCanvas: () => Promise<HTMLCanvasElement>;
+}
 
 @Component({
   selector: 'app-preview-dialog',
@@ -8,21 +14,33 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './preview-dialog.component.html',
   styleUrls: ['./preview-dialog.component.scss']
 })
-export class PreviewDialogComponent {
-@ViewChild('previewContent') previewContent!: ElementRef;
-today: Date = new Date();
+export class PreviewDialogComponent implements OnInit {
+  previewImage: string | null = null;
+  today = new Date();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { gallia: any, previews: any },
-    public dialogRef: MatDialogRef<PreviewDialogComponent>
+    public dialogRef: MatDialogRef<PreviewDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: PreviewDialogData
   ) {}
 
+  async ngOnInit(): Promise<void> {
+    try {
+      const canvas = await this.data.generateLabelCanvas();
+      this.previewImage = canvas.toDataURL('image/png');
+    } catch (error) {
+      console.error('Error generating preview:', error);
+      this.previewImage = null;
+    }
+  }
+
   print(): void {
-    this.dialogRef.close({ action: 'print', element: this.previewContent.nativeElement });
+    this.data.gallia.action = 'print';
+    this.dialogRef.close(this.data);
   }
 
   save(): void {
-    this.dialogRef.close({ action: 'save', element: this.previewContent.nativeElement });
+    this.data.gallia.action = 'save';
+    this.dialogRef.close(this.data);
   }
 
   cancel(): void {

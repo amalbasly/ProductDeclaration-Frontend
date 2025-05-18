@@ -37,7 +37,6 @@ import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-creat
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
 import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
-import { FlanDecoupeDetailsComponent } from './pages/Flan/flan-decoupe-details/flan-decoupe-details.component';
 
 
 
@@ -48,7 +47,6 @@ const routes: Routes = [
   // Public route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {path : 'flanD', component : FlanDecoupeDetailsComponent},
   
   // RH Layout with nested routes
   {
@@ -77,6 +75,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: PrepDashboardComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: 'list', component: ProductListComponent },
       { 
       path: 'gallia',

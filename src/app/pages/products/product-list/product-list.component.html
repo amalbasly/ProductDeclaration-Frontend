@@ -1,4 +1,4 @@
-<div class="container mt-4" role="main">
+<div class="full-width-container" role="main">
   <!-- Status Messages -->
   <div *ngIf="loading" class="status-message loading" role="alert" aria-live="polite">
     Loading products...
@@ -27,7 +27,7 @@
     </button>
   </div>
 
-  <!-- Table Wrapper with Scroll Only When Needed -->
+  <!-- Table -->
   <div class="table-responsive">
     <table *ngIf="!loading && products.length > 0" class="product-table" aria-label="Product List">
       <thead>

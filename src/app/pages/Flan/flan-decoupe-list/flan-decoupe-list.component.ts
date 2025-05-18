@@ -1,5 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FlanDecoupeService, FlanDecoupeListResponse } from '../../../Services/flan-decoupe.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+// DTOs from your service
+import {
+  FlanDecoupeService,
+  FlanDecoupeListResponse,
+  FlanDecoupeResponse
+} from '../../../Services/flan-decoupe.service';
 
 @Component({
   selector: 'app-flan-decoupe-list',
@@ -14,8 +24,12 @@ export class FlanDecoupeListComponent implements OnInit {
   };
   isLoading = true;
   errorMessage: string | null = null;
+  selectedFlanDecoupe: FlanDecoupeResponse | null = null;
 
-  constructor(private flanDecoupeService: FlanDecoupeService) { }
+  constructor(
+    private flanDecoupeService: FlanDecoupeService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.loadFlanDecoupes();
@@ -24,7 +38,7 @@ export class FlanDecoupeListComponent implements OnInit {
   loadFlanDecoupes() {
     this.isLoading = true;
     this.errorMessage = null;
-    
+
     this.flanDecoupeService.getFlanDecoupes().subscribe({
       next: (response) => {
         this.flanDecoupes = response;
@@ -32,7 +46,24 @@ export class FlanDecoupeListComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Erreur lors du chargement';
+        this.errorMessage = err.error?.message || 'Erreur lors du chargement des données';
+      }
+    });
+  }
+
+  openDetails(item: FlanDecoupeResponse, content: any) {
+    // Reuse existing API: GET /api/FlanDecoupe?id=...
+    this.flanDecoupeService.getFlanDecoupes(item.idDecoupe).subscribe({
+      next: (response) => {
+        if (response.success && response.flanDecoupes.length > 0) {
+          this.selectedFlanDecoupe = response.flanDecoupes[0]; // get first (only) item
+          this.modalService.open(content, { size: 'lg' });
+        } else {
+          this.errorMessage = 'Aucun détail trouvé pour cet élément.';
+        }
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors du chargement des détails.';
       }
     });
   }

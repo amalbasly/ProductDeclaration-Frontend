@@ -1,33 +1,9 @@
 <h1 mat-dialog-title>Gallia Label Preview</h1>
 <div mat-dialog-content>
-  <div #previewContent id="label-preview" class="printable-content">
+  <div class="preview-wrapper">
     <div class="label-container">
-      <div class="label-header">
-        <div class="label-title">{{ data.gallia.fields[0]?.fieldName || 'Gallia Label' }}</div>
-        <div class="label-date">Date: {{ data.gallia.labelDate | date:'mediumDate' }}</div>
-      </div>
-
-      <div class="fields-grid">
-        <div *ngFor="let field of data.gallia.fields; let i = index" class="field-section">
-          <div class="field-name">{{ field.fieldName || 'Field ' + (i + 1) }}</div>
-          <div class="field-value">{{ field.fieldValue }}</div>
-          <div class="visualization-type">Visualization: {{ field.visualizationType }}</div>
-          <div class="visualization">
-            <img *ngIf="field.visualizationType === 'qrcode' && data.previews[i]" 
-                 [src]="data.previews[i]" alt="QR Code" class="visualization-image">
-            <img *ngIf="field.visualizationType === 'barcode' && data.previews[i]" 
-                 [src]="data.previews[i]" alt="Barcode" class="visualization-image">
-            <div *ngIf="field.visualizationType === 'datametrics'" class="text-visualization">
-              {{ field.fieldValue }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="label-footer">
-        <div class="label-id">ID: {{ data.gallia.galliaId || 'NEW' }}</div>
-        <div class="print-date">Printed: {{ today | date:'medium' }}</div>
-      </div>
+      <img *ngIf="previewImage" [src]="previewImage" alt="Gallia Label Preview" class="label-image">
+      <div *ngIf="!previewImage" class="error-message">Failed to generate preview. Please try again.</div>
     </div>
   </div>
 </div>

@@ -1,30 +1,30 @@
-<div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h3>Liste des flans découpés</h3>
-    <a routerLink="/prep/flanC" class="btn btn-primary">Nouvelle découpe</a>
-  </div>
-  <div class="card-body">
-    <div *ngIf="isLoading" class="text-center">
-      <div class="spinner-border" role="status">
+<!-- Fullscreen Container -->
+<div class="fullscreen-container">
+  <!-- Table Card -->
+  <div class="full-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3>Liste des flans découpés</h3>
+      <a routerLink="/prep/flanC" class="btn btn-primary">Nouvelle découpe</a>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center spinner-wrapper">
+      <div class="spinner-border text-danger" role="status">
         <span class="sr-only">Chargement...</span>
       </div>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-
-    <div *ngIf="!flanDecoupes.success" class="alert alert-danger">
-      {{ flanDecoupes.message }}
-    </div>
-
-    <div *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length === 0 && !isLoading" 
+    <!-- Error Messages -->
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div *ngIf="!flanDecoupes.success" class="alert alert-danger">{{ flanDecoupes.message }}</div>
+    <div *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length === 0 && !isLoading"
          class="alert alert-info">
       Aucun flan découpé trouvé
     </div>
 
-    <table *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length > 0 && !isLoading" 
-           class="table table-striped">
+    <!-- Table -->
+    <table *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length > 0 && !isLoading"
+           class="table table-hover">
       <thead>
         <tr>
           <th>ID</th>
@@ -36,19 +36,60 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of flanDecoupes.flanDecoupes">
+        <tr *ngFor="let item of flanDecoupes.flanDecoupes"
+            (click)="openDetails(item, detailsModal)"
+            class="flan-row">
           <td>{{ item.idDecoupe }}</td>
           <td>{{ item.ptNumOriginal }}</td>
           <td>{{ item.nombreDeParts }}</td>
           <td>{{ item.labelUtilise }}</td>
           <td>{{ item.dateDecoupe | date:'medium' }}</td>
           <td>
-            <a [routerLink]="['/prep/flanDetails', item.idDecoupe]" class="btn btn-sm btn-info">
+            <button class="btn btn-sm btn-details" (click)="openDetails(item, detailsModal)">
               Détails
-            </a>
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- Modal Template -->
+<!-- Modal Template -->
+<ng-template #detailsModal let-modal>
+  <div class="modal-overlay" [class.open]="modal.isOpen">
+    <div class="modal-content-full">
+      <button type="button" class="close-button" aria-label="Close" (click)="modal.close()">
+        &times;
+      </button>
+
+      <div class="modal-body">
+        <div *ngIf="selectedFlanDecoupe" class="pcb-container">
+
+          <!-- Big Flan Card -->
+           <h5 class="parts-title">Carte Original</h5>
+          <div class="pcb-card big-pcb">
+            <h5 class="pcb-title">{{ selectedFlanDecoupe.ptNumOriginal }}</h5>
+            <p><strong>ID:</strong> {{ selectedFlanDecoupe.idDecoupe }}</p>
+            <p><strong>Label:</strong> {{ selectedFlanDecoupe.labelUtilise }}</p>
+            <p><strong>Date:</strong> {{ selectedFlanDecoupe.dateDecoupe | date:'medium' }}</p>
+            <p><strong>Utilisateur:</strong> {{ selectedFlanDecoupe.utilisateur }}</p>
+            <p><strong>Parts:</strong> {{ selectedFlanDecoupe.nombreDeParts }}</p>
+          </div>
+
+          <!-- Parts Cards -->
+          <h5 class="parts-title">Parts associées</h5>
+          <div class="parts-container">
+            <div *ngFor="let part of selectedFlanDecoupe.parts" class="part-card pcb-component">
+              <h6>{{ part.codePartie }}</h6>
+              <p><strong>Label:</strong> {{ part.label }}</p>
+              <p><strong>Date:</strong> {{ part.dateCreation | date:'medium' }}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

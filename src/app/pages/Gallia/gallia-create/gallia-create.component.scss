@@ -1,136 +1,178 @@
-// src/app/pages/Gallia/gallia-create/gallia-create.component.scss
-// Import Google Fonts for Lato
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Arial:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-// Define ALL Circuits colors
-$all-red: #E00034; // Red
-$all-gray: #6C6F70; // Gray
-$all-dark-gray: #404040; // Dark Gray
-$all-blue: #096683; // Blue
-$all-yellow: #FFC000; // Yellow
+$pcb-green-dark: #0e3b16;
+$pcb-green: #166a33;
+$pcb-green-light: #248f49;
+$pcb-copper: #b87333;
+$pcb-red: #e63946;
+$neutral-100: #f8fafc;
+$neutral-300: #cbd5e1;
+$neutral-800: #1e293b;
+$white: #ffffff;
 
-// Define font stacks
-$font-primary: 'Lato', 'Calibri', 'Arial', 'Helvetica', sans-serif;
-$font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
+$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
 
-// Base styles
+@mixin transition($prop: all, $time: .25s, $ease: ease) {
+  transition: $prop $time $ease;
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: 2px solid rgba($pcb-copper, .6);
+    outline-offset: 2px;
+  }
+}
+
 .gallia-create-container {
   display: flex;
   justify-content: center;
-  padding: 1.5rem;
-  background-color: #fff;
+  padding: 2rem 1rem;
+  background: $neutral-100;
 
   .card {
     width: 100%;
-    max-width: 800px; // Increased width to accommodate side-by-side layout
-    padding: 1.5rem;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid $all-gray;
+    max-width: 1280px;
+    background: $white;
+    border-radius: .75rem;
+    border: 1px solid $neutral-300;
+    box-shadow: 0 4px 8px rgba(0,0,0,.06);
+    padding: 2rem 2.5rem;
 
     h2 {
-      font-family: $font-title;
-      font-size: 1.5rem;
-      color: $all-red;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
+      font-family: $font-family-base;
+      font-weight: $font-weight-bold;
+      font-size: 1.65rem;
+      color: $pcb-green-dark;
+      margin-bottom: 1.5rem;
+      letter-spacing: .02em;
+      position: relative;
+
+      &:after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: $pcb-copper;
+        border-radius: 2px;
+        margin-top: .35rem;
+      }
     }
 
     .step {
-      max-width: 300px;
-      margin: 0 auto;
+      max-width: 360px;
+      margin-inline: auto;
     }
 
     .form-group {
-      margin-bottom: 1rem;
-
+      margin-bottom: 1.25rem;
       label {
-        font-family: $font-primary;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: $all-dark-gray;
-        margin-bottom: 0.4rem;
         display: block;
+        font-family: $font-family-base;
+        font-weight: $font-weight-medium;
+        font-size: .9rem;
+        color: $neutral-800;
+        margin-bottom: .4rem;
       }
-
       input,
       select {
         width: 100%;
-        padding: 0.6rem;
-        border: 1px solid $all-gray;
-        border-radius: 4px;
-        font-family: $font-primary;
-        font-size: 0.9rem;
-        color: $all-dark-gray;
+        font-family: $font-family-base;
+        font-size: .95rem;
+        padding: .65rem .75rem;
+        border: 1px solid $neutral-300;
+        border-radius: .5rem;
+        color: $neutral-800;
+        background: $white;
+        @include transition(border-color);
+        @include focus-ring;
 
+        &:hover {
+          border-color: $pcb-green;
+        }
         &:focus {
-          outline: none;
-          border-color: $all-blue;
-          box-shadow: 0 0 4px rgba($all-blue, 0.2);
+          border-color: $pcb-copper;
+          box-shadow: 0 0 0 3px rgba($pcb-copper,.15);
+        }
+        &[disabled] {
+          background: $neutral-100;
+          cursor: not-allowed;
         }
       }
     }
 
     .fields-section {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
 
       h3 {
-        font-family: $font-title;
-        font-size: 1.3rem;
-        color: $all-blue;
+        font-family: $font-family-base;
+        font-weight: $font-weight-bold;
+        font-size: 1.25rem;
+        color: $pcb-green;
         margin-bottom: 1rem;
       }
 
-      .field-container {
-        border: 1px solid $all-gray;
-        border-radius: 4px;
-        padding: 0.8rem;
-        margin-bottom: 1rem;
-        background-color: #fafafa;
+      .fields-grid {
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
 
-        .field-header {
-          h4 {
-            font-family: $font-title;
-            font-size: 1.1rem;
-            color: $all-dark-gray;
-            margin-bottom: 0.8rem;
-          }
+      .field-container {
+        background: $neutral-100;
+        border: 1px dashed rgba($pcb-copper,.6);
+        border-radius: .75rem;
+        padding: 1rem 1.25rem;
+        position: relative;
+        @include transition(box-shadow);
+
+        &:hover {
+          box-shadow: 0 2px 6px rgba(0,0,0,.08);
         }
 
-        // Side-by-side layout for field name, value, and visualization type
+        .field-header h4 {
+          font-family: $font-family-base;
+          font-weight: $font-weight-medium;
+          font-size: 1rem;
+          color: $pcb-green-dark;
+          margin-bottom: 1rem;
+        }
+
         .field-row {
           display: flex;
+          flex-wrap: wrap;
           gap: 1rem;
-          flex-wrap: wrap; // Ensures responsiveness
 
           .form-group {
-            flex: 1;
-            min-width: 200px; // Ensures fields don't get too narrow
+            flex: 1 1 140px;
           }
         }
 
         .preview-container {
-          margin-top: 0.8rem;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid $neutral-300;
           text-align: center;
-          padding: 0.5rem;
-          border-top: 1px solid $all-gray;
 
           .preview-image {
-            max-width: 80px;
+            max-width: 100px;
             height: auto;
-            border: 1px solid $all-dark-gray;
-            padding: 0.2rem;
-            background-color: #fff;
+            border: 1px solid $neutral-300;
+            border-radius: .5rem;
+            padding: .25rem;
+            background: $white;
           }
-
           .text-preview {
-            font-family: $font-primary;
-            font-size: 0.85rem;
-            color: $all-dark-gray;
-            padding: 0.4rem;
-            border: 1px solid $all-gray;
-            border-radius: 4px;
             display: inline-block;
+            padding: .5rem .75rem;
+            font-family: $font-family-base;
+            font-size: .85rem;
+            color: $pcb-green-dark;
+            border: 1px dotted $pcb-green-light;
+            border-radius: .5rem;
+            background: lighten($pcb-green, 47%);
           }
         }
       }
@@ -138,42 +180,53 @@ $font-title: 'Fjalla One', 'Arial Black', 'Helvetica', sans-serif;
 
     .form-actions {
       display: flex;
-      gap: 0.8rem;
+      flex-wrap: wrap;
+      gap: 1rem;
       justify-content: flex-end;
 
       .btn {
-        padding: 0.6rem 1.2rem;
-        border-radius: 4px;
-        font-family: $font-primary;
-        font-weight: 700;
-        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .35rem;
+        font-family: $font-family-base;
+        font-weight: $font-weight-bold;
+        font-size: .95rem;
+        padding: .65rem 1.4rem;
+        border-radius: .5rem;
         cursor: pointer;
+        border: none;
+        @include transition(background, color, box-shadow);
+        @include focus-ring;
 
         &.btn-primary {
-          background-color: $all-red;
-          color: #fff;
-          border: none;
-
-          &:hover {
-            background-color: darken($all-red, 10%);
-          }
-
+          background: $pcb-green;
+          color: $white;
+          &:hover { background: $pcb-green-light; }
+          &:active { background: darken($pcb-green-light, 6%); }
           &[disabled] {
-            background-color: $all-gray;
+            opacity: .6;
             cursor: not-allowed;
+            box-shadow: none;
           }
         }
 
         &.btn-secondary {
-          background-color: $all-gray;
-          color: #fff;
-          border: none;
-
-          &:hover {
-            background-color: darken($all-gray, 10%);
-          }
+          background: $pcb-copper;
+          color: $white;
+          &:hover { background: lighten($pcb-copper, 6%); }
+          &:active { background: darken($pcb-copper, 6%); }
         }
       }
     }
+  }
+}
+
+@media (max-width: 640px) {
+  .gallia-create-container .card {
+    padding: 1.5rem 1.25rem;
+  }
+  .form-actions {
+    justify-content: stretch;
   }
 }

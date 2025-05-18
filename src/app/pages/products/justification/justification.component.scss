@@ -1,128 +1,224 @@
-// ALL Circuits Brand Colors
-$primary-red: #E00034;
-$secondary-grey: #6C6F70;
-$light-grey: #f5f5f5;
-$border-grey: #ccc;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$pcb-green-dark: #0e3b16;
+$pcb-green: #166a33;
+$pcb-copper: #b87333;
+$neutral-100: #f8fafc;
+$neutral-300: #cbd5e1;
+$neutral-800: #1e293b;
+$white: #ffffff;
+$red: #e63946;
+
+$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+@mixin transition($prop: all, $time: 0.2s, $ease: ease-out) {
+  transition: $prop $time $ease;
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: 2px solid rgba($red, 0.7); /* Enhanced red touch for focus */
+    outline-offset: 2px;
+  }
+}
 
 .justification-container {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
-  max-width: 650px;
-  margin: 2rem auto;
-  font-family: 'Fjalla One', Calibri, Arial, sans-serif;
-}
-
-h2 {
-  color: $secondary-grey;
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1.5rem;
-}
-
-.alert-danger {
-  background-color: #fff5f5;
-  color: darkred;
-  border-left: 4px solid darkred;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  font-weight: bold;
-  color: $secondary-grey;
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
-
-.form-control {
-  border-radius: 30px;
-  border: 1px solid $border-grey;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease-in-out;
   width: 100%;
-  box-sizing: border-box;
-}
+  max-width: 650px; /* Matches provided SCSS for compact form */
+  margin: 2rem auto;
+  padding: 2rem;
+  background: $white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba($red, 0.1); /* Enhanced red touch */
+  font-family: $font-family-base;
 
-.form-control:focus {
-  border-color: $primary-red;
-  box-shadow: 0 0 0 0.2rem rgba($primary-red, 0.15);
-  outline: none;
-}
+  h2 {
+    font-weight: $font-weight-bold;
+    font-size: 1.5rem;
+    color: $pcb-green-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 1.5rem;
+    position: relative;
 
-textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-}
+    &:after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: $red; /* Enhanced red touch */
+      border-radius: 2px;
+      margin-top: 0.25rem;
+    }
+  }
 
-select.form-control {
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23E00034' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 12px 12px;
-}
+  .alert-danger {
+    background: lighten($red, 40%); /* Enhanced red touch */
+    border-left: 4px solid $red;
+    color: darken($red, 25%);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba($red, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
 
-small.text-muted {
-  color: #888 !important;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-  display: block;
-}
+    .bi-exclamation-circle {
+      font-size: 1.2rem;
+      color: $red;
+    }
+  }
 
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 2rem;
-}
+  .form-group {
+    margin-bottom: 1.5rem;
 
-.btn {
-  border-radius: 30px;
-  padding: 0.5rem 1.5rem;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
+    label {
+      font-weight: $font-weight-medium;
+      font-size: 0.9rem;
+      color: $neutral-800;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
 
-.btn-primary {
-  background-color: $primary-red;
-  color: white;
-  border: none;
-  font-family: inherit;
-}
+    .form-control {
+      font-size: 0.85rem;
+      color: $neutral-800;
+      border: 1px solid $red; /* Enhanced red touch */
+      border-radius: 30px;
+      padding: 0.6rem 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      @include transition(border-color, box-shadow);
 
-.btn-primary:hover {
-  background-color: darken($primary-red, 10%);
-}
+      &:hover {
+        border-color: darken($red, 10%);
+      }
 
-.btn-outline-secondary {
-  background-color: transparent;
-  color: $secondary-grey;
-  border: 2px solid $secondary-grey;
-  font-family: inherit;
-}
+      @include focus-ring;
 
-.btn-outline-secondary:hover {
-  background-color: $secondary-grey;
-  color: white;
-  border-color: $secondary-grey;
-}
+      &:focus {
+        border-color: $red;
+        box-shadow: 0 0 0 0.2rem rgba($red, 0.15);
+      }
 
-.btn:disabled,
-.btn[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
+      &.ng-invalid.ng-touched {
+        border-color: $red;
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba($red, 0.25);
+        }
+      }
+
+      &[type="textarea"] {
+        resize: vertical;
+        min-height: 100px;
+        border-radius: 12px; /* Slightly less rounded for textarea */
+      }
+
+      &[type="select"] {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23e63946' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l4 4 4-4'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 12px 12px;
+      }
+    }
+
+    small.text-muted {
+      font-size: 0.8rem;
+      color: $red !important; /* Enhanced red touch for validation hint */
+      margin-top: 0.25rem;
+      display: block;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+
+    .btn {
+      font-weight: $font-weight-bold;
+      font-size: 0.9rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      min-width: 120px;
+      @include transition(background-color, transform, border-color);
+
+      &.btn-primary {
+        background: $red; /* Enhanced red touch */
+        border-color: $red;
+        color: $white;
+
+        &:hover {
+          background: darken($red, 10%);
+          border-color: darken($red, 10%);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &:disabled {
+          background: darken($red, 20%);
+          border-color: darken($red, 20%);
+          opacity: 0.7;
+        }
+
+        .bi {
+          font-size: 1rem;
+          margin-right: 0.5rem;
+        }
+      }
+
+      &.btn-outline-secondary {
+        background: $white;
+        border: 2px solid $red; /* Enhanced red touch */
+        color: $red;
+
+        &:hover {
+          background: lighten($red, 40%);
+          border-color: $red;
+          color: darken($red, 10%);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &:disabled {
+          border-color: darken($red, 20%);
+          color: darken($red, 20%);
+          opacity: 0.7;
+        }
+
+        .bi {
+          font-size: 1rem;
+          margin-right: 0.5rem;
+        }
+      }
+
+      @include focus-ring;
+    }
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
 }

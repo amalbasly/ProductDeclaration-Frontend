@@ -1,7 +1,11 @@
-<!-- prep-layout.component.html -->
-<div class="app-container">
-  <app-prep-sidebar></app-prep-sidebar>
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+
+    <!-- Fixed Header -->
+    <app-prep-header></app-prep-header>
+
+    <!-- Fixed Sidebar -->
+    <app-prep-sidebar></app-prep-sidebar>
+
+    <!-- Scrollable Main Content -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
