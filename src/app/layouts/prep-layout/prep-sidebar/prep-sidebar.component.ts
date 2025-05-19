@@ -14,6 +14,7 @@ export class PrepSidebarComponent {
   isGalliaSubmenuOpen = false;
   isLabelSubmenuOpen = false;
   isFlanSubmenuOpen = false;
+  isAssemblySubmenuOpen = false;
 
   constructor(
     public authService: ValidateEmployeeService,
@@ -34,6 +35,9 @@ export class PrepSidebarComponent {
 
   toggleFlanSubmenu(): void {
     this.isFlanSubmenuOpen = !this.isFlanSubmenuOpen;
+  }
+  toggleAssemblySubmenu(): void {
+    this.isAssemblySubmenuOpen = !this.isAssemblySubmenuOpen;
   }
 
 }

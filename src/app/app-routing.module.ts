@@ -6,10 +6,9 @@ import { LoginComponent } from './pages/login/login.component';
 
 // RH Layout & Pages
 import { RhLayoutComponent } from './layouts/rh-layout/rh-layout/rh-layout.component';
-import { PrepLayoutComponent } from './layouts/prep-layout/prep-layout/prep-layout.component';
 import { ProfileDashboardComponent } from './layouts/rh-layout/profile-dashboard/profile-dashboard.component';
+import { PrepLayoutComponent } from './layouts/prep-layout/prep-layout/prep-layout.component';
 import { PrepDashboardComponent } from './layouts/prep-layout/prep-dashboard/prep-dashboard.component';
-
 
 // Admin Layout & Pages
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout.component';
@@ -22,7 +21,6 @@ import { EmployeeEditComponent } from './pages/employee/employee-edit/employee-e
 import { EmployeeDetailsComponent } from './pages/employee/employee-details/employee-details.component';
 import { EmployeeDeleteComponent } from './pages/employee/employee-delete/employee-delete.component';
 import { ProfileComponent } from './pages/employee/profile/profile.component';
-
 
 // Other Pages
 import { ProductComponent } from './pages/products/product/product.component';
@@ -37,11 +35,8 @@ import { GalliaCreateComponent } from './pages/Gallia/gallia-create/gallia-creat
 import { ReferenceFormComponent } from './pages/products/reference-form/reference-form.component';
 import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
-
-
-
-
-
+import { AssemblageListComponent } from './pages/Assemblage/assemblage-list/assemblage-list.component';
+import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/assemblage-form.component';
 
 const routes: Routes = [
   // Public route
@@ -56,8 +51,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: ProfileDashboardComponent },
       { path: 'profile', component: ProfileComponent },
-      { 
-        path: 'employees', 
+      {
+        path: 'employees',
         children: [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: EmployeeListComponent },
@@ -69,8 +64,9 @@ const routes: Routes = [
     ]
   },
 
+  // Prep Layout with nested routes
   {
-  path: 'prep',
+    path: 'prep',
     component: PrepLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -78,28 +74,30 @@ const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
       { path: 'list', component: ProductListComponent },
       { 
-      path: 'gallia',
-      component: GalliaListComponent,
-      data: { labelType: 'Gallia' }
-    },
-    { 
-      path: 'etiquette',
-      component: GalliaListComponent,
-      data: { labelType: 'Etiquette' }
-    },
-    { 
-      path: 'createG', 
-      component: GalliaCreateComponent,
-      data: { labelType: 'Gallia' }
-    },
-    { 
-      path: 'create-etiquette', 
-      component: GalliaCreateComponent,
-      data: { labelType: 'Etiquette' }
-    },
-      {path:'flanC', component: FlanDecoupeCreateComponent},
-      {path : 'flanList', component : FlanDecoupeListComponent},
-
+        path: 'gallia',
+        component: GalliaListComponent,
+        data: { labelType: 'Gallia' }
+      },
+      { 
+        path: 'etiquette',
+        component: GalliaListComponent,
+        data: { labelType: 'Etiquette' }
+      },
+      { 
+        path: 'createG', 
+        component: GalliaCreateComponent,
+        data: { labelType: 'Gallia' }
+      },
+      { 
+        path: 'create-etiquette', 
+        component: GalliaCreateComponent,
+        data: { labelType: 'Etiquette' }
+      },
+      { path: 'flanC', component: FlanDecoupeCreateComponent },
+      { path: 'flanList', component: FlanDecoupeListComponent },
+      { path: 'assemblageC', component: AssemblageFormComponent },
+      { path: 'assemblageC/:id', component: AssemblageFormComponent }, // Consolidated edit route
+      { path: 'assemblageL', component: AssemblageListComponent },
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,
@@ -124,9 +122,10 @@ const routes: Routes = [
       }
     ]
   },
-  
-  // Admin Layout with shared pages
-  /*{
+
+  // Admin Layout (commented out, preserved as is)
+  /*
+  {
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
@@ -138,31 +137,31 @@ const routes: Routes = [
         { path: 'details/:mat', component: EmployeeDetailsComponent },
         { path: 'delete', component: EmployeeDeleteComponent },
       ]},
-      {path : 'list', component : ProductListComponent},
-
+      { path: 'list', component: ProductListComponent },
       { 
         path: 'products/create/serialized', 
         component: SerializedComponent,
-        data: { isSerialized: true }, // Add route data
+        data: { isSerialized: true },
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent },
-          { path: 'deleteP', component:ProductDeleteComponent },
+          { path: 'deleteP', component: ProductDeleteComponent },
           { path: 'synoptique/:ptNum', component: SynoptiqueComponent },
-          {path :'justification/:ptNum', component: JustificationComponent}
+          { path: 'justification/:ptNum', component: JustificationComponent }
         ]
       },
       { 
         path: 'products/create/non-serialized',
         component: NonSerializedComponent,
-        data: { isSerialized: false }, // Add route data
+        data: { isSerialized: false },
         children: [
           { path: '', redirectTo: 'product', pathMatch: 'full' },
           { path: 'product', component: ProductComponent }
         ]
       }
     ]
-  },*/
+  },
+  */
 
   // Fallback
   { path: '**', redirectTo: 'login' }

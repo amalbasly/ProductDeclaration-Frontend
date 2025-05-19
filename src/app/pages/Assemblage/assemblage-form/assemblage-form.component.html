@@ -1,0 +1,74 @@
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Edit Assemblage' : 'Create Assemblage' }}</h2>
+
+  <div *ngIf="errorMessage" class="alert alert-danger" (click)="clearMessages()">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success" (click)="clearMessages()">
+    {{ successMessage }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="assemblage-form">
+    <div class="form-group">
+      <label for="nomAssemblage">Assemblage Name</label>
+      <input id="nomAssemblage" type="text" formControlName="nomAssemblage" 
+             [class.invalid]="form.get('nomAssemblage')?.invalid && form.get('nomAssemblage')?.touched">
+      <div *ngIf="form.get('nomAssemblage')?.invalid && form.get('nomAssemblage')?.touched" class="error-message">
+        Assemblage name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="mainProduitPtNum">Main Product</label>
+      <select id="mainProduitPtNum" formControlName="mainProduitPtNum"
+              [class.invalid]="form.get('mainProduitPtNum')?.invalid && form.get('mainProduitPtNum')?.touched">
+        <option *ngFor="let product of productOptions" [value]="product">{{ product }}</option>
+      </select>
+      <div *ngIf="form.get('mainProduitPtNum')?.invalid && form.get('mainProduitPtNum')?.touched" class="error-message">
+        Main product is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="labelName">Label Name</label>
+      <select id="labelName" formControlName="labelName"
+              [class.invalid]="form.get('labelName')?.invalid && form.get('labelName')?.touched">
+        <option *ngFor="let name of labelOptions" [value]="name">{{ name }}</option>
+      </select>
+      <div *ngIf="form.get('labelName')?.invalid && form.get('labelName')?.touched" class="error-message">
+        Label name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="secondaryProductCount">Number of Secondary Products</label>
+      <input id="secondaryProductCount" type="number" min="0" 
+             [(ngModel)]="secondaryProductCount" 
+             (ngModelChange)="setSecondaryProductCount($event)"
+             [ngModelOptions]="{standalone: true}">
+    </div>
+
+    <div class="secondary-products-container" formArrayName="secondaryProducts" *ngIf="secondaryProducts.controls.length > 0">
+      <h3>Secondary Products</h3>
+      <div *ngFor="let product of secondaryProducts.controls; let i = index" class="secondary-product-group">
+        <label>Secondary Product #{{ i + 1 }}</label>
+        <select [formControlName]="i" [class.invalid]="secondaryProducts.controls[i].invalid && (secondaryProducts.controls[i].dirty || secondaryProducts.controls[i].touched)">
+          <option *ngFor="let productOption of productOptions" [value]="productOption">{{ productOption }}</option>
+        </select>
+        <div *ngIf="secondaryProducts.controls[i].invalid && (secondaryProducts.controls[i].dirty || secondaryProducts.controls[i].touched)" class="error-message">
+          Product selection is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="router.navigate(['/prep/assemblageL'])" class="btn btn-secondary">
+        Cancel
+      </button>
+      <button type="submit" [disabled]="form.invalid || loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        {{ loading ? 'Processing...' : (isEditMode ? 'Update' : 'Create') }}
+      </button>
+    </div>
+  </form>
+</div>

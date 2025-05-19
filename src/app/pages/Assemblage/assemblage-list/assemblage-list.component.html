@@ -1,0 +1,98 @@
+<div class="fullscreen-container">
+  <div class="full-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3>Assemblage List</h3>
+      <a routerLink="/prep/assemblageC" class="btn btn-primary">New Assemblage</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger" (click)="clearMessages()">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success" (click)="clearMessages()">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="loading" class="text-center spinner-wrapper">
+      <div class="spinner-border text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="confirmDeleteId !== null" class="confirmation-dialog">
+      <p>Are you sure you want to delete this assemblage?</p>
+      <button (click)="deleteAssemblage()" class="btn btn-danger">Yes, Delete</button>
+      <button (click)="cancelDelete()" class="btn btn-secondary">Cancel</button>
+    </div>
+
+    <div *ngIf="assemblages.length === 0 && !loading" class="alert alert-info">
+      No assemblages found
+    </div>
+
+    <table *ngIf="assemblages.length > 0 && !loading" class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Main Product PT#</th>
+          <th>Label Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let assemblage of assemblages" class="assemblage-row">
+          <td>{{ assemblage.assemblageId }}</td>
+          <td>{{ assemblage.nomAssemblage }}</td>
+          <td>{{ assemblage.mainProduitPtNum }}</td>
+          <td>{{ assemblage.galliaName }}</td>
+          <td>
+            <button (click)="openDetails(assemblage, detailsModal)" class="btn btn-sm btn-details">Details</button>
+            <button (click)="editAssemblage(assemblage.assemblageId)" class="btn btn-sm btn-primary">Edit</button>
+            <button (click)="confirmDelete(assemblage.assemblageId)" class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #detailsModal let-modal>
+  <div class="modal-overlay" [class.open]="modal.isOpen">
+    <div class="modal-content-full">
+      <button type="button" class="close-button" aria-label="Close" (click)="modal.close()">
+        ×
+      </button>
+
+      <div class="modal-body">
+        <div *ngIf="selectedAssemblage" class="pcb-container">
+          <!-- Parts Cards (Before Assembly) -->
+          <h5 class="parts-title">Components Before Assembly</h5>
+          <div class="parts-container">
+            <!-- Main Product -->
+            <div class="part-card pcb-component">
+              <h6>{{ selectedAssemblage.mainProduitPtNum }}</h6>
+              <p><strong>Type:</strong> Main Product</p>
+              <p><strong>Gallia Name:</strong> {{ selectedAssemblage.galliaName }}</p>
+            </div>
+            <!-- Secondary Products -->
+            <div *ngFor="let part of selectedAssemblage.secondaryProduits" class="part-card pcb-component">
+              <h6>{{ part.ptNum }}</h6>
+              <p><strong>Type:</strong> Secondary Product</p>
+              <p><strong>Gallia Name:</strong> {{ selectedAssemblage.galliaName }}</p>
+            </div>
+          </div>
+
+          <!-- Assemblage Card (After Assembly) -->
+          <h5 class="parts-title">Assembled Product</h5>
+          <div class="pcb-card big-pcb">
+            <h5 class="pcb-title">{{ selectedAssemblage.nomAssemblage }}</h5>
+            <p><strong>ID:</strong> {{ selectedAssemblage.assemblageId }}</p>
+            <p><strong>Main Product:</strong> {{ selectedAssemblage.mainProduitPtNum }}</p>
+            <p><strong>Gallia Name:</strong> {{ selectedAssemblage.galliaName }}</p>
+            <p><strong>Secondary Products:</strong> {{ selectedAssemblage.secondaryProduits.length }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

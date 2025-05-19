@@ -66,6 +66,8 @@ import { LabelDetailDialogComponent } from './pages/Gallia/label-detail-dialog/l
 import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
 import { PrepHeaderComponent } from './layouts/prep-layout/prep-header/prep-header.component';
+import { AssemblageListComponent } from './pages/Assemblage/assemblage-list/assemblage-list.component';
+import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/assemblage-form.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +108,8 @@ import { PrepHeaderComponent } from './layouts/prep-layout/prep-header/prep-head
     FlanDecoupeCreateComponent,
     FlanDecoupeListComponent,
     PrepHeaderComponent,
+    AssemblageListComponent,
+    AssemblageFormComponent,
   ],
   imports: [
     BrowserModule,

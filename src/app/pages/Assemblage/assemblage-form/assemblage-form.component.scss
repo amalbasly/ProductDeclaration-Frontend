@@ -1,0 +1,271 @@
+// ALL Circuits Brand Colors
+$all-red: #E00034;
+$light-bg: #f8fafc;
+$white: #ffffff;
+$gray-light: #e9ecef;
+$gray-dark: #6b7280;
+
+// PCB Theme Integration
+$pcb-green-dark: #0e3b16;
+$pcb-green: #166a33;
+$pcb-copper: #b87333;
+$neutral-100: #f8fafc;
+$neutral-800: #1e293b;
+
+// Font
+$font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+.form-container {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: $light-bg;
+  font-family: $font-main;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $pcb-green-dark;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &:after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(to right, $pcb-copper, transparent);
+      border-radius: 2px;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.assemblage-form {
+  background-color: $white;
+  border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  animation: slideUp 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    max-width: 90vw;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $neutral-800;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border: 1px solid $gray-light;
+    border-radius: 8px;
+    background-color: $neutral-100;
+    color: $neutral-800;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $pcb-green;
+      box-shadow: 0 0 0 3px rgba($pcb-green, 0.2);
+      background-color: $white;
+    }
+
+    &.invalid {
+      border-color: $all-red;
+      background-color: lighten($all-red, 45%);
+    }
+  }
+
+  input[type="number"] {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none; // Remove spinner in Chrome/Safari
+      margin: 0;
+    }
+  }
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: $all-red;
+  margin-top: 0.25rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+.secondary-products-container {
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 1.3rem;
+    color: $pcb-green-dark;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+
+    &:after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: $pcb-copper;
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+.secondary-product-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $neutral-800;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border: 1px solid $gray-light;
+    border-radius: 8px;
+    background-color: $neutral-100;
+    color: $neutral-800;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $pcb-green;
+      box-shadow: 0 0 0 3px rgba($pcb-green, 0.2);
+      background-color: $white;
+    }
+
+    &.invalid {
+      border-color: $all-red;
+      background-color: lighten($all-red, 45%);
+    }
+  }
+}
+
+// Button Styles
+.btn-primary {
+  background-color: $pcb-green;
+  border: none;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  transition: all 0.3s ease;
+  color: $white;
+  box-shadow: 0 2px 8px rgba($pcb-green, 0.3);
+
+  &:hover {
+    background-color: lighten($pcb-green, 12%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($pcb-green, 0.4);
+  }
+
+  &:disabled {
+    background-color: darken($pcb-green, 20%);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .spinner-border {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.btn-secondary {
+  background-color: $gray-light;
+  border: none;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  transition: all 0.3s ease;
+  color: $neutral-800;
+  box-shadow: 0 2px 8px rgba($gray-dark, 0.2);
+
+  &:hover {
+    background-color: darken($gray-light, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($gray-dark, 0.3);
+  }
+}
+
+// Alert Styles
+.alert {
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+
+  &.alert-danger {
+    background-color: lighten($all-red, 40%);
+    color: darken($all-red, 10%);
+    border: 1px solid $all-red;
+  }
+
+  &.alert-success {
+    background-color: lighten($pcb-green, 40%);
+    color: $pcb-green-dark;
+    border: 1px solid $pcb-green;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
