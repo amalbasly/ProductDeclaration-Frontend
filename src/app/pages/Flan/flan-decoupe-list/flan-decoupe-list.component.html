@@ -4,7 +4,8 @@
   <div class="full-card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3>Liste des flans découpés</h3>
-      <a routerLink="/prep/flanC" class="btn btn-primary">Nouvelle découpe</a>
+          <a [routerLink]="['/' + userRole + '/flanC']" class="btn btn-primary">Nouvelle decoupe</a>
+
     </div>
 
     <!-- Loading Spinner -->

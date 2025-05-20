@@ -1,0 +1,18 @@
+<header class="header-container">
+  <!-- App Title -->
+  <div class="app-title">
+    <i class="fas fa-microchip"></i>
+    <h1>ProManage</h1>
+  </div>
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <!-- Profile Button -->
+    <button mat-icon-button class="profile-btn" routerLink="/admin/profile" matTooltip="View Profile">
+      <i class="fas fa-user"></i>
+    </button>
+    <!-- Logout Button -->
+    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Logout">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div>
+</header>

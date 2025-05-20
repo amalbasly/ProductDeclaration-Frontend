@@ -4,7 +4,7 @@ import { JustificationService } from '../../../Services/justification.service';
 
 @Component({
   selector: 'app-justification',
-  standalone : false,
+  standalone: false,
   templateUrl: './justification.component.html',
   styleUrls: ['./justification.component.scss']
 })
@@ -14,6 +14,7 @@ export class JustificationComponent implements OnInit {
   urgencyLevel: string = 'Medium';
   isSubmitting: boolean = false;
   errorMessage: string | null = null;
+  userRole: 'prep' | 'admin' | null = null; // Initialize as null
 
   constructor(
     private route: ActivatedRoute,
@@ -22,17 +23,35 @@ export class JustificationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.productCode = this.route.snapshot.paramMap.get('ptNum') || '';
     
     if (!this.productCode) {
       this.errorMessage = 'No product code provided';
       alert(this.errorMessage);
-      this.router.navigate(['/prep/dashboard']);
+      this.router.navigate([`${this.getBasePath()}/dashboard`]);
     }
   }
 
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
+  }
+
+  getBasePath(): string {
+    return this.userRole === 'admin' ? '/admin' : '/prep';
+  }
+
   navigateToProducts(): void {
-    this.router.navigate(['/products']);
+    // Navigate to product list, which is '/list' for prep and '/list' for admin
+    this.router.navigate([`${this.getBasePath()}/list`]);
   }
 
   submitJustification(): void {
@@ -44,7 +63,7 @@ export class JustificationComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = null;
 
-    const submittedBy = 'system_user'; // You can change this based on user auth later
+    const submittedBy = 'system_user'; // Placeholder, replace with authService user ID when available
 
     this.justificationService.submitJustification({
       productCode: this.productCode,
@@ -55,13 +74,13 @@ export class JustificationComponent implements OnInit {
       next: (response) => {
         this.isSubmitting = false;
         alert('Justification submitted successfully!');
-        this.router.navigate(['/prep/dashboard']);
+        this.router.navigate([`${this.getBasePath()}/dashboard`]);
       },
       error: (error) => {
         this.isSubmitting = false;
         this.handleError(error);
         alert(this.errorMessage || 'Failed to submit justification. Please try again.');
-        this.router.navigate(['/prep/dashboard']);
+        this.router.navigate([`${this.getBasePath()}/dashboard`]);
       }
     });
   }

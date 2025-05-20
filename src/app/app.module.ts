@@ -68,6 +68,7 @@ import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-de
 import { PrepHeaderComponent } from './layouts/prep-layout/prep-header/prep-header.component';
 import { AssemblageListComponent } from './pages/Assemblage/assemblage-list/assemblage-list.component';
 import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/assemblage-form.component';
+import { AdminHeaderComponent } from './layouts/admin-layout/admin-header/admin-header.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/asse
     PrepHeaderComponent,
     AssemblageListComponent,
     AssemblageFormComponent,
+    AdminHeaderComponent,
   ],
   imports: [
     BrowserModule,

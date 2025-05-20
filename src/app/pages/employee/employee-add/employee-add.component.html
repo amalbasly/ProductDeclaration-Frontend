@@ -1,48 +1,121 @@
-<form #employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)" class="employee-form">
-  <div class="form-group">
-    <label for="pl_nom">Last Name*</label>
-    <input id="pl_nom" name="pl_nom" [(ngModel)]="employee.pl_nom" required>
-  </div>
+<div class="fullscreen-container">
+  <div class="card">
+    <div class="card-header">
+      <h3>New Team Member</h3>
+    </div>
+    <div class="card-body">
+      <form #employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)" class="employee-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="pl_nom">Last Name <span class="required">*</span></label>
+            <input
+              id="pl_nom"
+              name="pl_nom"
+              [(ngModel)]="employee.pl_nom"
+              required
+              #pl_nom="ngModel"
+              placeholder="Enter last name"
+              [class.invalid]="pl_nom.invalid && pl_nom.touched"
+              [class.valid]="pl_nom.valid && pl_nom.touched"
+            >
+            <span class="error-message" *ngIf="pl_nom.invalid && pl_nom.touched">Last name is required</span>
+          </div>
 
-  <div class="form-group">
-    <label for="pl_prenom">First Name*</label>
-    <input id="pl_prenom" name="pl_prenom" [(ngModel)]="employee.pl_prenom" required>
-  </div>
+          <div class="form-group">
+            <label for="pl_prenom">First Name <span class="required">*</span></label>
+            <input
+              id="pl_prenom"
+              name="pl_prenom"
+              [(ngModel)]="employee.pl_prenom"
+              required
+              #pl_prenom="ngModel"
+              placeholder="Enter first name"
+              [class.invalid]="pl_prenom.invalid && pl_prenom.touched"
+              [class.valid]="pl_prenom.valid && pl_prenom.touched"
+            >
+            <span class="error-message" *ngIf="pl_prenom.invalid && pl_prenom.touched">First name is required</span>
+          </div>
 
-  <div class="form-group">
-    <label for="pl_badge">Badge Number*</label>
-    <input id="pl_badge" type="number" name="pl_badge" [(ngModel)]="employee.pl_badge" required>
-  </div>
+          <div class="form-group">
+            <label for="pl_badge">Badge Number <span class="required">*</span></label>
+            <input
+              id="pl_badge"
+              type="number"
+              name="pl_badge"
+              [(ngModel)]="employee.pl_badge"
+              required
+              #pl_badge="ngModel"
+              placeholder="Enter badge number"
+              [class.invalid]="pl_badge.invalid && pl_badge.touched"
+              [class.valid]="pl_badge.valid && pl_badge.touched"
+            >
+            <span class="error-message" *ngIf="pl_badge.invalid && pl_badge.touched">Badge number is required</span>
+          </div>
 
-  <div class="form-group">
-    <label for="pl_fonc">Function</label>
-    <input id="pl_fonc" name="pl_fonc" [(ngModel)]="employee.pl_fonc">
-  </div>
+          <div class="form-group">
+            <label for="pl_fonc">Function</label>
+            <input
+              id="pl_fonc"
+              name="pl_fonc"
+              [(ngModel)]="employee.pl_fonc"
+              placeholder="Enter function (optional)"
+            >
+          </div>
 
-  <div class="form-group">
-    <label for="descriptionGrp">Group Description*</label>
-    <input id="descriptionGrp" name="descriptionGrp" [(ngModel)]="employee.descriptionGrp" required>
-  </div>
+          <div class="form-group">
+            <label for="descriptionGrp">Group Description <span class="required">*</span></label>
+            <input
+              id="descriptionGrp"
+              name="descriptionGrp"
+              [(ngModel)]="employee.descriptionGrp"
+              required
+              #descriptionGrp="ngModel"
+              placeholder="Enter group description"
+              [class.invalid]="descriptionGrp.invalid && descriptionGrp.touched"
+              [class.valid]="descriptionGrp.valid && descriptionGrp.touched"
+            >
+            <span class="error-message" *ngIf="descriptionGrp.invalid && descriptionGrp.touched">Group description is required</span>
+          </div>
 
-  <div class="form-group">
-    <label for="img">Photo</label>
-    <input id="img" type="file" (change)="handleFileInput($event)">
-    <small *ngIf="employee.img">Selected file: {{ employee.img }}</small>
-  </div>
+          <div class="form-group">
+            <label for="img">Photo</label>
+            <input
+              id="img"
+              type="file"
+              (change)="handleFileInput($event)"
+              accept="image/*"
+            >
+            <small *ngIf="employee.img" class="file-info">
+              Selected file: {{ employee.img }}
+            </small>
+          </div>
+        </div>
 
-  <div class="form-actions">
-    <button type="submit" [disabled]="!employeeForm.valid || isLoading">
-      {{ isLoading ? 'Adding Employee...' : 'Add Employee' }}
-    </button>
-    <button type="button" (click)="onCancel()" [disabled]="isLoading">
-      Cancel
-    </button>
-  </div>
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!employeeForm.valid || isLoading"
+          >
+            {{ isLoading ? 'Adding Employee...' : 'Add Member' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-details"
+            (click)="onCancel()"
+            [disabled]="isLoading"
+          >
+            Cancel
+          </button>
+        </div>
 
-  <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+      </form>
+    </div>
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-</form>
+</div>

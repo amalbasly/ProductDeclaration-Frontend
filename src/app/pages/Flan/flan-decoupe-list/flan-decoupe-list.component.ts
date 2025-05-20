@@ -1,10 +1,7 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router'; // <-- import ActivatedRoute
 
-// DTOs from your service
 import {
   FlanDecoupeService,
   FlanDecoupeListResponse,
@@ -13,7 +10,7 @@ import {
 
 @Component({
   selector: 'app-flan-decoupe-list',
-  standalone : false,
+  standalone: false,
   templateUrl: './flan-decoupe-list.component.html',
   styleUrls: ['./flan-decoupe-list.component.scss']
 })
@@ -25,14 +22,30 @@ export class FlanDecoupeListComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
   selectedFlanDecoupe: FlanDecoupeResponse | null = null;
+  userRole: 'prep' | 'admin' = 'prep'; // default role
 
   constructor(
     private flanDecoupeService: FlanDecoupeService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private route: ActivatedRoute  // <-- inject ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.loadFlanDecoupes();
+  }
+
+  detectUserRole(): void {
+    // Detect role by checking route path segments
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
   }
 
   loadFlanDecoupes() {
@@ -52,19 +65,22 @@ export class FlanDecoupeListComponent implements OnInit {
   }
 
   openDetails(item: FlanDecoupeResponse, content: any) {
-    // Reuse existing API: GET /api/FlanDecoupe?id=...
     this.flanDecoupeService.getFlanDecoupes(item.idDecoupe).subscribe({
       next: (response) => {
         if (response.success && response.flanDecoupes.length > 0) {
-          this.selectedFlanDecoupe = response.flanDecoupes[0]; // get first (only) item
+          this.selectedFlanDecoupe = response.flanDecoupes[0];
           this.modalService.open(content, { size: 'lg' });
         } else {
           this.errorMessage = 'Aucun détail trouvé pour cet élément.';
         }
       },
-      error: (err) => {
+      error: () => {
         this.errorMessage = 'Erreur lors du chargement des détails.';
       }
     });
+  }
+
+  getNewFlanLink(): string {
+    return this.userRole === 'admin' ? '/admin/flanC' : '/prep/flanC';
   }
 }

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AssemblageService, AssemblageDto } from '../../../Services/assemblage.service';
-import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-assemblage-list',
-  standalone: false,
+  standalone : false,
   templateUrl: './assemblage-list.component.html',
   styleUrls: ['./assemblage-list.component.scss']
 })
@@ -17,15 +17,30 @@ export class AssemblageListComponent implements OnInit {
   successMessage: string | null = null;
   confirmDeleteId: number | null = null;
   selectedAssemblage: AssemblageDto | null = null;
+  userRole: 'prep' | 'admin' = 'prep'; // default role
 
   constructor(
     private assemblageService: AssemblageService,
     private router: Router,
+    private route: ActivatedRoute,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.loadAssemblages();
+  }
+
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
   }
 
   loadAssemblages(): void {
@@ -62,7 +77,7 @@ export class AssemblageListComponent implements OnInit {
   }
 
   editAssemblage(id: number): void {
-    this.router.navigate(['/prep/assemblageC', id]);
+    this.router.navigate([`/${this.userRole}/assemblageC`, id]);
   }
 
   confirmDelete(id: number): void {

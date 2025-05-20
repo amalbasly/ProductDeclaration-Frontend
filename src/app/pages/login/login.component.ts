@@ -62,6 +62,9 @@ export class LoginComponent {
           } else if (result.employeeFunction =='préparateur') {
             this.router.navigate(['/prep']);
           } 
+          else if (result.employeeFunction === 'Admin'){
+            this.router.navigate(['/admin']);
+          }
           }
          else {
           this.errorMessage = 'Identifiants invalides. Veuillez réessayer.';

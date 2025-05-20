@@ -27,6 +27,7 @@ export class ProductComponent implements OnInit {
   isSerializedRoute = false;
   isUpdateMode = false;
   currentProduct: ProduitSerialiséDto | null = null;
+  userRole: 'prep' | 'admin' | null = null; // Initialize as null
 
   constructor(
     private fb: FormBuilder,
@@ -51,11 +52,12 @@ export class ProductComponent implements OnInit {
       tolerance: [''],
       flashable: [null],
       isSerialized: [false],
-      galliaName: [''] // ✅ Added field
+      galliaName: ['']
     });
   }
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.route.parent?.data.subscribe(data => {
       this.isSerializedRoute = data['isSerialized'] || false;
       this.productForm.patchValue({ isSerialized: this.isSerializedRoute });
@@ -83,12 +85,31 @@ export class ProductComponent implements OnInit {
     this.loadDropdownOptions();
   }
 
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
+  }
+
+  getCreateRoute(): string {
+    const serializedPath = this.isSerializedRoute ? 'serialized' : 'non-serialized';
+    return this.userRole === 'admin'
+      ? `/admin/products/create/${serializedPath}`
+      : `/prep/products/create/${serializedPath}`;
+  }
+
   loadDropdownOptions(): void {
     this.isLoading = true;
 
     forkJoin({
       dropdowns: this.productService.getDropdownOptions(),
-      galliaNames: this.galliaService.getGalliaNames() // ✅ New API call
+      galliaNames: this.galliaService.getGalliaNames()
     }).subscribe({
       next: ({ dropdowns, galliaNames }) => {
         this.dropdowns = {
@@ -97,7 +118,7 @@ export class ProductComponent implements OnInit {
           sousFamilles: dropdowns.sousFamilles?.filter(x => x) || [],
           types: dropdowns.types?.filter(x => x) || [],
           statuts: dropdowns.statuts?.filter(x => x) || [],
-          galliaNames: galliaNames || [] // ✅ Populate dropdown
+          galliaNames: galliaNames || []
         };
         this.isLoading = false;
       },
@@ -118,35 +139,34 @@ export class ProductComponent implements OnInit {
 
   loadProductData(product: ProduitSerialiséDto): void {
     this.productForm.reset({
-        isSerialized: this.isSerializedRoute
+      isSerialized: this.isSerializedRoute
     });
 
-    // Make sure we're using the correct property names from your DTO
     this.productForm.patchValue({
-        ligne: product.LpNum || product.LpNum|| '',  // Try both possible property names
-        famille: product.FpCod || '',
-        sousFamille: product.SpCod || '',
-        codeProduit: product.PtNum,
-        libelle: product.PtLib || '',
-        type: product.TpCod || '',
-        libelle2: product.PtLib2 || '',
-        statut: product.SpId || '',
-        codeProduitClientC264: product.PtSpecifT14 || '',
-        poids: product.PtPoids || null,
-        createur: product.PtCreateur || '',
-        dateCreation: product.PtDcreat || null,
-        tolerance: product.PtSpecifT15 || '',
-        flashable: product.PtFlasher || null,
-        isSerialized: product.IsSerialized,
-        galliaName: product.GalliaName || product.GalliaName|| ''  // Try both possible property names
+      ligne: product.LpNum || product.LpNum || '',
+      famille: product.FpCod || '',
+      sousFamille: product.SpCod || '',
+      codeProduit: product.PtNum,
+      libelle: product.PtLib || '',
+      type: product.TpCod || '',
+      libelle2: product.PtLib2 || '',
+      statut: product.SpId || '',
+      codeProduitClientC264: product.PtSpecifT14 || '',
+      poids: product.PtPoids || null,
+      createur: product.PtCreateur || '',
+      dateCreation: product.PtDcreat || null,
+      tolerance: product.PtSpecifT15 || '',
+      flashable: product.PtFlasher || null,
+      isSerialized: product.IsSerialized,
+      galliaName: product.GalliaName || product.GalliaName || ''
     });
 
     if (this.isUpdateMode) {
-        const codeControl = this.productForm.get('codeProduit');
-        codeControl?.disable();
-        codeControl?.setValue(product.PtNum);
+      const codeControl = this.productForm.get('codeProduit');
+      codeControl?.disable();
+      codeControl?.setValue(product.PtNum);
     }
-}
+  }
 
   onSubmit(): void {
     this.formSubmitted = true;
@@ -173,7 +193,9 @@ export class ProductComponent implements OnInit {
         if (response.result === 'Success') {
           const action = this.isUpdateMode ? 'updated' : 'created';
           alert(`Product ${action} successfully! Code: ${response.productCode}`);
-          if (!this.isSerializedRoute && !this.isUpdateMode) this.resetForm();
+          if (!this.isUpdateMode) {
+            this.router.navigate([this.getCreateRoute()]); // Navigate to create route
+          }
         }
       },
       error: (error) => {
@@ -196,7 +218,7 @@ export class ProductComponent implements OnInit {
       isSerialized: this.isSerializedRoute
     };
 
-    const operation = this.isUpdateMode 
+    const operation = this.isUpdateMode
       ? this.productService.updateProduct({ ...formData, pt_num: this.currentProduct?.PtNum })
       : this.productService.createProduct(formData);
 
@@ -204,9 +226,10 @@ export class ProductComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.result === 'Success') {
+          const basePath = this.userRole === 'admin' ? '/admin' : '/prep';
           this.router.navigate(
-            ['../synoptique', response.productCode],
-            { relativeTo: this.route, queryParams: { update: this.isUpdateMode } }
+            [`${basePath}/products/create/serialized/synoptique`, response.productCode],
+            { queryParams: { update: this.isUpdateMode } }
           );
         }
       },
@@ -237,7 +260,10 @@ export class ProductComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.result === 'Success') {
-          this.router.navigate(['../', response.productCode, 'reference'], { relativeTo: this.route });
+          const basePath = this.userRole === 'admin' ? '/admin' : '/prep';
+          this.router.navigate(
+            [`${basePath}/products/create/non-serialized`, response.productCode, 'reference']
+          );
         }
       },
       error: (error) => {
@@ -249,7 +275,6 @@ export class ProductComponent implements OnInit {
 
   private resetForm(): void {
     this.productForm.reset();
-
     this.formSubmitted = false;
   }
 

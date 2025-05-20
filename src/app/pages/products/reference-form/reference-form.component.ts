@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientReferenceService } from '../../../Services/client-reference.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-reference-form',
@@ -14,12 +15,14 @@ export class ReferenceFormComponent implements OnInit {
   productCode: string = '';
   isLoading = false;
   isEditMode = false;
+  userRole: 'admin' | 'prep' | null = null; // Initialize as null
 
   constructor(
     private fb: FormBuilder,
     private refService: ClientReferenceService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
       clientReference: ['', Validators.required],
@@ -30,37 +33,55 @@ export class ReferenceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.route.paramMap.subscribe(params => {
       this.productCode = params.get('productCode') || '';
 
-      // Load existing reference if available
       if (this.productCode) {
         this.loadExistingReference();
+      } else {
+        this.snackBar.open('No product code provided', 'Close', { duration: 3000 });
+        this.router.navigate([`${this.getBasePath()}/dashboard`]);
       }
     });
   }
 
-  private loadExistingReference(): void {
-  this.isLoading = true;
-  this.refService.getByPtNumAsync(this.productCode).subscribe({
-    next: (reference) => {
-      if (reference) {
-        this.isEditMode = true;
-        this.form.patchValue(reference);
-      }
-      this.isLoading = false;
-    },
-    error: (err) => {
-      this.isLoading = false;
-
-      // Only alert for errors other than 404
-      if (err.status !== 404) {
-        this.showError(err);
-      }
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else if (urlSegment.includes('prep')) {
+      this.userRole = 'prep';
+    } else {
+      this.userRole = 'prep'; // Default to prep if unclear, adjust as needed
     }
-  });
-}
+  }
 
+  getBasePath(): string {
+    return this.userRole === 'admin' ? '/admin' : '/prep';
+  }
+
+  private loadExistingReference(): void {
+    this.isLoading = true;
+    this.refService.getByPtNumAsync(this.productCode).subscribe({
+      next: (reference) => {
+        if (reference) {
+          this.isEditMode = true;
+          this.form.patchValue(reference);
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err.status !== 404) {
+          this.showError(err);
+        }
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -81,8 +102,8 @@ export class ReferenceFormComponent implements OnInit {
     operation.subscribe({
       next: () => {
         this.isLoading = false;
-        alert('Reference saved successfully!');
-        this.router.navigate(['/prep/dashboard']);
+        this.snackBar.open('Reference saved successfully!', 'Close', { duration: 3000 });
+        this.router.navigate([`${this.getBasePath()}/dashboard`]);
       },
       error: (err) => {
         this.isLoading = false;
@@ -110,7 +131,7 @@ export class ReferenceFormComponent implements OnInit {
     operation.subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/prep/products/create/non-serialized/justification', this.productCode]);
+        this.router.navigate([`${this.getBasePath()}/products/create/non-serialized/justification`, this.productCode]);
       },
       error: (err) => {
         this.isLoading = false;
@@ -119,9 +140,8 @@ export class ReferenceFormComponent implements OnInit {
     });
   }
 
-  // ✅ Helper to show better error messages
   private showError(error: any): void {
     const message = error?.error?.message || error?.message || 'An unexpected error occurred';
-    alert(message);
+    this.snackBar.open(message, 'Close', { duration: 3000 });
   }
 }

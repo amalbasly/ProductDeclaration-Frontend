@@ -18,6 +18,7 @@ export class GalliaListComponent implements OnInit {
   isLoading = true;
   displayedColumns: string[] = ['thumbnail', 'id', 'galliaName', 'date', 'created', 'actions'];
   labelType = 'Gallia'; // Default labelType
+  userRole: 'prep' | 'admin' = 'prep';
 
   constructor(
     private galliaService: GalliaService,
@@ -27,22 +28,44 @@ export class GalliaListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  this.route.url.subscribe((segments) => {
-    if (segments.some((segment) => segment.path === 'etiquette')) {
-      this.labelName = 'Etiquette';
-      this.labelType = 'Etiquette';
+    this.detectUserRole();  // Detect role at start
+
+    this.route.url.subscribe((segments) => {
+      if (segments.some((segment) => segment.path === 'etiquette')) {
+        this.labelName = 'Etiquette';
+        this.labelType = 'Etiquette';
+      } else {
+        this.labelName = 'Gallia';
+        this.labelType = 'Gallia';
+      }
+      this.loadGallias();
+    });
+  }
+
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
     } else {
-      this.labelName = 'Gallia';
+      this.userRole = 'prep';
     }
-    this.loadGallias();
-  });
-}
+  }
+
+  getCreateRoute(): string {
+    if (this.labelName === 'Etiquette') {
+      return this.userRole === 'admin' ? '/admin/create-etiquette' : '/prep/create-etiquette';
+    } else {
+      return this.userRole === 'admin' ? '/admin/createG' : '/prep/createG';
+    }
+  }
 
   loadGallias(): void {
     this.isLoading = true;
     this.galliaService.getAllGallias(this.labelType).subscribe({
       next: (data) => {
-        // Filter by labelName
         this.gallias = data.filter((gallia) => gallia.labelName === this.labelName);
         this.isLoading = false;
       },
@@ -67,7 +90,7 @@ export class GalliaListComponent implements OnInit {
           this.snackBar.open('Gallia deleted successfully', 'Close', { duration: 3000 });
           this.loadGallias();
         },
-        error: (err) => {
+        error: () => {
           this.snackBar.open('Failed to delete Gallia', 'Close', { duration: 3000 });
         }
       });

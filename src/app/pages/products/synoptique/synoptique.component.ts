@@ -24,21 +24,39 @@ export class SynoptiqueComponent implements OnInit {
   errorMessage: string | null = null;
   isSaving = false;
   isUpdateMode = false;
-  private isUpdatingOrder = false; // Flag to prevent recursive onOrderChange
+  userRole: 'prep' | 'admin' | null = null; // Initialize as null
+  private isUpdatingOrder = false;
 
   constructor(
     private synoptiqueService: SynoptiqueService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.route.paramMap.subscribe(params => {
       this.productCode = params.get('ptNum') || '';
       this.isUpdateMode = this.route.snapshot.queryParamMap.get('update') === 'true';
       this.loadData();
     });
+  }
+
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
+  }
+
+  getBasePath(): string {
+    return this.userRole === 'admin' ? '/admin' : '/prep';
   }
 
   loadData(): void {
@@ -58,7 +76,7 @@ export class SynoptiqueComponent implements OnInit {
           this.loadExistingSynoptique();
         } else {
           this.isLoading = false;
-          this.cdr.detectChanges(); // Manually trigger change detection
+          this.cdr.detectChanges();
         }
       },
       error: (err: Error) => {
@@ -122,20 +140,19 @@ export class SynoptiqueComponent implements OnInit {
   }
 
   reassignOrders(): void {
-    // Create a deep copy to avoid modifying bound objects directly
     this.rankedModes = [...this.rankedModes].sort((a, b) => a.order - b.order);
     this.rankedModes.forEach((mode, index) => {
       mode.order = index + 1;
       const originalMode = this.allModes.find(m => m.mode.id === mode.mode.id);
       if (originalMode) {
         originalMode.order = index + 1;
-        originalMode.selected = true; // Ensure consistency
+        originalMode.selected = true;
       }
     });
   }
 
   onOrderChange(modeItem: RankableMode, newOrder: number): void {
-    if (this.isUpdatingOrder) return; // Prevent recursive calls
+    if (this.isUpdatingOrder) return;
     if (newOrder < 1 || newOrder > this.rankedModes.length) return;
 
     this.isUpdatingOrder = true;
@@ -225,7 +242,7 @@ export class SynoptiqueComponent implements OnInit {
 
     if (result?.success) {
       alert('Synoptique saved successfully!');
-      this.router.navigate(['/prep/dashboard']);
+      this.router.navigate([`${this.getBasePath()}/dashboard`]);
     } else {
       throw new Error(result?.message || 'Failed to save synoptique');
     }
@@ -241,7 +258,7 @@ export class SynoptiqueComponent implements OnInit {
       
       if (result?.success) {
         alert('Synoptique updated successfully!');
-        this.router.navigate(['/prep/dashboard']);
+        this.router.navigate([`${this.getBasePath()}/dashboard`]);
       } else {
         throw new Error(result?.message || 'Failed to update synoptique');
       }
@@ -316,7 +333,7 @@ export class SynoptiqueComponent implements OnInit {
     }
 
     alert('Synoptique updated successfully!');
-    this.router.navigate(['/prep/dashboard']);
+    this.router.navigate([`${this.getBasePath()}/dashboard`]);
   }
 
   async saveAndGoToJustification(): Promise<void> {
@@ -335,22 +352,12 @@ export class SynoptiqueComponent implements OnInit {
       } else {
         await this.saveSynoptique();
       }
-      this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
+      this.router.navigate([`${this.getBasePath()}/products/create/serialized/justification`, this.productCode]);
     } catch (err) {
       this.errorMessage = (err as Error).message || 'Operation failed';
     } finally {
       this.isSaving = false;
       this.cdr.detectChanges();
     }
-  }
-
-  private async updateAndGoToJustification(): Promise<void> {
-    await this.updateSynoptique(); // Reuse updateSynoptique to avoid duplication
-    this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
-  }
-
-  private async updateEntriesIndividuallyForJustification(): Promise<void> {
-    await this.updateEntriesIndividually(); // Reuse updateEntriesIndividually
-    this.router.navigate(['/prep/products/create/serialized/justification', this.productCode]);
   }
 }

@@ -34,6 +34,7 @@ export class GalliaCreateComponent implements OnInit {
     { value: 'barcode', label: 'Barcode' },
     { value: 'datametrics', label: 'Text' }
   ];
+  userRole: 'prep' | 'admin' = 'prep';
 
   constructor(
     private galliaService: GalliaService,
@@ -44,10 +45,24 @@ export class GalliaCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.url.subscribe((segments: UrlSegment[]) => {
-      this.labelType = segments.some(s => s.path === 'create-etiquette') ? 'Etiquette' : 'Gallia';
-      this.gallia.labelName = this.labelType;
-    });
+  this.route.url.subscribe((segments: UrlSegment[]) => {
+    this.labelType = segments.some(s => s.path === 'create-etiquette') ? 'Etiquette' : 'Gallia';
+    this.gallia.labelName = this.labelType;
+  });
+
+  this.detectUserRole(); // <- Add this line
+}
+
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
   }
 
   setFieldsCount(): void {
@@ -130,22 +145,23 @@ export class GalliaCreateComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    if (!this.validateForm()) return;
+  if (!this.validateForm()) return;
 
-    this.isLoading = true;
-    try {
-      const createdGallia = await this.galliaService.createGallia(this.gallia, this.labelType).toPromise();
-      if (createdGallia?.galliaId) {
-        await this.saveLabelImage(createdGallia.galliaId);
-      }
-      this.showSuccess(`${this.labelType} created successfully!`);
-      this.router.navigate([`/prep/${this.labelType.toLowerCase()}`]);
-    } catch (error) {
-      this.showError(`Failed to create ${this.labelType}: ${this.getErrorMessage(error)}`);
-    } finally {
-      this.isLoading = false;
+  this.isLoading = true;
+  try {
+    const createdGallia = await this.galliaService.createGallia(this.gallia, this.labelType).toPromise();
+    if (createdGallia?.galliaId) {
+      await this.saveLabelImage(createdGallia.galliaId);
     }
+    this.showSuccess(`${this.labelType} created successfully!`);
+    this.router.navigate([`/${this.userRole}/${this.labelType.toLowerCase()}`]); // ← uses dynamic role
+  } catch (error) {
+    this.showError(`Failed to create ${this.labelType}: ${this.getErrorMessage(error)}`);
+  } finally {
+    this.isLoading = false;
   }
+}
+
 
   private validateForm(): boolean {
     if (this.gallia.fields.some(f => !f.fieldValue.trim())) {
