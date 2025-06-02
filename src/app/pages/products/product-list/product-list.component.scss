@@ -47,7 +47,7 @@ $font-weight-bold: 700;
     
     &.loading {
       background: lighten($neutral-100, 1%);
-      border-color: $red; /* Enhanced red touch */
+      border-color: $red;
       color: $neutral-800;
       display: flex;
       align-items: center;
@@ -59,7 +59,7 @@ $font-weight-bold: 700;
         display: inline-block;
         width: 1.5rem;
         height: 1.5rem;
-        border: 3px solid $red; /* Red touch for spinner */
+        border: 3px solid $red;
         border-top-color: transparent;
         border-radius: 50%;
         animation: spin 1s linear infinite;
@@ -67,7 +67,7 @@ $font-weight-bold: 700;
     }
 
     &.error {
-      background: lighten($red, 40%); /* More prominent red */
+      background: lighten($red, 40%);
       border-color: $red;
       color: darken($red, 25%);
       box-shadow: 0 2px 6px rgba($red, 0.2);
@@ -89,13 +89,13 @@ $font-weight-bold: 700;
     padding: 1rem;
     margin-bottom: 1.5rem;
     border-radius: 12px;
-    border: 1px solid rgba($red, 0.3); /* Enhanced red touch */
+    border: 1px solid rgba($red, 0.3);
     box-shadow: 0 2px 6px rgba($red, 0.1);
 
     input, select {
       padding: 0.5rem 1rem;
       min-width: 180px;
-      border: 1px solid $red; /* Enhanced red touch */
+      border: 1px solid $red;
       border-radius: 30px;
       font-size: 0.9rem;
       color: $neutral-800;
@@ -117,7 +117,7 @@ $font-weight-bold: 700;
     button {
       background: $pcb-green;
       color: $white;
-      border: 1px solid $red; /* Enhanced red touch */
+      border: 1px solid $red;
       padding: 0.5rem 1.4rem;
       border-radius: 30px;
       font-weight: $font-weight-bold;
@@ -127,7 +127,7 @@ $font-weight-bold: 700;
       box-shadow: 0 2px 6px rgba($red, 0.2);
 
       &:hover {
-        background: $red; /* Red touch on hover */
+        background: $red;
         border-color: darken($red, 10%);
         transform: translateY(-1px);
       }
@@ -140,7 +140,7 @@ $font-weight-bold: 700;
 
       &:last-child {
         background: $white;
-        color: $red; /* Enhanced red touch */
+        color: $red;
         border-color: $red;
         box-shadow: 0 2px 6px rgba($red, 0.2);
 
@@ -187,7 +187,7 @@ $font-weight-bold: 700;
       }
 
       tbody tr:hover {
-        background: lighten($red, 45%); /* Enhanced red touch for row hover */
+        background: lighten($red, 45%);
         box-shadow: inset 0 0 0 1px rgba($red, 0.2);
       }
 
@@ -211,7 +211,7 @@ $font-weight-bold: 700;
         }
 
         .delete-btn .material-icons {
-          color: $red; /* Red touch for delete */
+          color: $red;
           &:hover {
             color: darken($red, 12%);
           }
@@ -220,7 +220,7 @@ $font-weight-bold: 700;
         .edit-btn .material-icons {
           color: $pcb-green;
           &:hover {
-            color: lighten($red, 10%); /* Red touch on edit hover */
+            color: lighten($red, 10%);
           }
         }
       }
@@ -232,11 +232,158 @@ $font-weight-bold: 700;
     padding: 2rem;
     font-style: italic;
     font-size: 1.1rem;
-    color: $red; /* Enhanced red touch */
+    color: $red;
     background: lighten($red, 48%);
     border-radius: 8px;
     border: 1px solid rgba($red, 0.3);
     margin-top: 1rem;
+  }
+}
+
+.create-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+
+  button {
+    background: $pcb-green;
+    color: $white;
+    border: 1px solid $red;
+    padding: 0.5rem 1.4rem;
+    border-radius: 30px;
+    font-weight: $font-weight-bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    @include transition(background-color, transform, border-color);
+    box-shadow: 0 2px 6px rgba($red, 0.2);
+
+    &:hover {
+      background: $red;
+      border-color: darken($red, 10%);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include focus-ring;
+  }
+}
+
+/* Dialog Styles */
+.dialog-content {
+  padding: 1rem;
+  font-family: $font-family-base;
+  color: $neutral-800;
+
+  .loading {
+    text-align: center;
+    font-size: 1rem;
+    color: $neutral-800;
+    padding: 1rem;
+    background: lighten($neutral-100, 1%);
+    border-radius: 8px;
+  }
+
+  .error {
+    text-align: center;
+    font-size: 1rem;
+    color: darken($red, 25%);
+    background: lighten($red, 40%);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid $red;
+  }
+
+  .justification-details {
+    p {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+
+      strong {
+        font-weight: $font-weight-bold;
+        color: $pcb-green-dark;
+      }
+    }
+  }
+
+  .no-justification {
+    text-align: center;
+    font-style: italic;
+    font-size: 1rem;
+    color: $red;
+    padding: 1rem;
+    background: lighten($red, 48%);
+    border-radius: 8px;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding: 1rem;
+
+  button {
+    padding: 0.5rem 1.4rem;
+    border-radius: 30px;
+    font-weight: $font-weight-bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    @include transition(background-color, transform, border-color);
+    box-shadow: 0 2px 6px rgba($red, 0.2);
+
+    &[color="primary"] {
+      background: $pcb-green;
+      color: $white;
+      border: 1px solid $red;
+
+      &:hover {
+        background: darken($pcb-green, 10%);
+        border-color: darken($red, 10%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &[color="warn"] {
+      background: $white;
+      color: $red;
+      border: 1px solid $red;
+
+      &:hover {
+        background: lighten($red, 40%);
+        border-color: darken($red, 10%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &:not([color]) {
+      background: $neutral-100;
+      color: $neutral-800;
+      border: 1px solid $neutral-300;
+
+      &:hover {
+        background: $neutral-300;
+        transform: translateY(-1px);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include focus-ring;
+
+    &[disabled] {
+      background: $neutral-300;
+      color: $neutral-800;
+      border-color: $neutral-300;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
   }
 }
 
@@ -277,6 +424,24 @@ $font-weight-bold: 700;
     .no-products {
       font-size: 1rem;
       padding: 1.5rem;
+    }
+  }
+
+  .dialog-content {
+    padding: 0.75rem;
+
+    .justification-details p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+      margin: 0.5rem 0;
     }
   }
 }

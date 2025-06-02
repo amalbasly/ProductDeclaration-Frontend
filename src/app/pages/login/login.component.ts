@@ -65,6 +65,9 @@ export class LoginComponent {
           else if (result.employeeFunction === 'Admin'){
             this.router.navigate(['/admin']);
           }
+          else if (result.employeeFunction === 'Tracability Manager'){
+            this.router.navigate(['/traca']);
+          }
           }
          else {
           this.errorMessage = 'Identifiants invalides. Veuillez réessayer.';

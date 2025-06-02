@@ -9,6 +9,8 @@ import { RhLayoutComponent } from './layouts/rh-layout/rh-layout/rh-layout.compo
 import { ProfileDashboardComponent } from './layouts/rh-layout/profile-dashboard/profile-dashboard.component';
 import { PrepLayoutComponent } from './layouts/prep-layout/prep-layout/prep-layout.component';
 import { PrepDashboardComponent } from './layouts/prep-layout/prep-dashboard/prep-dashboard.component';
+import { TracaDashboardComponent } from './layouts/traca-layout/traca-dashboard/traca-dashboard.component';
+
 
 // Admin Layout & Pages
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout.component';
@@ -35,6 +37,7 @@ import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/fla
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
 import { AssemblageListComponent } from './pages/Assemblage/assemblage-list/assemblage-list.component';
 import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/assemblage-form.component';
+import { TracaLayoutComponent } from './layouts/traca-layout/traca-layout/traca-layout.component';
 
 const routes: Routes = [
   // Public route
@@ -186,6 +189,41 @@ const routes: Routes = [
           { path: 'details/:mat', component: EmployeeDetailsComponent }
         ]
       }
+    ]
+  },
+  {
+    path: 'traca',
+    component: TracaLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: TracaDashboardComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'list', component: ProductListComponent },
+      { 
+        path: 'gallia',
+        component: GalliaListComponent,
+        data: { labelType: 'Gallia' }
+      },
+      { 
+        path: 'etiquette',
+        component: GalliaListComponent,
+        data: { labelType: 'Etiquette' }
+      },
+      { 
+        path: 'createG', 
+        component: GalliaCreateComponent,
+        data: { labelType: 'Gallia' }
+      },
+      { 
+        path: 'create-etiquette', 
+        component: GalliaCreateComponent,
+        data: { labelType: 'Etiquette' }
+      },
+      { path: 'flanC', component: FlanDecoupeCreateComponent },
+      { path: 'flanList', component: FlanDecoupeListComponent },
+      { path: 'assemblageC', component: AssemblageFormComponent },
+      { path: 'assemblageC/:id', component: AssemblageFormComponent },
+      { path: 'assemblageL', component: AssemblageListComponent },
     ]
   },
 

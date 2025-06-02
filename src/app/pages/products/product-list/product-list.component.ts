@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../../Services/product.service';
-import { ProduitSerialiséDto } from '../../../models/product';
+import { ProductService, ProduitSerialiséDto } from '../../../Services/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductJustificationDialogComponent } from '../product-justification-dialog/product-justification-dialog.component';
 
 @Component({
   selector: 'app-product-list',
@@ -18,17 +19,21 @@ export class ProductListComponent implements OnInit {
   loading = false;
   error = '';
   successMessage = '';
-  userRole: 'prep' | 'admin' | null = null; // Initialize as null
+  userRole: 'prep' | 'admin' | 'traceabilityManager' | null = null;
+  displayedColumns: string[] = [];
+  managerId: string = 'manager-id'; // Replace with actual manager ID from auth service
 
   constructor(
     private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar // Added for consistent feedback
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.detectUserRole();
+    this.setDisplayedColumns();
     this.getProducts();
   }
 
@@ -39,13 +44,37 @@ export class ProductListComponent implements OnInit {
       .join('/');
     if (urlSegment.includes('admin')) {
       this.userRole = 'admin';
+    } else if (urlSegment.includes('traca')) {
+      this.userRole = 'traceabilityManager';
     } else {
       this.userRole = 'prep';
     }
   }
 
+  setDisplayedColumns(): void {
+    const baseColumns = [
+      'actions',
+      'ptNum',
+      'ptLib',
+      'fpCod',
+      'spCod',
+      'spId',
+      'isSerialized',
+      'ptPoids',
+      'ptDcreat',
+      'galliaName'
+    ];
+    this.displayedColumns = (this.userRole === 'admin' || this.userRole === 'traceabilityManager')
+      ? [...baseColumns, 'isApproved']
+      : baseColumns;
+  }
+
   getBasePath(): string {
-    return this.userRole === 'admin' ? '/admin' : '/prep';
+    switch (this.userRole) {
+      case 'admin': return '/admin';
+      case 'traceabilityManager': return '/traca';
+      default: return '/prep';
+    }
   }
 
   getCreateRoute(isSerialized: boolean): string {
@@ -60,27 +89,49 @@ export class ProductListComponent implements OnInit {
     this.products = [];
 
     const isSerialized = this.isSerializedFilter === '' ? undefined : this.isSerializedFilter === 'true';
+    const serviceMethod = (this.userRole === 'admin' || this.userRole === 'traceabilityManager')
+      ? this.productService.getAllProducts
+      : this.productService.getProducts;
 
-    this.productService.getProducts(this.codeProduitFilter, this.statusFilter, isSerialized)
+    serviceMethod.call(this.productService, this.codeProduitFilter, this.statusFilter, isSerialized)
       .subscribe({
         next: (response: any) => {
-          if (response.products?.products) {
-            this.products = response.products.products;
-          } else if (response.Products) {
-            this.products = response.Products;
-          } else if (response.products) {
-            this.products = response.products;
-          }
+          this.products = response.Products || response.products?.products || response.products || [];
           this.loading = false;
+          if (this.products.length === 0) {
+            this.error = 'No products found matching your criteria.';
+          }
         },
         error: (err) => {
-          this.error = 'Failed to load products: ' + (err.error?.message || err.message);
+          this.error = 'Failed to load products: ' + (err.error?.Message || err.message);
           this.snackBar.open(this.error, 'Close', { duration: 3000 });
           console.error(err);
           this.loading = false;
         }
       });
   }
+
+  onRowClick(product: ProduitSerialiséDto): void {
+  if (this.userRole === 'traceabilityManager' && !product.IsApproved) {
+    this.openJustificationDialog(product);
+  }
+}
+
+openJustificationDialog(product: ProduitSerialiséDto): void {
+  const dialogRef = this.dialog.open(ProductJustificationDialogComponent, {
+    width: '600px',
+    data: { 
+      product: product,
+      managerId: this.managerId 
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === true) {
+      this.getProducts(); // Refresh the list after approval/decline
+    }
+  });
+}
 
   deleteProduct(productCode: string): void {
     if (!confirm('Are you sure you want to delete this product?')) {

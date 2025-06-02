@@ -5,6 +5,20 @@ import { HttpClientModule, provideHttpClient, withFetch, withInterceptorsFromDi 
 import { RouterModule, provideRouter } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+// Angular Material Modules
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; // For MatSnackBar
+
 // Routing
 import { AppRoutingModule } from './app-routing.module';
 
@@ -46,22 +60,6 @@ import { AdminSidebarComponent } from './layouts/admin-layout/admin-sidebar/admi
 import { TracaDashboardComponent } from './layouts/traca-layout/traca-dashboard/traca-dashboard.component';
 import { TracaLayoutComponent } from './layouts/traca-layout/traca-layout/traca-layout.component';
 import { TracaSidebarComponent } from './layouts/traca-layout/traca-sidebar/traca-sidebar.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
-
-
-// Services
-import { EmployeeService } from './Services/employee.service';
-
-// External Modules
-import { NgxBarcode6Module } from 'ngx-barcode6';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LabelDetailDialogComponent } from './pages/Gallia/label-detail-dialog/label-detail-dialog.component';
 import { FlanDecoupeCreateComponent } from './pages/Flan/flan-decoupe-create/flan-decoupe-create.component';
 import { FlanDecoupeListComponent } from './pages/Flan/flan-decoupe-list/flan-decoupe-list.component';
@@ -69,6 +67,14 @@ import { PrepHeaderComponent } from './layouts/prep-layout/prep-header/prep-head
 import { AssemblageListComponent } from './pages/Assemblage/assemblage-list/assemblage-list.component';
 import { AssemblageFormComponent } from './pages/Assemblage/assemblage-form/assemblage-form.component';
 import { AdminHeaderComponent } from './layouts/admin-layout/admin-header/admin-header.component';
+
+// Services
+import { EmployeeService } from './Services/employee.service';
+
+// External Modules
+import { NgxBarcode6Module } from 'ngx-barcode6';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ProductJustificationDialogComponent } from './pages/products/product-justification-dialog/product-justification-dialog.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +118,7 @@ import { AdminHeaderComponent } from './layouts/admin-layout/admin-header/admin-
     AssemblageListComponent,
     AssemblageFormComponent,
     AdminHeaderComponent,
+    ProductJustificationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -122,16 +129,19 @@ import { AdminHeaderComponent } from './layouts/admin-layout/admin-header/admin-
     NgxBarcode6Module,
     DragDropModule,
     RouterModule,
+    NgbModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatTableModule,
-    NgbModule,
-    MatCardModule, // For mat-card, mat-card-header, mat-card-title, mat-card-content
-    MatListModule, // For mat-list, mat-list-item
-    MatButtonModule
+    MatCardModule,
+    MatListModule,
+    MatFormFieldModule, // Added for mat-form-field
+    MatInputModule,     // Added for mat-input
+    MatSelectModule,    // Added for mat-select, mat-option
+    MatSnackBarModule   // Added for MatSnackBar
   ],
   providers: [EmployeeService],
   bootstrap: [AppComponent]
@@ -140,7 +150,7 @@ export class AppModule {}
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter([]), // Populate this with your actual route config
+    provideRouter([]), // Populate with actual route config
     provideHttpClient(
       withFetch(),
       withInterceptorsFromDi()

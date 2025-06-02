@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlanDecoupeService, FlanDecoupeRequest } from '../../../Services/flan-decoupe.service';
 import { GalliaService } from '../../../Services/gallia.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-flan-decoupe-create',
@@ -22,16 +22,31 @@ export class FlanDecoupeCreateComponent implements OnInit {
   isSubmitting = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  userRole: 'prep' | 'admin' | null = null;
 
   constructor(
     private flanDecoupeService: FlanDecoupeService,
     private galliaService: GalliaService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.detectUserRole();
     this.loadProductNames();
     this.loadLabelNames();
+  }
+
+  detectUserRole(): void {
+    const urlSegment = this.route.snapshot.pathFromRoot
+      .map(r => r.routeConfig?.path)
+      .filter(path => !!path)
+      .join('/');
+    if (urlSegment.includes('admin')) {
+      this.userRole = 'admin';
+    } else {
+      this.userRole = 'prep';
+    }
   }
 
   loadProductNames(): void {
@@ -81,8 +96,9 @@ export class FlanDecoupeCreateComponent implements OnInit {
       next: (response) => {
         this.successMessage = 'Flan découpé créé avec succès';
         setTimeout(() => {
-          this.router.navigate(['/prep/flanList']);
-        }, 1000); // 1-second delay to show success message
+          const basePath = this.userRole === 'admin' ? '/admin' : '/prep';
+          this.router.navigate([`${basePath}/flanList`]);
+        }, 1000);
       },
       error: (err) => {
         this.isSubmitting = false;
