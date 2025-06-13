@@ -1,133 +1,134 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
+// Brand Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
+$white: #ffffff;
 $neutral-100: #f8fafc;
 $neutral-300: #cbd5e1;
 $neutral-800: #1e293b;
-$white: #ffffff;
-$red: #e63946;
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
-@mixin transition($prop: all, $time: 0.2s, $ease: ease-out) {
-  transition: $prop $time $ease;
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
+  transition: $prop $time $ease; // Smoother, slower transition
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($red, 0.7); /* Enhanced red touch for focus */
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($all-blue, 0.25); // Softer, diffused blue ring
   }
 }
 
 .form-container {
   width: 100%;
-  max-width: 600px; /* Matches provided SCSS for compact form */
-  margin: 2rem auto;
-  padding: 2rem;
-  background: $white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba($red, 0.1); /* Enhanced red touch */
-  font-family: $font-family-base;
+  max-width: 650px; // Slightly wider for comfort
+  margin: 2.5rem auto; // More vertical space
+  padding: 2.5rem; // Increased padding for a breezier feel
+  background: $neutral-100; // Softer, light background
+  border-radius: 16px; // Gentler corners
+  box-shadow: 0 6px 18px rgba($all-blue, 0.06); // Softer, subtler shadow
+  font-family: $font-body;
 
   h2 {
-    font-weight: $font-weight-bold;
-    font-size: 1.5rem;
-    color: $pcb-green-dark;
+    font-family: $font-heading;
+    font-weight: 400; // Lighter weight for softness
+    font-size: 1.4rem; // Slightly smaller for a gentler look
+    color: $neutral-800; // Dark but not harsh
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 1.5rem;
+    letter-spacing: 0.6px;
+    margin-bottom: 1.75rem;
     position: relative;
 
     &:after {
       content: '';
       display: block;
-      width: 60px;
-      height: 3px;
-      background: $red; /* Enhanced red touch */
-      border-radius: 2px;
-      margin-top: 0.25rem;
+      width: 50px; // Shorter for subtlety
+      height: 2px; // Thinner for a softer touch
+      background: $all-red; // Red accent
+      border-radius: 1px;
+      margin-top: 0.5rem;
     }
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem; // More space for a relaxed feel
 
     label {
-      font-weight: $font-weight-medium;
-      font-size: 0.9rem;
+      font-weight: 400; // Lighter weight for softness
+      font-size: 0.85rem; // Smaller, gentler text
       color: $neutral-800;
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem; // Slightly more spacing
     }
 
     .form-control {
-      font-size: 0.85rem;
+      font-size: 0.8rem; // Smaller, softer text
       color: $neutral-800;
-      border: 1px solid $red; /* Enhanced red touch */
-      border-radius: 30px;
-      padding: 0.6rem 1rem;
+      border: 1px solid $neutral-300; // Light, neutral border
+      border-radius: 20px; // Softer, rounder corners
+      padding: 0.7rem 1.2rem; // More padding for comfort
       width: 100%;
       box-sizing: border-box;
       @include transition(border-color, box-shadow);
 
       &:hover {
-        border-color: darken($red, 10%);
+        border-color: lighten($all-blue, 10%); // Softer blue on hover
       }
 
       @include focus-ring;
 
       &:focus {
-        border-color: $red;
-        box-shadow: 0 0 0 0.2rem rgba($red, 0.15);
+        border-color: $all-blue;
+        box-shadow: 0 0 0 3px rgba($all-blue, 0.15); // Softer, diffused focus
       }
 
       &[readonly] {
-        background: $neutral-100;
+        background: lighten($neutral-100, 1%); // Even softer background
         cursor: not-allowed;
         border-color: $neutral-300;
         color: $neutral-800;
       }
 
       &.is-invalid {
-        border-color: $red;
+        border-color: $all-red;
 
         &:focus {
-          box-shadow: 0 0 0 0.2rem rgba($red, 0.25);
+          box-shadow: 0 0 0 3px rgba($all-red, 0.2); // Softer red focus
         }
       }
     }
 
     .invalid-feedback {
-      font-size: 0.8rem;
-      color: $red; /* Red touch for validation */
-      font-weight: $font-weight-medium;
-      margin-top: 0.25rem;
+      font-size: 0.75rem; // Smaller, gentler feedback
+      color: $all-red;
+      font-weight: 400; // Lighter weight
+      margin-top: 0.3rem;
       display: block;
     }
   }
 
   .btn {
-    font-weight: $font-weight-bold;
-    font-size: 0.9rem;
-    padding: 0.5rem 1.5rem;
-    border-radius: 30px;
-    min-width: 140px;
+    font-family: $font-heading;
+    font-weight: 500; // Lighter weight for softness
+    font-size: 0.85rem; // Smaller, gentler text
+    padding: 0.6rem 1.6rem; // More padding for comfort
+    border-radius: 40px; // Rounder for a softer look
+    min-width: 150px; // Slightly wider for ease
     @include transition(background-color, transform, border-color);
 
     &.btn-primary {
-      background: $red; /* Enhanced red touch */
-      border-color: $red;
+      background: $all-blue; // Blue for primary
+      border-color: $all-blue;
       color: $white;
 
       &:hover {
-        background: darken($red, 10%);
-        border-color: darken($red, 10%);
+        background: lighten($all-blue, 5%); // Softer hover
+        border-color: lighten($all-blue, 5%);
         transform: translateY(-1px);
       }
 
@@ -136,20 +137,20 @@ $font-weight-bold: 700;
       }
 
       &:disabled {
-        background: darken($red, 20%);
-        border-color: darken($red, 20%);
-        opacity: 0.7;
+        background: $neutral-300; // Softer disabled state
+        border-color: $neutral-300;
+        opacity: 0.6; // More transparent for gentleness
       }
     }
 
     &.btn-success {
-      background: $pcb-green;
-      border-color: $red; /* Enhanced red touch */
+      background: $all-blue; // Blue for consistency
+      border-color: $all-blue;
       color: $white;
 
       &:hover {
-        background: $red; /* Red touch on hover */
-        border-color: darken($red, 10%);
+        background: lighten($all-blue, 5%); // Softer hover
+        border-color: lighten($all-blue, 5%);
         transform: translateY(-1px);
       }
 
@@ -158,9 +159,9 @@ $font-weight-bold: 700;
       }
 
       &:disabled {
-        background: darken($pcb-green, 20%);
-        border-color: darken($red, 20%);
-        opacity: 0.7;
+        background: $neutral-300; // Softer disabled state
+        border-color: $neutral-300;
+        opacity: 0.6;
       }
     }
 
@@ -168,8 +169,8 @@ $font-weight-bold: 700;
   }
 
   .d-flex.justify-content-between {
-    margin-top: 2rem;
-    gap: 1rem;
+    margin-top: 2.5rem; // More space for a relaxed feel
+    gap: 1.2rem; // Wider gap for comfort
 
     @media (max-width: 576px) {
       flex-direction: column;
@@ -177,7 +178,7 @@ $font-weight-bold: 700;
 
       .btn {
         width: 100%;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem; // More space for softness
       }
     }
   }

@@ -3,13 +3,13 @@ import { ValidateEmployeeService } from '../../../Services/validate-employee.ser
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-header',
-  standalone :false,
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'app-traca-header',
+  standalone: false,
+  templateUrl: './traca-header.component.html',
+  styleUrl: './traca-header.component.scss'
 })
-export class HeaderComponent {
-  constructor(
+export class TracaHeaderComponent {
+constructor(
     public authService: ValidateEmployeeService,
     private router: Router
   ) {}

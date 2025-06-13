@@ -4,7 +4,7 @@ import { GalliaDto } from '../../../models/GalliaDto';
 
 @Component({
   selector: 'app-label-detail-dialog',
-  standalone : false,
+  standalone: false,
   templateUrl: './label-detail-dialog.component.html',
   styleUrls: ['./label-detail-dialog.component.scss']
 })

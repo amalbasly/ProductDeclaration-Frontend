@@ -1,28 +1,20 @@
-<header *ngIf="auth.currentUser$ | async as user" class="thin-header">
-  <div class="header-content">
-    <div class="search-bar">
-      <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search...">
-    </div>
-    
-    <div class="header-actions">
-      <button class="notification-btn">
-        <i class="fas fa-bell"></i>
-        <span class="badge">{{notifications.length}}</span>
-      </button>
-      
-      <div class="dropdown-container">
-        <button class="menu-btn" (click)="toggleDropdown()">
-          <i class="fas fa-ellipsis-v"></i>
-        </button>
-        
-        <div class="dropdown-menu" *ngIf="showDropdown">
-          <a href="#"><i class="fas fa-envelope"></i> Messages</a>
-          <a href="#"><i class="fas fa-question-circle"></i> Help Center</a>
-          <a href="#"><i class="fas fa-cog"></i> Settings</a>
-          <a (click)="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</a>
-        </div>
-      </div>
-    </div>
+<header class="header-container">
+  <!-- App Title -->
+  <div class="app-title">
+    <i class="fas fa-microchip"></i>
+    <h1>FlowTrack</h1>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <!-- Profile Button -->
+    <button mat-icon-button class="profile-btn" routerLink="/rh/profile" matTooltip="View Profile">
+      <i class="fas fa-user"></i>
+    </button>
+
+    <!-- Logout Button -->
+    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Logout">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
   </div>
 </header>

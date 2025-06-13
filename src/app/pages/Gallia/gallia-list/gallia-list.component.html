@@ -1,8 +1,8 @@
 <div class="gallia-list-container">
   <div class="header">
-    <h2>{{ labelName === 'Etiquette' ? 'Label List' : 'Gallia Labels' }}</h2>
+    <h2>{{ labelName === 'Etiquette' ? 'Standard Label List' : 'Gallia Labels' }}</h2>
     <button mat-raised-button color="primary" [routerLink]="getCreateRoute()">
-      {{ labelName === 'Etiquette' ? 'Create New Label' : 'Create New Gallia Label' }}
+      {{ labelName === 'Etiquette' ? 'Create New Standard Label' : 'Create New Gallia Label' }}
     </button>
   </div>
 
@@ -31,7 +31,7 @@
 
       <!-- Gallia Name Column -->
       <ng-container matColumnDef="galliaName">
-        <th mat-header-cell *matHeaderCellDef>{{ labelName === 'Etiquette' ? 'Label Name' : 'Gallia Name' }}</th>
+        <th mat-header-cell *matHeaderCellDef>{{ labelName === 'Etiquette' ? 'Standard Label Name' : 'Gallia Name' }}</th>
         <td mat-cell *matCellDef="let element">
           {{ element.galliaName || 'N/A' }}
         </td>

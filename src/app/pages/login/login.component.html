@@ -1,69 +1,40 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMS Connexion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-<body>
-    <div class="page-wrapper">
-        <div class="login-container">
-            <div class="left-section">
-                <h2>Connexion</h2>
-                <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-                    <div class="input-group">
-                        <label for="credentials">Entrez le Matricule, Nom et Prénom</label>
-                        <input
-                            type="text"
-                            id="credentials"
-                            [(ngModel)]="credentials"
-                            name="credentials"
-                            placeholder="Matricule Nom Prénom"
-                            required
-                            [disabled]="isLoading"
-                            (input)="errorMessage = ''">
-                        <div *ngIf="loginForm.submitted && !credentials" class="error-message">
-                            Veuillez saisir vos informations
-                        </div>
+<div class="page-wrapper">
+    <div class="login-container">
+        <div class="left-section">
+            <h2>Login</h2>
+            <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+                <div class="input-group">
+                    <label for="credentials">Flash your Badge</label>
+                    <input
+                        type="text"
+                        id="credentials"
+                        [(ngModel)]="credentials"
+                        name="credentials"
+                        placeholder="Scan or enter your badge info"
+                        required
+                        [disabled]="isLoading"
+                        (input)="errorMessage = ''">
+                    <div *ngIf="loginForm.submitted && !credentials" class="error-message">
+                        Please provide your badge details to log in
                     </div>
-                    <button type="submit" [disabled]="isLoading || !credentials">
-                        <span *ngIf="!isLoading">Se connecter</span>
-                        <span *ngIf="isLoading">
-                            <i class="fas fa-spinner fa-spin"></i> Vérification...
-                        </span>
-                    </button>
-                </form>
-            </div>
-
-            <div class="right-section">
-                <img src="assets/Logo.ico" alt="Logo EMS" class="logo">
-                <h2>Bon Retour !</h2>
-                <p>Connectez-vous pour continuer</p>
-                <p>An ALL Circuits Company </p>
-                <div *ngIf="errorMessage" class="error-message">
-                    <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
                 </div>
+                <button type="submit" [disabled]="isLoading || !credentials">
+                    <span *ngIf="!isLoading">Log In</span>
+                    <span *ngIf="isLoading">
+                        <i class="fas fa-spinner fa-spin"></i> Verifying...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <div class="right-section">
+            <img src="assets/Logo.ico" alt="EMS Logo" class="logo">
+            <h2>Welcome Back!</h2>
+            <p>Log in to continue</p>
+            <p class="company">An ALL Circuits Company</p>
+            <div *ngIf="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const container = document.querySelector('.page-wrapper');
-            for(let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.cssText = `
-                    width: ${Math.random() * 5 + 2}px;
-                    height: ${Math.random() * 5 + 2}px;
-                    left: ${Math.random() * 100}%;
-                    animation-duration: ${Math.random() * 10 + 10}s;
-                    animation-delay: ${Math.random() * 10}s;
-                `;
-                container.appendChild(particle);
-            }
-        });
-    </script>
-</body>
-</html>
+</div>

@@ -1,1 +1,195 @@
-<p>traca-dashboard works!</p>
+<div class="traceability-dashboard">
+  <!-- Dashboard Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="dashboard-title">
+          <span class="title-icon"><i class="fas fa-clipboard-check"></i></span>
+          <span>Traceability Center</span>
+        </h1>
+        <p class="dashboard-subtitle">Monitor and manage product approvals and compliance</p>
+      </div>
+      <div class="header-controls">
+        <div class="date-filter">
+          <i class="fas fa-calendar-week"></i>
+          <span>{{ currentDate | date:'MMMM d, y' }}</span>
+        </div>
+        <button mat-flat-button class="refresh-btn" color="primary" (click)="refreshData()">
+          <i class="fas fa-sync"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-value">{{ pendingCount }}</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ approvedToday }}</div>
+        <div class="stat-label">Approved Today</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ rejectedCount }}</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ totalProducts }}</div>
+        <div class="stat-label">Total Products</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Content -->
+  <div class="dashboard-content">
+    <!-- Left Column -->
+    <div class="dashboard-column">
+      <!-- Enhanced Approval Status Card -->
+      <div class="dashboard-card status-card">
+        <div class="card-header">
+          <h2><i class="fas fa-chart-pie"></i> Approval Status</h2>
+          <div class="time-filter">
+            <button mat-button (click)="filterByTime('week')" [class.active]="timeFilter === 'week'">Week</button>
+            <button mat-button (click)="filterByTime('month')" [class.active]="timeFilter === 'month'">Month</button>
+            <button mat-button (click)="filterByTime('quarter')" [class.active]="timeFilter === 'quarter'">Quarter</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="chart-container">
+            <canvas #approvalStatusChart></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item approved">
+              <span class="legend-color"></span>
+              <span class="legend-label">Approved ({{ approvalStats.approved }})</span>
+            </div>
+            <div class="legend-item pending">
+              <span class="legend-color"></span>
+              <span class="legend-label">Pending ({{ approvalStats.pending }})</span>
+            </div>
+            <div class="legend-item rejected">
+              <span class="legend-color"></span>
+              <span class="legend-label">Rejected ({{ approvalStats.rejected }})</span>
+            </div>
+            <div class="legend-item completed">
+              <span class="legend-color"></span>
+              <span class="legend-label">Completed ({{ approvalStats.completed }})</span>
+            </div>
+          </div>
+          <div class="chart-details">
+            <div class="detail-row">
+              <span class="detail-label">Approval Rate</span>
+              <span class="detail-value positive">{{ approvalStats.approvalRate }}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Avg. Pending Duration</span>
+              <span class="detail-value neutral">{{ approvalStats.avgPendingDuration }} days</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Rejection Trend</span>
+              <span class="detail-value negative">{{ approvalStats.rejectionTrend }}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Completion Goal</span>
+              <span class="detail-value neutral">{{ approvalStats.completionGoal }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity Stream -->
+      <div class="dashboard-card activity-stream">
+        <div class="card-header">
+          <h2><i class="fas fa-stream"></i> Activity Stream</h2>
+          <button mat-button (click)="viewAllActivities()">View All</button>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon" [class]="activity.type">
+              <i [class]="activity.icon"></i>
+            </div>
+            <div class="activity-details">
+              <div class="activity-message">{{ activity.message }}</div>
+              <div class="activity-meta">
+                <span class="activity-time">{{ activity.timestamp | date:'shortTime' }}</span>
+                <span class="activity-date">{{ activity.timestamp | date:'MMM d' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="dashboard-column">
+      <!-- Approval Requests -->
+      <div class="dashboard-card approval-requests">
+        <div class="card-header">
+          <h2><i class="fas fa-tasks"></i> Approval Queue</h2>
+          <div class="requests-filter">
+            <mat-form-field appearance="outline">
+              <mat-label>Filter</mat-label>
+              <mat-select [(value)]="requestFilter" (selectionChange)="filterRequests()">
+                <mat-option value="all">All Requests</mat-option>
+                <mat-option value="pending">Pending Only</mat-option>
+                <mat-option value="urgent">Urgent</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="requests-list">
+          <div class="request-item" *ngFor="let request of filteredRequests" [class.urgent]="request.priority === 'high'">
+            <div class="request-info">
+              <div class="request-id">{{ request.productId }}</div>
+              <div class="request-name">{{ request.productName }}</div>
+              <div class="request-meta">
+                <span class="requester"><i class="fas fa-user"></i> {{ request.requester }}</span>
+                <span class="date"><i class="fas fa-calendar"></i> {{ request.submissionDate | date:'shortDate' }}</span>
+              </div>
+            </div>
+            <div class="request-actions">
+              <div class="request-status" [class]="request.status">
+                {{ request.status | titlecase }}
+              </div>
+              <button mat-stroked-button (click)="reviewRequest(request)">
+                <i class="fas fa-eye"></i> Review
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance Trends -->
+      <div class="dashboard-card compliance-trends">
+        <div class="card-header">
+          <h2><i class="fas fa-chart-line"></i> Compliance Trends</h2>
+          <div class="trend-selector">
+            <button mat-icon-button (click)="previousPeriod()">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span>{{ trendPeriod }}</span>
+            <button mat-icon-button (click)="nextPeriod()">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="trend-chart">
+          <canvas #complianceTrendChart></canvas>
+        </div>
+        <div class="trend-stats">
+          <div class="trend-stat">
+            <div class="stat-value positive">+12%</div>
+            <div class="stat-label">Approval Rate</div>
+          </div>
+          <div class="trend-stat">
+            <div class="stat-value negative">-5%</div>
+            <div class="stat-label">Rejection Rate</div>
+          </div>
+          <div class="trend-stat">
+            <div class="stat-value">24h</div>
+            <div class="stat-label">Avg. Response</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,129 +1,101 @@
-@import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue&display=swap ');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@400;700;900&display=swap');
 
-// Colors
-$bg-header: #2d2d3f;
-$text-light: #e0e0e0;
-$accent: #929aab;
-$hover-bg: rgba(146, 154, 171, 0.15);
-$logout-hover: #e63946;
-$border-separator: rgba(255, 255, 255, 0.05);
+// Color Palette (from Sidebar)
+$all-red: #FF4757; 
+$all-blue: #096683;
+$white: #ffffff;
 
-// Font
-$font-main: 'Helvetica Neue LT Std', 'Helvetica Neue', Arial, sans-serif;
+// Gradient Colors
+$header-gradient-top: darken($all-blue, 15%);
+$header-gradient-bottom: darken($all-blue, 20%);
 
-// Mixin
-@mixin transition($prop: all, $time: 0.25s, $ease: ease) {
-  transition: $prop $time $ease;
-}
-
-// Animation
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// Fonts
+$font-family-heading: 'Fjalla One', sans-serif;
+$font-family-body: 'Lato', sans-serif;
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
-  background: $bg-header;
-  color: $text-light;
-  height: 48px;
-  font-family: $font-main;
-  border-bottom: 1px solid $border-separator;
-  animation: fadeIn 0.5s ease forwards;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 1.25rem;
+  background: linear-gradient(180deg, $header-gradient-top, $header-gradient-bottom);
+  color: $white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  width: calc(100% - 250px); // Same as sidebar width
+  left: 250px; // Align with sidebar
+  top: 0;
+  z-index: 999;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    left: 0;
+  }
 
   .app-title {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
 
     i {
-      font-size: 1.2rem;
-      color: $accent;
+      font-size: 1rem;
+      color: lighten($all-red, 10%);
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: rotate(10deg);
+      }
     }
 
     h1 {
-      font-family: $font-main;
-      font-weight: 500;
-      font-size: 1.1rem;
-      color: $text-light;
       margin: 0;
+      font-family: $font-family-heading;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      color: $white;
+      font-weight: normal;
     }
   }
 
   .action-buttons {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
 
-    .profile-btn,
-    .logout-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    button {
       background-color: transparent;
       border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      color: $accent;
-      @include transition(background-color, color, transform);
-      position: relative;
-
-      &:hover {
-        background: $hover-bg;
-        color: lighten($accent, 10%);
-        transform: scale(1.1);
-      }
-
-      &:active {
-        transform: scale(0.95);
-      }
+      transition: all 0.3s ease;
+      padding: 0;
 
       i {
-        font-size: 1.2rem;
-        transition: color 0.3s ease;
+        color: $white;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        background-color: rgba($white, 0.15);
+
+        i {
+          color: $all-red;
+        }
       }
     }
 
     .logout-btn:hover {
-      color: $logout-hover;
-    }
-  }
+      background-color: rgba($all-red, 0.15);
 
-  @media (max-width: 768px) {
-    padding: 0.5rem;
-
-    .app-title {
-      h1 {
-        font-size: 1rem;
-      }
       i {
-        font-size: 1rem;
-      }
-    }
-
-    .action-buttons {
-      gap: 0.3rem;
-
-      .profile-btn,
-      .logout-btn {
-        width: 28px;
-        height: 28px;
-
-        i {
-          font-size: 1rem;
-        }
+        color: $all-red;
       }
     }
   }

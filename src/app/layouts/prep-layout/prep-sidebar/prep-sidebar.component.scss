@@ -1,12 +1,21 @@
-// Colors
-$bg-dark: #1e1e2f;
-$text-light: #e0e0e0;
-$accent: #929aab; // Gray tone accent
-$hover-bg: rgba(146, 154, 171, 0.15);
-$submenu-bg: #2a2a3a;
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@400;700;900&display=swap');
+
+// Use HR Theme Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
+$white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue; // Accent is now based on all-blue
+$text-light: $white;
+
+// Background tones
+$bg-dark: darken($all-blue, 20%); // Matches previous gradient look
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15%);
 
 // Font
-$font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
+$font-main: 'Lato', Calibri, Arial, sans-serif;
 
 .sidebar {
   width: 250px;
@@ -22,32 +31,45 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
   transition: transform 0.3s ease-in-out;
 
   .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-bottom: 20px;
-    padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 10px;
 
-    i {
-      font-size: 2.2rem;
-      color: $accent;
-      margin-bottom: 10px;
-      transition: transform 0.3s ease;
-    }
-
-    h2 {
-      font-family: $font-main;
-      font-size: 1.1rem;
-      margin: 0;
-      text-align: center;
-      color: $text-light;
-    }
-
-    &:hover i {
-      transform: rotate(8deg);
-    }
+  i {
+    font-size: 2.2rem;
+    color: $accent;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
   }
+
+  h2 {
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.1rem;
+    margin: 0;
+    text-align: center;
+    color: $text-light;
+  }
+
+  // Add this for the role badge
+  .role-badge {
+    background-color: $accent;
+    color: $white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &:hover i {
+    transform: rotate(8deg);
+  }
+}
 
   .nav-links {
     list-style: none;
@@ -66,12 +88,14 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
         text-decoration: none;
         font-size: 14px;
         transition: all 0.3s ease;
+        border-left: 4px solid transparent;
 
         i {
           min-width: 20px;
           text-align: center;
           margin-right: 10px;
           color: $accent;
+          transition: all 0.3s ease;
         }
 
         span {
@@ -83,17 +107,23 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
           background-color: $hover-bg;
           border-left: 4px solid $accent;
           padding-left: 16px;
+          color: $white;
+
+          i,
+          span {
+            color: $white;
+          }
         }
 
         &:hover i,
         &:hover span {
-          color: $accent;
+          color: $white;
         }
       }
 
       &.has-submenu {
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 1px solid rgba($white, 0.05);
+        border-bottom: 1px solid rgba($white, 0.05);
 
         .dropdown-icon {
           margin-left: auto;
@@ -150,7 +180,7 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
     padding: 15px 20px;
     font-size: 13px;
     font-family: $font-main;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba($white, 0.05);
     margin-top: auto;
 
     i {
@@ -161,6 +191,10 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
     span {
       word-break: break-word;
     }
+
+    &:hover {
+      background-color: $hover-bg;
+    }
   }
 
   .logout {
@@ -170,7 +204,7 @@ $font-main: 'Helvetica Neue LT Std', Arial, sans-serif;
     font-family: $font-main;
     color: $accent;
     cursor: pointer;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba($white, 0.05);
     transition: background-color 0.2s ease;
 
     &:hover {

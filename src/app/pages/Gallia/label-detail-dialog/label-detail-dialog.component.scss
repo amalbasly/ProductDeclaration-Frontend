@@ -1,63 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
+
+// Brand Colors
+$all-red: #FF4757;
+$all-blue: #0b6985;
+$white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue;
+$border-accent: $all-red;
+$text-light: $white;
+$bg-dark: darken($all-blue, 20%);
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15%);
+
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
+
+:host {
+  display: block;
+}
+
+h1[mat-dialog-title] {
+  font-family: $font-heading;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $all-blue;
+  padding: 1rem 1.25rem;
+  margin: 0;
+  border-bottom: 1px solid $neutral-200;
+  background-color: $white;
+  letter-spacing: 0.3px;
+}
+
+.mat-dialog-content {
+  padding: 1.25rem;
+  margin: 0;
+  background-color: $white;
+  max-height: 70vh;
+  overflow: auto;
+}
+
 .label-detail-container {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 
   .label-image-container {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
+    align-items: flex-start;
+    max-height: 60vh;
+    overflow: auto; // Changed to auto for scrollable container
+    background-color: #f9f9f9; // Light background for better visibility
+    padding: 1rem;
+    box-sizing: border-box;
 
     .full-label-image {
-      max-width: 100%;
-      max-height: 500px;
+      width: auto; // Changed from 100% to auto
+      max-width: 100%; // Ensures it doesn't exceed container
+      height: auto; // Maintains aspect ratio
+      max-height: none; // Removed fixed max-height
       object-fit: contain;
+      object-position: top;
+      border: 1px solid $neutral-200;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
+      display: block;
     }
 
     .no-image {
-      color: #999;
-      font-style: italic;
+      padding: 1.5rem;
+      text-align: center;
+      color: $all-red;
+      font-family: $font-body;
+      font-size: 0.9rem;
+      background: lighten($all-red, 45%);
+      border-radius: 6px;
+      width: 100%;
     }
   }
 
   .label-details {
     flex: 1;
-    padding: 10px;
+    padding: 1rem;
+    background: lighten($neutral-200, 3%);
+    border-radius: 8px;
+    border: 1px solid $neutral-200;
+    overflow-y: auto; // Added scroll for details if needed
+    max-height: 60vh;
 
     h2 {
-      margin-top: 0;
-      color: #333;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-    }
-
-    p {
-      margin: 10px 0;
-      color: #555;
+      font-family: $font-heading;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: $all-blue;
+      margin-bottom: 0.8rem;
     }
 
     h3 {
-      margin: 20px 0 10px 0;
-      color: #333;
+      font-family: $font-heading;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: $all-blue;
+      margin: 1rem 0 0.5rem;
+    }
+
+    p {
+      font-family: $font-body;
+      font-size: 0.9rem;
+      color: $bg-dark;
+      margin: 0.4rem 0;
+
+      strong {
+        color: $all-blue;
+        margin-right: 0.3rem;
+      }
     }
 
     .field-detail {
-      margin-bottom: 8px;
-      padding-left: 10px;
-      border-left: 3px solid #eee;
+      padding: 0.5rem 0;
+      border-top: 1px dotted $neutral-200;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+}
+
+.mat-dialog-actions {
+  padding: 0.75rem 1.25rem;
+  margin: 0;
+  border-top: 1px solid $neutral-200;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  button {
+    font-family: $font-heading;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+
+    &[color="primary"] {
+      background-color: $accent;
+      color: $text-light;
+      &:hover {
+        background-color: lighten($accent, 10%);
+      }
+    }
+
+    &:not([color="primary"]) {
+      background-color: $white;
+      color: $bg-dark;
+      border: 1px solid $neutral-200;
+      &:hover {
+        background-color: $hover-bg;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .label-detail-container {
+    flex-direction: column;
+
+    .label-image-container {
+      max-height: 50vh;
+      padding: 0.5rem;
+    }
+
+    .label-details {
+      max-height: none;
     }
   }
 }
 
 @media print {
-  .label-detail-container {
-    flex-direction: column;
+  .mat-dialog-actions,
+  .mat-dialog-title {
+    display: none !important;
+  }
 
-    .label-image-container {
-      margin-bottom: 20px;
-    }
+  .mat-dialog-content {
+    padding: 0 !important;
+    max-height: none !important;
+  }
+
+  .label-image-container {
+    border: none !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    padding: 0 !important;
+    background: none !important;
+  }
+
+  .label-details {
+    display: none !important;
+  }
+
+  .full-label-image {
+    max-height: none !important;
+    max-width: 100% !important;
   }
 }

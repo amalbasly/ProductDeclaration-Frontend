@@ -1,36 +1,30 @@
-<!-- Fullscreen Container -->
 <div class="fullscreen-container">
-  <!-- Table Card -->
   <div class="full-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h3>Liste des flans découpés</h3>
-          <a [routerLink]="['/' + userRole + '/flanC']" class="btn btn-primary">Nouvelle decoupe</a>
-
+      <h3>Cut Flan List</h3>
+      <a [routerLink]="['/' + userRole + '/flanC']" class="btn btn-primary">New Cut</a>
     </div>
 
-    <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="text-center spinner-wrapper">
       <div class="spinner-border text-danger" role="status">
-        <span class="sr-only">Chargement...</span>
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
 
-    <!-- Error Messages -->
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
     <div *ngIf="!flanDecoupes.success" class="alert alert-danger">{{ flanDecoupes.message }}</div>
     <div *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length === 0 && !isLoading"
          class="alert alert-info">
-      Aucun flan découpé trouvé
+      No flan cuts found
     </div>
 
-    <!-- Table -->
     <table *ngIf="flanDecoupes.success && flanDecoupes.flanDecoupes.length > 0 && !isLoading"
            class="table table-hover">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Produit original</th>
-          <th>Nombre de parts</th>
+          <th>Original Product</th>
+          <th>Parts Count</th>
           <th>Label</th>
           <th>Date</th>
           <th>Actions</th>
@@ -47,7 +41,7 @@
           <td>{{ item.dateDecoupe | date:'medium' }}</td>
           <td>
             <button class="btn btn-sm btn-details" (click)="openDetails(item, detailsModal)">
-              Détails
+              Details
             </button>
           </td>
         </tr>
@@ -56,8 +50,6 @@
   </div>
 </div>
 
-<!-- Modal Template -->
-<!-- Modal Template -->
 <ng-template #detailsModal let-modal>
   <div class="modal-overlay" [class.open]="modal.isOpen">
     <div class="modal-content-full">
@@ -68,19 +60,17 @@
       <div class="modal-body">
         <div *ngIf="selectedFlanDecoupe" class="pcb-container">
 
-          <!-- Big Flan Card -->
-           <h5 class="parts-title">Carte Original</h5>
+          <h5 class="parts-title">Original Product</h5>
           <div class="pcb-card big-pcb">
             <h5 class="pcb-title">{{ selectedFlanDecoupe.ptNumOriginal }}</h5>
             <p><strong>ID:</strong> {{ selectedFlanDecoupe.idDecoupe }}</p>
             <p><strong>Label:</strong> {{ selectedFlanDecoupe.labelUtilise }}</p>
             <p><strong>Date:</strong> {{ selectedFlanDecoupe.dateDecoupe | date:'medium' }}</p>
-            <p><strong>Utilisateur:</strong> {{ selectedFlanDecoupe.utilisateur }}</p>
+            <p><strong>User:</strong> {{ selectedFlanDecoupe.utilisateur }}</p>
             <p><strong>Parts:</strong> {{ selectedFlanDecoupe.nombreDeParts }}</p>
           </div>
 
-          <!-- Parts Cards -->
-          <h5 class="parts-title">Parts associées</h5>
+          <h5 class="parts-title">Associated Parts</h5>
           <div class="parts-container">
             <div *ngFor="let part of selectedFlanDecoupe.parts" class="part-card pcb-component">
               <h6>{{ part.codePartie }}</h6>

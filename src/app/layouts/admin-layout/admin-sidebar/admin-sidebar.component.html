@@ -3,8 +3,9 @@
 
     <!-- Logo & User Info -->
     <div class="logo">
-      <i class="fas fa-user-tie"></i>
+      <i class="fas fa-user-shield"></i>
       <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
+      <div class="role-badge">Admin</div>
     </div>
 
     <!-- Navigation Links -->
@@ -98,20 +99,20 @@
       <li class="has-submenu" [class.open]="isLabelSubmenuOpen">
         <a (click)="toggleLabelSubmenu()">
           <i class="fas fa-tag"></i>
-          <span>Label</span>
+          <span>Standard Label</span>
           <i class="dropdown-icon fas fa-chevron-down"></i>
         </a>
         <ul class="submenu">
           <li>
             <a routerLink="/admin/create-etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
               <i class="fas fa-plus"></i>
-              <span>Create Label</span>
+              <span>Create Standard Label</span>
             </a>
           </li>
           <li>
             <a routerLink="/admin/etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
               <i class="fas fa-list"></i>
-              <span>Label List</span>
+              <span>Standard Label List</span>
             </a>
           </li>
         </ul>
@@ -168,9 +169,13 @@
     </ul>
 
     <!-- Email Footer -->
-    <div class="user-email">
-      <i class="fas fa-envelope"></i>
-      <span>{{ user?.employeeEmail || '' }}</span>
+    <div class="sidebar-footer">
+      <div class="user-email">
+        <div class="email-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <span class="email-text">{{ user?.employeeEmail || '' }}</span>
+      </div>
     </div>
 
   </div>

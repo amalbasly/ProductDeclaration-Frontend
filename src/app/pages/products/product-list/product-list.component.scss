@@ -1,134 +1,282 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
+// Brand Colors
+$all-red: #FF4757;  
+$all-blue: #0b6985;
+$white: #ffffff;
 $neutral-100: #f8fafc;
 $neutral-300: #cbd5e1;
 $neutral-800: #1e293b;
-$white: #ffffff;
-$red: #e63946;
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
-@mixin transition($prop: all, $time: 0.2s, $ease: ease-out) {
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
   transition: $prop $time $ease;
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($pcb-copper, 0.7);
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($all-blue, 0.2);
   }
 }
 
 .full-width-container {
   width: 100%;
-  max-width: 1280px;
-  margin: 2rem auto;
-  padding: 2rem;
-  box-sizing: border-box;
-  background: $white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: $font-family-base;
+  max-width: 1300px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: $neutral-100;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba($all-blue, 0.06);
+  font-family: $font-body;
 
+  // Status Messages
   .status-message {
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    font-weight: $font-weight-medium;
-    font-size: 1rem;
+    padding: 1.2rem;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    font-size: 0.95rem;
     text-align: center;
-    border-left: 4px solid;
-    
+    font-weight: 400;
+    border-left: 3px solid;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+
     &.loading {
-      background: lighten($neutral-100, 1%);
-      border-color: $red;
+      background: lighten($neutral-100, 2%);
+      border-color: $all-blue;
       color: $neutral-800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
 
       &:before {
         content: '';
         display: inline-block;
-        width: 1.5rem;
-        height: 1.5rem;
-        border: 3px solid $red;
+        width: 1.2rem;
+        height: 1.2rem;
+        border: 2px solid $all-blue;
         border-top-color: transparent;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        animation: spin 1.2s linear infinite;
       }
     }
 
     &.error {
-      background: lighten($red, 40%);
-      border-color: $red;
-      color: darken($red, 25%);
-      box-shadow: 0 2px 6px rgba($red, 0.2);
+      background: lighten($all-red, 45%);
+      border-color: $all-red;
+      color: darken($all-red, 10%);
     }
 
     &.success {
-      background: lighten($pcb-green, 45%);
-      border-color: $pcb-green;
-      color: $pcb-green-dark;
+      background: lighten($all-blue, 40%);
+      border-color: $all-blue;
+      color: $neutral-800;
     }
   }
 
+  // Filters Section
   .filter-controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
-    background: $neutral-100;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid rgba($red, 0.3);
-    box-shadow: 0 2px 6px rgba($red, 0.1);
+    background: $white;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 14px;
+    border: 1px solid rgba($all-blue, 0.1);
+    box-shadow: 0 2px 6px rgba($all-blue, 0.05);
 
-    input, select {
-      padding: 0.5rem 1rem;
-      min-width: 180px;
-      border: 1px solid $red;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      color: $neutral-800;
-      background: $white;
-      @include transition(border-color, box-shadow);
+    .mat-form-field {
+      min-width: 200px;
+      input,
+      select {
+        padding: 0.6rem 1.2rem;
+        border: 1px solid $neutral-300;
+        border-radius: 30px;
+        background: $white;
+        @include transition(border-color, box-shadow);
 
-      &:hover {
-        border-color: darken($red, 10%);
+        &:hover {
+          border-color: $all-blue;
+        }
+
+        @include focus-ring;
+
+        &:focus {
+          border-color: $all-blue;
+          box-shadow: 0 0 0 3px rgba($all-blue, 0.1);
+        }
       }
 
-      @include focus-ring;
-
-      &:focus {
-        border-color: $red;
-        box-shadow: 0 0 0 3px rgba($red, 0.15);
+      .mat-icon {
+        color: $all-blue;
+        font-size: 1.1rem;
       }
     }
 
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-left: auto;
+
+      button {
+        background: $all-blue;
+        color: $white;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        cursor: pointer;
+        @include transition(background-color, transform);
+        box-shadow: 0 2px 4px rgba($all-blue, 0.1);
+
+        &:hover {
+          background: lighten($all-blue, 5%);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &.clear-button {
+          background: $white;
+          color: $all-red;
+          border: 1px solid $all-red;
+          box-shadow: 0 2px 4px rgba($all-red, 0.1);
+
+          &:hover {
+            background: lighten($all-red, 45%);
+          }
+        }
+
+        .mat-icon {
+          font-size: 1.1rem;
+          margin-right: 0.3rem;
+        }
+      }
+    }
+  }
+
+  // Table Section
+  .table-responsive {
+    overflow-x: auto;
+
+    .product-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      background: $white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+      margin-top: 1.5rem;
+
+      thead {
+        background: lighten($all-blue, 10%);
+        color: $white;
+      }
+
+      th, td {
+        padding: 0.9rem 0.6rem;
+        font-size: 0.85rem;
+        border-bottom: 1px solid $neutral-300;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center;
+      }
+
+      th {
+        font-family: $font-heading;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-size: 0.75rem;
+      }
+
+      tr:hover {
+        background: rgba($all-blue, 0.03);
+        box-shadow: inset 0 0 0 1px rgba($all-blue, 0.08);
+      }
+
+      // Action Icons (Edit/Delete)
+      td.actions {
+        white-space: nowrap;
+        .edit-btn, .delete-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          margin: 0 0.3rem;
+          @include transition(transform, color);
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          .mat-icon {
+            font-size: 1.1rem;
+          }
+
+          &.edit-btn .mat-icon {
+            color: $all-blue;
+            &:hover {
+              color: lighten($all-blue, 10%);
+            }
+          }
+
+          &.delete-btn .mat-icon {
+            color: $all-red;
+            &:hover {
+              color: lighten($all-red, 5%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Empty State
+  .no-products {
+    text-align: center;
+    padding: 2.5rem;
+    font-style: italic;
+    font-size: 1rem;
+    color: $neutral-800;
+    background: $white;
+    border-radius: 10px;
+    border: 1px solid rgba($all-blue, 0.1);
+    margin-top: 1.5rem;
+  }
+
+  // Create Buttons
+  .create-buttons {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+
     button {
-      background: $pcb-green;
+      background: $all-blue;
       color: $white;
-      border: 1px solid $red;
-      padding: 0.5rem 1.4rem;
+      border: none;
+      padding: 0.6rem 1.5rem;
       border-radius: 30px;
-      font-weight: $font-weight-bold;
-      font-size: 0.9rem;
+      font-family: $font-heading;
+      font-weight: 500;
+      font-size: 0.85rem;
       cursor: pointer;
-      @include transition(background-color, transform, border-color);
-      box-shadow: 0 2px 6px rgba($red, 0.2);
+      @include transition(background-color, transform);
+      box-shadow: 0 2px 4px rgba($all-blue, 0.1);
 
       &:hover {
-        background: $red;
-        border-color: darken($red, 10%);
+        background: lighten($all-blue, 5%);
         transform: translateY(-1px);
       }
 
@@ -137,224 +285,82 @@ $font-weight-bold: 700;
       }
 
       @include focus-ring;
-
-      &:last-child {
-        background: $white;
-        color: $red;
-        border-color: $red;
-        box-shadow: 0 2px 6px rgba($red, 0.2);
-
-        &:hover {
-          background: lighten($red, 40%);
-          border-color: $red;
-        }
-      }
     }
-  }
-
-  .table-responsive {
-    overflow-x: visible;
-
-    .product-table {
-      width: 100%;
-      table-layout: fixed;
-      border-collapse: collapse;
-      background: $white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-      margin-top: 1rem;
-
-      thead {
-        background: $pcb-green-dark;
-        color: $white;
-      }
-
-      th, td {
-        padding: 1rem 0.75rem;
-        font-size: 0.9rem;
-        border-bottom: 1px solid $neutral-300;
-        word-wrap: break-word;
-        white-space: normal;
-        text-align: center;
-      }
-
-      th {
-        font-weight: $font-weight-bold;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        font-size: 0.8rem;
-      }
-
-      tbody tr:hover {
-        background: lighten($red, 45%);
-        box-shadow: inset 0 0 0 1px rgba($red, 0.2);
-      }
-
-      td.actions {
-        white-space: nowrap;
-
-        .delete-btn, .edit-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          margin: 0 0.25rem;
-          @include transition(transform, color);
-
-          &:hover {
-            transform: scale(1.1);
-          }
-
-          .material-icons {
-            font-size: 1.2rem;
-          }
-        }
-
-        .delete-btn .material-icons {
-          color: $red;
-          &:hover {
-            color: darken($red, 12%);
-          }
-        }
-
-        .edit-btn .material-icons {
-          color: $pcb-green;
-          &:hover {
-            color: lighten($red, 10%);
-          }
-        }
-      }
-    }
-  }
-
-  .no-products {
-    text-align: center;
-    padding: 2rem;
-    font-style: italic;
-    font-size: 1.1rem;
-    color: $red;
-    background: lighten($red, 48%);
-    border-radius: 8px;
-    border: 1px solid rgba($red, 0.3);
-    margin-top: 1rem;
-  }
-}
-
-.create-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
-
-  button {
-    background: $pcb-green;
-    color: $white;
-    border: 1px solid $red;
-    padding: 0.5rem 1.4rem;
-    border-radius: 30px;
-    font-weight: $font-weight-bold;
-    font-size: 0.9rem;
-    cursor: pointer;
-    @include transition(background-color, transform, border-color);
-    box-shadow: 0 2px 6px rgba($red, 0.2);
-
-    &:hover {
-      background: $red;
-      border-color: darken($red, 10%);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    @include focus-ring;
   }
 }
 
 /* Dialog Styles */
 .dialog-content {
-  padding: 1rem;
-  font-family: $font-family-base;
+  padding: 1.2rem;
+  font-family: $font-body;
   color: $neutral-800;
 
-  .loading {
+  .loading,
+  .error,
+  .no-justification {
     text-align: center;
-    font-size: 1rem;
-    color: $neutral-800;
-    padding: 1rem;
-    background: lighten($neutral-100, 1%);
-    border-radius: 8px;
+    padding: 1.2rem;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    background: $white;
+    border: 1px solid rgba($all-blue, 0.1);
   }
 
   .error {
-    text-align: center;
-    font-size: 1rem;
-    color: darken($red, 25%);
-    background: lighten($red, 40%);
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid $red;
-  }
-
-  .justification-details {
-    p {
-      margin: 0.5rem 0;
-      font-size: 0.95rem;
-
-      strong {
-        font-weight: $font-weight-bold;
-        color: $pcb-green-dark;
-      }
-    }
+    color: darken($all-red, 10%);
+    background: lighten($all-red, 45%);
+    border-color: $all-red;
   }
 
   .no-justification {
-    text-align: center;
-    font-style: italic;
-    font-size: 1rem;
-    color: $red;
-    padding: 1rem;
-    background: lighten($red, 48%);
-    border-radius: 8px;
+    color: $neutral-800;
+    background: $white;
+  }
+
+  .justification-details p {
+    margin: 0.6rem 0;
+    font-size: 0.9rem;
+
+    strong {
+      font-weight: 500;
+      color: $neutral-800;
+    }
   }
 }
 
 .dialog-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
   justify-content: flex-end;
-  padding: 1rem;
+  padding: 1.2rem;
 
   button {
-    padding: 0.5rem 1.4rem;
+    padding: 0.6rem 1.5rem;
     border-radius: 30px;
-    font-weight: $font-weight-bold;
-    font-size: 0.9rem;
+    font-family: $font-heading;
+    font-weight: 500;
+    font-size: 0.85rem;
     cursor: pointer;
-    @include transition(background-color, transform, border-color);
-    box-shadow: 0 2px 6px rgba($red, 0.2);
+    @include transition(background-color, transform);
+    box-shadow: 0 2px 4px rgba($all-blue, 0.1);
 
     &[color="primary"] {
-      background: $pcb-green;
+      background: $all-blue;
       color: $white;
-      border: 1px solid $red;
+      border: none;
 
       &:hover {
-        background: darken($pcb-green, 10%);
-        border-color: darken($red, 10%);
+        background: lighten($all-blue, 5%);
         transform: translateY(-1px);
       }
     }
 
     &[color="warn"] {
       background: $white;
-      color: $red;
-      border: 1px solid $red;
-
+      color: $all-red;
+      border: 1px solid $all-red;
       &:hover {
-        background: lighten($red, 40%);
-        border-color: darken($red, 10%);
+        background: lighten($all-red, 45%);
         transform: translateY(-1px);
       }
     }
@@ -363,7 +369,6 @@ $font-weight-bold: 700;
       background: $neutral-100;
       color: $neutral-800;
       border: 1px solid $neutral-300;
-
       &:hover {
         background: $neutral-300;
         transform: translateY(-1px);
@@ -394,44 +399,39 @@ $font-weight-bold: 700;
 @media (max-width: 992px) {
   .full-width-container {
     padding: 1.5rem;
-    margin: 1rem auto;
+    margin: 1.5rem auto;
 
     .filter-controls {
-      gap: 0.75rem;
-
-      input, select {
-        min-width: 150px;
-        font-size: 0.85rem;
+      gap: 0.8rem;
+      .mat-form-field {
+        min-width: 160px;
+        font-size: 0.8rem;
       }
-
-      button {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
+      .action-buttons button {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
       }
     }
 
     .table-responsive .product-table {
       th, td {
-        padding: 0.75rem 0.4rem;
+        padding: 0.6rem 0.5rem;
         font-size: 0.8rem;
       }
-
       th {
         font-size: 0.7rem;
       }
     }
 
     .no-products {
-      font-size: 1rem;
+      font-size: 0.95rem;
       padding: 1.5rem;
     }
   }
 
   .dialog-content {
-    padding: 0.75rem;
-
     .justification-details p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
   }
 
@@ -452,20 +452,31 @@ $font-weight-bold: 700;
       flex-direction: column;
       align-items: stretch;
 
-      input, select, button {
+      .mat-form-field,
+      .action-buttons button {
         width: 100%;
-        min-width: unset;
       }
     }
 
-    .table-responsive .product-table {
-      display: block;
+    .table-responsive {
       overflow-x: auto;
-      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
 
+    .product-table {
+      display: block;
+      white-space: nowrap;
       th, td {
-        min-width: 100px;
+        min-width: 90px;
       }
     }
   }
+}
+.mat-column-actions {
+  list-style-type: none !important;
+  padding-left: 0 !important;
+}
+
+.mat-column-actions::after {
+  content: none !important;
 }

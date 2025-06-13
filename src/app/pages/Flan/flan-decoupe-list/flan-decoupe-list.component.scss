@@ -1,24 +1,22 @@
-// ALL Circuits Brand Colors
-$all-red: #E00034;
-$light-bg: #f8fafc;
+// New Color Palette
+$all-red: #FF4757;
+$all-blue: #0b6985;
 $white: #ffffff;
-$gray-light: #e9ecef;
-
-// PCB Theme Integration
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
 $neutral-100: #f8fafc;
-$neutral-800: #1e293b;
+$neutral-200: #edf2f7;
+$neutral-300: #cbd5e1;
+$bg-dark: darken($all-blue, 20%);
+$text-light: $white;
 
-// Font
-$font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+// Fonts
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
 .fullscreen-container {
   height: 100vh;
   padding: 2rem;
-  background-color: $light-bg;
-  font-family: $font-main;
+  background-color: $neutral-100;
+  font-family: $font-body;
 }
 
 .full-card {
@@ -30,21 +28,21 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   position: relative;
 
   .card-header {
-    border-bottom: 1px solid lighten($pcb-copper, 30%);
+    border-bottom: 1px solid lighten($all-red, 30%);
     margin-bottom: 1.5rem;
 
     h3 {
-      font-size: 1.4rem;
-      color: $pcb-green-dark;
+      font-family: $font-heading;
+      font-size: 1.5rem;
+      color: $all-blue;
       font-weight: 700;
-      position: relative;
 
       &:after {
         content: '';
         display: block;
         width: 60px;
         height: 4px;
-        background: $pcb-copper;
+        background: $all-red;
         border-radius: 2px;
         margin-top: 0.35rem;
       }
@@ -53,7 +51,7 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .btn-primary {
-  background-color: $pcb-green;
+  background-color: $all-blue;
   border: none;
   font-weight: 700;
   border-radius: 30px;
@@ -62,21 +60,21 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   color: $white;
 
   &:hover {
-    background-color: lighten($pcb-green, 10%);
+    background-color: lighten($all-blue, 10%);
   }
 }
 
 .btn-details {
   background-color: transparent;
-  color: $pcb-green;
-  border: 2px solid $pcb-green;
+  color: $all-blue;
+  border: 2px solid $all-blue;
   font-weight: 700;
   border-radius: 30px;
   padding: 0.4rem 1rem;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: $pcb-green;
+    background-color: $all-blue;
     color: $white;
   }
 }
@@ -86,13 +84,13 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   th {
     background-color: transparent;
-    color: $pcb-green-dark;
+    color: $bg-dark;
     font-weight: 600;
   }
 
   tr.flan-row:hover {
     cursor: pointer;
-    background-color: rgba($pcb-green, 0.07);
+    background-color: rgba($all-blue, 0.07);
   }
 }
 
@@ -111,14 +109,22 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   z-index: 1050;
 }
 
+.modal-overlay.open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .modal-content-full {
   background-color: $white;
+  border: 3px solid $all-red;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 12px;
   position: relative;
   max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
+  font-family: $font-body;
 }
 
 .close-button {
@@ -126,7 +132,7 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   top: 1rem;
   right: 1rem;
   font-size: 1.5rem;
-  color: #ccc;
+  color: $neutral-300;
   background: none;
   border: none;
   cursor: pointer;
@@ -143,19 +149,21 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   gap: 20px;
 }
 
-/* Big Flan Card */
+/* Big Flan Card (White Inside, Red Border) */
 .big-pcb {
-  background-color: $pcb-green;
-  color: white;
+  background-color: $white;
+  color: $bg-dark;
   padding: 1.5rem;
-  border: 2px solid $pcb-copper;
+  border: 2px solid $all-red;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   .pcb-title {
+    font-family: $font-heading;
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 10px;
+    color: $all-blue;
   }
 
   p {
@@ -166,13 +174,11 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
 /* Part Cards */
 .pcb-component {
-  background-color: darken($pcb-green, 10%);
+  background-color: $all-blue;
   color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
   transition: transform 0.2s ease;
 
   &:hover {
@@ -191,7 +197,8 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .parts-title {
-  color: $pcb-copper;
+  color: $all-red;
+  font-family: $font-heading;
   font-size: 16px;
   font-weight: 600;
   margin: 1rem 0 0.5rem;

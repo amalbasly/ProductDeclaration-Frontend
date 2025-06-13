@@ -1,107 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@400;700;900&display=swap');
 
-// ALL Circuits Brand Colors
-$all-red: #E00034;
-$light-bg: #f8fafc;
+// Theme Colors (from ALL Circuits Charter)
+$all-red: #FF4757; // Dominant red   
+$all-blue: #087c9f; // Strong blue accent
+$all-gray: #E2E8F0;
+$all-dark-gray: #087c9f;
+$error-color: #d62828;
+$success-color: #2ec4b6;
 $white: #ffffff;
-$gray-light: #e9ecef;
-
-// PCB Theme Integration
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
 $neutral-100: #f8fafc;
+$neutral-200: #edf2f7;
 $neutral-300: #cbd5e1;
-$neutral-800: #1e293b;
 
-// Font
-$font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-
-// Transitions
-@mixin transition($time: 0.3s, $ease: ease, $props...) {
-  transition: #{if(length($props) > 0, $props, all)} $time $ease;
-}
-
-// Animations
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@mixin transition($time: 0.3s, $ease: ease-in-out) {
+  transition: all $time $ease;
 }
 
 .employee-container {
+  font-family: 'Lato', sans-serif;
+  padding: 2rem 1rem;
+
   .card {
     background-color: $white;
     border-radius: 0.75rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    margin: 2rem auto;
-    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
     max-width: 1200px;
-    font-family: $font-main;
+    color: $all-dark-gray;
+    @include transition(0.3s);
+
+    &:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
 
     .card-header {
-      border-bottom: 1px solid lighten($pcb-copper, 30%);
-      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, darken($all-blue, 15%), darken($all-blue, 20%));
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba($white, 0.2);
+      text-align: left;
 
       h2 {
         margin: 0;
-        font-size: 1.6rem;
-        color: $pcb-green-dark;
+        font-size: 1.5rem;
+        color: $white;
         font-weight: 700;
+        letter-spacing: 0.5px;
         position: relative;
+        display: inline-block;
 
         &:after {
           content: '';
           display: block;
           width: 60px;
-          height: 4px;
-          background: $pcb-copper;
+          height: 3px;
+          background: lighten($all-blue, 20%);
+          margin-top: 0.3rem;
           border-radius: 2px;
-          margin-top: 0.35rem;
         }
       }
     }
 
     .card-body {
-      padding: 0;
+      padding: 1.5rem;
 
       .controls {
-        margin-bottom: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
 
         .btn-primary {
-          background-color: $pcb-green;
+          background: linear-gradient(to right, darken($all-blue, 10%), darken($all-blue, 20%));
           color: $white;
-          font-weight: 700;
+          border: none;
           font-size: 1rem;
           padding: 0.5rem 1.5rem;
           border-radius: 30px;
-          border: none;
-          box-shadow: 0 2px 6px rgba($pcb-copper, 0.3);
-          @include transition(0.3s, ease, background-color, transform, box-shadow);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba($all-blue, 0.3);
+          font-weight: 600;
+          @include transition();
 
           &:hover {
-            background-color: lighten($pcb-green, 10%);
+            background: linear-gradient(to right, darken($all-blue, 5%), darken($all-blue, 15%));
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba($pcb-copper, 0.4);
+            box-shadow: 0 4px 12px rgba($all-blue, 0.4);
           }
 
           &:active {
             transform: translateY(0);
-            box-shadow: 0 2px 4px rgba($pcb-copper, 0.3);
+            box-shadow: 0 2px 6px rgba($all-blue, 0.3);
           }
 
           &:disabled {
-            background-color: $gray-light;
-            opacity: 0.7;
+            background-color: $neutral-200;
+            color: $neutral-300;
             cursor: not-allowed;
             box-shadow: none;
           }
@@ -109,32 +104,26 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
       }
 
       .alert {
-        border-radius: 0.5rem;
         padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
         font-size: 0.95rem;
         margin-bottom: 1.25rem;
-        font-weight: 400;
+        font-weight: 500;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        animation: slideIn 0.3s ease;
+        animation: fadeIn 0.3s ease-in-out;
 
         &.alert-info {
-          background-color: rgba($neutral-300, 0.2);
-          color: $neutral-800;
+          background-color: rgba($neutral-300, 0.15);
+          color: $all-dark-gray;
           border-left: 4px solid $neutral-300;
         }
 
         &.alert-danger {
-          background-color: #ffe5e5;
-          color: #7a0000;
-          border-left: 4px solid $all-red;
-
-          &::before {
-            content: '\2716';
-            font-size: 1rem;
-            color: $all-red;
-          }
+          background-color: rgba($error-color, 0.1);
+          color: $error-color;
+          border-left: 4px solid $error-color;
         }
       }
 
@@ -147,33 +136,35 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
         thead {
           th {
             background-color: transparent;
-            color: $pcb-green-dark;
-            font-weight: 600;
+            color: $all-blue;
+            font-weight: 700;
             padding: 0.75rem;
             text-align: left;
-            border-bottom: 2px solid lighten($pcb-copper, 30%);
+            border-bottom: 2px solid $neutral-200;
           }
         }
 
         tbody {
           tr {
+            @include transition(0.3s);
+
             &:hover {
-              background-color: rgba($pcb-green, 0.07);
+              background-color: rgba($all-blue, 0.05);
               cursor: pointer;
             }
 
             td {
               padding: 0.75rem;
-              border-bottom: 1px solid $neutral-300;
+              border-bottom: 1px solid $neutral-200;
 
               &.clickable {
-                color: $pcb-green;
+                color: $all-blue;
                 text-decoration: underline;
                 cursor: pointer;
-                @include transition(0.3s, ease, color);
+                @include transition(0.3s);
 
                 &:hover {
-                  color: lighten($pcb-green, 10%);
+                  color: darken($all-blue, 10%);
                 }
               }
 
@@ -184,40 +175,40 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
                 .action-button {
                   padding: 0.5rem;
                   border-radius: 50%;
-                  border: none;
+                  border: 2px solid;
                   font-size: 1rem;
                   width: 36px;
                   height: 36px;
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  @include transition(0.3s, ease, background-color, transform, box-shadow);
+                  @include transition(0.3s);
 
                   &.edit-button {
                     background-color: transparent;
-                    color: $pcb-green;
-                    border: 2px solid $pcb-green;
-                    box-shadow: 0 2px 6px rgba($neutral-800, 0.2);
+                    color: $all-blue;
+                    border-color: $all-blue;
+                    box-shadow: 0 2px 6px rgba($all-blue, 0.2);
 
                     &:hover {
-                      background-color: $pcb-green;
+                      background-color: $all-blue;
                       color: $white;
                       transform: translateY(-2px);
-                      box-shadow: 0 4px 8px rgba($pcb-green, 0.3);
+                      box-shadow: 0 4px 10px rgba($all-blue, 0.3);
                     }
                   }
 
                   &.delete-button {
                     background-color: transparent;
                     color: $all-red;
-                    border: 2px solid $all-red;
-                    box-shadow: 0 2px 6px rgba($neutral-800, 0.2);
+                    border-color: $all-red;
+                    box-shadow: 0 2px 6px rgba($all-red, 0.2);
 
                     &:hover {
                       background-color: $all-red;
                       color: $white;
                       transform: translateY(-2px);
-                      box-shadow: 0 4px 8px rgba($all-red, 0.3);
+                      box-shadow: 0 4px 10px rgba($all-red, 0.3);
                     }
                   }
                 }
@@ -226,66 +217,75 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
           }
         }
       }
+
+      .no-results {
+        text-align: center;
+        color: $all-dark-gray;
+        font-style: italic;
+        margin-top: 1rem;
+      }
     }
   }
 }
 
 .modal-overlay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1050;
-  animation: slideIn 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
 
   .modal-content {
     background-color: $white;
     border-radius: 0.75rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     padding: 1.5rem;
     max-width: 500px;
+    width: 90%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    font-family: $font-main;
-    animation: slideIn 0.3s ease;
+    font-family: 'Lato', sans-serif;
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid lighten($pcb-copper, 30%);
+      border-bottom: 1px solid $neutral-200;
+      padding-bottom: 1rem;
 
       h2 {
-        font-size: 1.4rem;
-        color: $pcb-green-dark;
-        font-weight: 700;
         margin: 0;
+        font-size: 1.4rem;
+        color: $all-blue;
+        font-weight: 700;
       }
 
       .close-button {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: $neutral-300;
-        cursor: pointer;
-        @include transition(0.3s, ease, color);
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  @include transition(0.3s);
 
-        &:hover {
-          color: $all-red;
-        }
+  &:hover {
+    color: $all-red;
+  }
 
-        &:focus {
-          outline: 2px solid $pcb-copper;
-          outline-offset: 2px;
-        }
-      }
+  &:focus {
+    outline: 2px solid $all-blue;
+    outline-offset: 2px;
+  }
+}
+
     }
 
     .modal-body {
@@ -297,126 +297,98 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
           display: flex;
           justify-content: space-between;
           padding: 0.5rem 0;
-          border-bottom: 1px solid $neutral-300;
+          border-bottom: 1px solid $neutral-200;
 
           .detail-label {
-            font-weight: 500;
-            color: $neutral-800;
-            flex: 1;
+            font-weight: 600;
+            color: $all-dark-gray;
           }
 
           .detail-value {
-            color: $pcb-green-dark;
-            flex: 2;
-            text-align: right;
-          }
-        }
-
-        p {
-          margin: 0.5rem 0;
-          color: $neutral-800;
-
-          strong {
-            color: $pcb-green-dark;
-          }
-        }
-
-        .form-group {
-          label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            color: $all-blue;
             font-weight: 500;
-            color: $neutral-800;
           }
+        }
 
-          .form-control {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.95rem;
-            border: 1px solid $neutral-300;
-            border-radius: 0.5rem;
-            color: $neutral-800;
-            background-color: $white;
-            @include transition(0.3s, ease, border-color, box-shadow);
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: $all-dark-gray;
+        }
 
-            &:focus {
-              outline: none;
-              border-color: $pcb-copper;
-              box-shadow: 0 0 0 3px rgba($pcb-copper, 0.1);
-            }
+        input.form-control {
+          width: 100%;
+          padding: 0.5rem 0.75rem;
+          font-size: 0.95rem;
+          border: 1px solid $neutral-200;
+          border-radius: 0.5rem;
+          color: $all-dark-gray;
+          background-color: $white;
+          @include transition(0.3s);
+
+          &:focus {
+            outline: none;
+            border-color: $all-blue;
+            box-shadow: 0 0 0 3px rgba($all-blue, 0.1);
           }
         }
 
         .alert-danger {
-          background-color: #ffe5e5;
-          color: #7a0000;
-          border-left: 4px solid $all-red;
+          background-color: rgba($error-color, 0.1);
+          color: $error-color;
+          border-left: 4px solid $error-color;
           padding: 0.75rem 1.25rem;
           font-size: 0.95rem;
           margin-bottom: 1.25rem;
-
-          &::before {
-            content: '\2716';
-            font-size: 1rem;
-            color: $all-red;
-            margin-right: 0.5rem;
-          }
         }
       }
 
       .button-group {
         display: flex;
-        gap: 1rem;
         justify-content: flex-end;
+        gap: 1rem;
 
         .btn {
-          font-family: $font-main;
           font-weight: 700;
           font-size: 1rem;
           padding: 0.5rem 1.5rem;
           border-radius: 30px;
           border: none;
-          @include transition(0.3s, ease, background-color, transform, box-shadow);
+          cursor: pointer;
+          @include transition(0.3s);
 
           &.btn-primary {
-            background-color: $pcb-green;
-            color: $white;
-            box-shadow: 0 2px 6px rgba($pcb-copper, 0.3);
+  background-color: $all-blue;
+  color: $white !important;
+  box-shadow: 0 2px 6px rgba($all-blue, 0.3);
 
-            &:hover {
-              background-color: lighten($pcb-green, 10%);
-              transform: translateY(-2px);
-              box-shadow: 0 4px 8px rgba($pcb-copper, 0.4);
-            }
+  &:hover {
+    background-color: darken($all-blue, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba($all-blue, 0.4);
+  }
 
-            &:active {
-              transform: translateY(0);
-              box-shadow: 0 2px 4px rgba($pcb-copper, 0.3);
-            }
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba($all-blue, 0.3);
+  }
+}
 
-            &:disabled {
-              background-color: $gray-light;
-              opacity: 0.7;
-              cursor: not-allowed;
-              box-shadow: none;
-            }
-          }
 
           &.btn-secondary {
-            background-color: $neutral-300;
-            color: $neutral-800;
-            box-shadow: 0 2px 6px rgba($neutral-800, 0.2);
+            background-color: $neutral-200;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
             &:hover {
-              background-color: lighten($neutral-300, 10%);
+              background-color: $neutral-300;
               transform: translateY(-2px);
-              box-shadow: 0 4px 8px rgba($neutral-800, 0.3);
             }
 
             &:active {
               transform: translateY(0);
-              box-shadow: 0 2px 4px rgba($neutral-800, 0.2);
             }
           }
         }
@@ -425,78 +397,14 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   }
 }
 
-@media (max-width: 768px) {
-  .employee-container {
-    .card {
-      margin: 1rem auto;
-      padding: 1rem;
-      max-width: 100%;
-    }
-
-    .controls {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .employee-table {
-      font-size: 0.9rem;
-
-      thead {
-        th {
-          padding: 0.5rem;
-        }
-      }
-
-      tbody {
-        td {
-          padding: 0.5rem;
-        }
-      }
-    }
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-
-  .modal-content {
-    max-width: 90vw;
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .employee-container {
-    .card {
-      padding: 0.75rem;
-    }
-
-    .employee-table {
-      font-size: 0.85rem;
-
-      .action-button {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-      }
-    }
-  }
-
-  .modal-content {
-    .modal-header {
-      h2 {
-        font-size: 1.2rem;
-      }
-    }
-
-    .modal-body {
-      .form-group,
-      .employee-details {
-        font-size: 0.9rem;
-      }
-
-      .button-group {
-        .btn {
-          padding: 0.5rem 1rem;
-          font-size: 0.9rem;
-        }
-      }
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

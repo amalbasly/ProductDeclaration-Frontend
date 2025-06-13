@@ -17,30 +17,30 @@
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Ligne</label>
+            <label class="form-label">Line</label>
             <select formControlName="ligne" class="form-select" [class.is-invalid]="isFieldInvalid('ligne')">
-              <option value="">Select Ligne</option>
+              <option value="">Select Line</option>
               <option *ngFor="let item of dropdowns.lignes" [value]="item">{{ item }}</option>
             </select>
-            <div *ngIf="isFieldInvalid('ligne')" class="invalid-feedback">Ligne is required</div>
+            <div *ngIf="isFieldInvalid('ligne')" class="invalid-feedback">Line is required</div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Famille</label>
+            <label class="form-label">Family</label>
             <select formControlName="famille" class="form-select" [class.is-invalid]="isFieldInvalid('famille')">
-              <option value="">Select Famille</option>
+              <option value="">Select Family</option>
               <option *ngFor="let item of dropdowns.famille" [value]="item">{{ item }}</option>
             </select>
-            <div *ngIf="isFieldInvalid('famille')" class="invalid-feedback">Famille is required</div>
+            <div *ngIf="isFieldInvalid('famille')" class="invalid-feedback">Family is required</div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Sous-Famille</label>
+            <label class="form-label">Sub-Family</label>
             <select formControlName="sousFamille" class="form-select" [class.is-invalid]="isFieldInvalid('sousFamille')">
-              <option value="">Select Sous-Famille</option>
+              <option value="">Select Sub-Family</option>
               <option *ngFor="let item of dropdowns.sousFamilles" [value]="item">{{ item }}</option>
             </select>
-            <div *ngIf="isFieldInvalid('sousFamille')" class="invalid-feedback">Sous-Famille is required</div>
+            <div *ngIf="isFieldInvalid('sousFamille')" class="invalid-feedback">Sub-Family is required</div>
           </div>
         </div>
       </div>
@@ -49,24 +49,24 @@
     <!-- Product Details -->
     <div class="card mb-4">
       <div class="card-header bg-white fw-bold">
-        📝 Détails Produit
+        📝 Product Details
       </div>
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Code Produit</label>
+            <label class="form-label">Product Code</label>
             <input type="text" formControlName="codeProduit" class="form-control"
                    [class.is-invalid]="isFieldInvalid('codeProduit')">
             <div *ngIf="isFieldInvalid('codeProduit')" class="invalid-feedback">
-              Code Produit is required and must be alphanumeric
+              Product Code is required and must be alphanumeric
             </div>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Libelle</label>
+            <label class="form-label">Label</label>
             <input type="text" formControlName="libelle" class="form-control"
                    [class.is-invalid]="isFieldInvalid('libelle')">
-            <div *ngIf="isFieldInvalid('libelle')" class="invalid-feedback">Libelle is required</div>
+            <div *ngIf="isFieldInvalid('libelle')" class="invalid-feedback">Label is required</div>
           </div>
 
           <div class="col-md-4">
@@ -79,7 +79,7 @@
         </div>
 
         <div class="mt-3">
-          <label class="form-label">Libelle 2</label>
+          <label class="form-label">Label 2</label>
           <input type="text" formControlName="libelle2" class="form-control">
         </div>
       </div>
@@ -88,20 +88,20 @@
     <!-- Technical Info -->
     <div class="card mb-4">
       <div class="card-header bg-white fw-bold">
-        ⚙️ Informations Techniques
+        ⚙️ Technical Information
       </div>
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Statut</label>
+            <label class="form-label">Status</label>
             <select formControlName="statut" class="form-select">
-              <option value="">Select Statut (optional)</option>
+              <option value="">Select Status (optional)</option>
               <option *ngFor="let item of dropdowns.statuts" [value]="item">{{ item }}</option>
             </select>
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Poids</label>
+            <label class="form-label">Weight</label>
             <input type="number" formControlName="poids" class="form-control" min="0"
                    [class.is-invalid]="isFieldInvalid('poids')">
             <div *ngIf="isFieldInvalid('poids')" class="invalid-feedback">Must be positive number</div>
@@ -127,22 +127,22 @@
     <!-- Additional Fields -->
     <div class="card mb-4">
       <div class="card-header bg-white fw-bold">
-        🧾 Champs Additionnels
+        🧾 Additional Fields
       </div>
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Code Produit Client C264</label>
+            <label class="form-label">Client Product Code C264</label>
             <input type="text" formControlName="codeProduitClientC264" class="form-control">
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Createur</label>
+            <label class="form-label">Creator</label>
             <input type="text" formControlName="createur" class="form-control">
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Date Creation</label>
+            <label class="form-label">Creation Date</label>
             <input type="date" formControlName="dateCreation" class="form-control">
           </div>
         </div>
@@ -182,13 +182,13 @@
         <button *ngIf="isSerializedRoute" type="button" class="btn btn-outline-primary ms-2"
                 (click)="goToSynoptique()"
                 [disabled]="productForm.invalid || isLoading">
-          {{ isUpdateMode ? 'Update Synoptique' : 'Remplir Synoptique' }}
+          {{ isUpdateMode ? 'Update Synoptique' : 'Fill Synoptique' }}
         </button>
 
         <button *ngIf="!isSerializedRoute" type="button" class="btn btn-outline-primary ms-2"
                 (click)="goToReference()"
                 [disabled]="productForm.invalid || isLoading">
-          {{ isUpdateMode ? 'Update Reference' : 'Remplir Reference' }}
+          {{ isUpdateMode ? 'Update Reference' : 'Fill Reference' }}
         </button>
       </div>
     </div>

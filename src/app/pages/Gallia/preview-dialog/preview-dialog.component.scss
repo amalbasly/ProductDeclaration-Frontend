@@ -1,29 +1,54 @@
-$primary-color: #166a33;
-$secondary-color: #f8fafc;
-$text-color: #1e293b;
-$border-color: #cbd5e1;
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
+
+// Brand Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
 $white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue;
+$border-accent: $all-red;
+$text-light: $white;
+$bg-dark: darken($all-blue, 20%);
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15%);
+
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
+
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
+  transition: $prop $time $ease;
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($accent, 0.25);
+  }
+}
 
 :host {
   display: block;
 }
 
 h1[mat-dialog-title] {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: $primary-color;
-  padding: 1rem 1.5rem;
+  font-family: $font-heading;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $all-blue;
+  padding: 1rem 1.25rem;
   margin: 0;
-  border-bottom: 1px solid $border-color;
-  background-color: $secondary-color;
+  border-bottom: 1px solid $neutral-200;
+  background-color: $white;
+  letter-spacing: 0.3px;
 }
 
 .mat-dialog-content {
-  padding: 1.5rem;
+  padding: 1.25rem;
   margin: 0;
   background-color: $white;
-  max-height: 80vh;
+  max-height: 70vh;
   overflow: auto;
 }
 
@@ -35,50 +60,104 @@ h1[mat-dialog-title] {
 .label-container {
   width: 595px;
   background: $white;
-  border: 1px solid $border-color;
+  border: 1px solid $neutral-200;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
+}
 
-  .label-image {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
+.label-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-  .error-message {
-    padding: 2rem;
-    text-align: center;
-    color: #e63946;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-  }
+.error-message {
+  padding: 1.5rem;
+  text-align: center;
+  color: $all-red;
+  font-family: $font-body;
+  font-size: 0.9rem;
+  background: lighten($all-red, 45%);
+  border-radius: 6px;
 }
 
 .mat-dialog-actions {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   margin: 0;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid $neutral-200;
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
+  gap: 0.5rem;
+}
 
-  button {
-    font-family: 'Roboto', sans-serif;
-    &[color="primary"] {
-      background-color: $primary-color;
-      color: $white;
-    }
+button {
+  font-family: $font-heading;
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  @include transition(background-color, transform, box-shadow);
+  @include focus-ring;
 
-    mat-icon {
-      margin-right: 0.5rem;
+  &[color="primary"] {
+    background-color: $accent;
+    color: $text-light;
+    &:hover {
+      background-color: lighten($accent, 10%);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba($bg-dark, 0.1);
     }
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &:not([color="primary"]) {
+    background-color: $white;
+    color: $bg-dark;
+    border: 1px solid $neutral-200;
+    &:hover {
+      background-color: $hover-bg;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba($bg-dark, 0.1);
+    }
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  mat-icon {
+    margin-right: 0.3rem;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
   }
 }
 
 @media (max-width: 768px) {
   .label-container {
     width: 100%;
+  }
+
+  h1[mat-dialog-title] {
+    font-size: 1.3rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .mat-dialog-content {
+    padding: 1rem;
+  }
+
+  .mat-dialog-actions {
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1 1 auto;
+      text-align: center;
+    }
   }
 }
 
@@ -88,8 +167,13 @@ h1[mat-dialog-title] {
     display: none !important;
   }
 
+  .mat-dialog-content {
+    padding: 0 !important;
+  }
+
   .label-container {
     border: none;
     box-shadow: none;
+    width: 100%;
   }
 }

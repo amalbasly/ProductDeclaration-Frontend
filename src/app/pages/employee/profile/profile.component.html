@@ -2,65 +2,142 @@
   <div class="profile-card">
     <div class="card-header">
       <h2>Update Profile</h2>
-      <p class="subtitle">Modify your personal details and profile image</p>
+      <p class="subtitle">Manage your personal information and settings</p>
     </div>
+
     <div class="card-body">
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-        <!-- Last Name -->
-        <div class="form-group">
-          <label for="pl_nom">Last Name</label>
-          <input type="text" id="pl_nom" formControlName="pl_nom" class="form-control" required>
-          <div *ngIf="profileForm.get('pl_nom')?.hasError('required') && profileForm.get('pl_nom')?.touched" class="text-danger">
-            Last name is required
-          </div>
-        </div>
+        <!-- Profile Section with Image -->
+        <div class="profile-section">
+          <div class="profile-details">
+            <!-- Name Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pl_nom">Last Name</label>
+                <input type="text" id="pl_nom" formControlName="pl_nom" class="form-control" required>
+                <div *ngIf="profileForm.get('pl_nom')?.hasError('required') && profileForm.get('pl_nom')?.touched"
+                  class="text-danger">
+                  Last name is required
+                </div>
+              </div>
 
-        <!-- First Name -->
-        <div class="form-group">
-          <label for="pl_prenom">First Name</label>
-          <input type="text" id="pl_prenom" formControlName="pl_prenom" class="form-control" required>
-          <div *ngIf="profileForm.get('pl_prenom')?.hasError('required') && profileForm.get('pl_prenom')?.touched" class="text-danger">
-            First name is required
-          </div>
-        </div>
-
-        <!-- Profile Image -->
-        <div class="image-upload-section">
-          <label class="section-label">Profile Image</label>
-          <div class="image-upload-container">
-            <!-- Image Preview -->
-            <div class="image-preview" *ngIf="profileImageUrl">
-              <img [src]="profileImageUrl" alt="Profile Image" class="profile-image">
-              <button type="button" class="remove-image-btn" (click)="removeImage()" title="Remove Image">
-                <i class="fas fa-trash-alt"></i>
-              </button>
+              <div class="form-group">
+                <label for="pl_prenom">First Name</label>
+                <input type="text" id="pl_prenom" formControlName="pl_prenom" class="form-control" required>
+                <div *ngIf="profileForm.get('pl_prenom')?.hasError('required') && profileForm.get('pl_prenom')?.touched"
+                  class="text-danger">
+                  First name is required
+                </div>
+              </div>
             </div>
-            <!-- File Input -->
-            <div class="file-input-wrapper">
-              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif" (change)="onFileSelected($event)" style="display: none;">
-              <label for="fileInput" class="btn btn-upload">Choose Image</label>
-              <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
-              <div *ngIf="imageError" class="text-danger image-error">{{ imageError }}</div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" formControlName="email" class="form-control" required>
+              <div *ngIf="profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched"
+                class="text-danger">
+                Email is required
+              </div>
+              <div *ngIf="profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched"
+                class="text-danger">
+                Please enter a valid email address
+              </div>
+            </div>
+
+            <!-- Contact Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" formControlName="phone" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" formControlName="country" class="form-control">
+                  <option value="">Select Country</option>
+                  <option value="US">Tunisia</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="UK">United Kingdom</option>
+                  <!-- Add more countries as needed -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Location Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="state">State/Region</label>
+                <input type="text" id="state" formControlName="state" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" formControlName="city" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Image Section -->
+          <div class="profile-image-section">
+            <div class="image-upload-container">
+              <div class="image-preview" *ngIf="profileImageUrl">
+                <img [src]="profileImageUrl" alt="Profile Image" class="profile-image">
+                <button type="button" class="remove-image-btn" (click)="removeImage()" title="Remove Image">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+              <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif" (change)="onFileSelected($event)"
+                  style="display: none;">
+                <label for="fileInput" class="btn btn-upload">Change Photo</label>
+                <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+                <div *ngIf="imageError" class="text-danger image-error">{{ imageError }}</div>
+                <p class="image-hint">JPG, PNG or GIF (Max. 5MB)</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Messages -->
-        <div *ngIf="successMessage" class="alert alert-success">
-          {{ successMessage }}
+        <!-- Additional Information Section -->
+        <div class="section-divider">
+          <span>Additional Information</span>
         </div>
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="education">Education Level</label>
+            <select id="education" formControlName="education" class="form-control">
+              <option value="">Select Education</option>
+              <option value="high_school">High School</option>
+              <option value="bachelor">Bachelor's Degree</option>
+              <option value="master">Master's Degree</option>
+              <option value="phd">PhD</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="profession">Profession</label>
+            <input type="text" id="profession" formControlName="profession" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" formControlName="bio" class="form-control" rows="3"
+            placeholder="Tell us about yourself..."></textarea>
         </div>
 
         <!-- Actions -->
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading">
-            <span *ngIf="!isLoading">Update Profile</span>
-            <span *ngIf="isLoading">Updating...</span>
-          </button>
           <button type="button" class="btn btn-outline-secondary" (click)="resetForm()" [disabled]="isLoading">
-            Reset
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Save Changes</span>
+            <span *ngIf="isLoading">Saving...</span>
           </button>
         </div>
       </form>

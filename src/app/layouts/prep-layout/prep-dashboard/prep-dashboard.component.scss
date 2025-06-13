@@ -1,44 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
-$neutral-100: #f8fafc;
-$neutral-300: #cbd5e1;
-$neutral-800: #1e293b;
+// Brand Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
 $white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue;
+$border-accent: $all-red;
+$text-light: $white;
+$bg-dark: darken($all-blue, 20%);
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15%);
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
-@mixin transition($prop: all, $time: 0.25s, $ease: ease) {
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
   transition: $prop $time $ease;
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($pcb-copper, 0.6);
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($accent, 0.25);
   }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInDelayed {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -48,8 +41,9 @@ $font-weight-bold: 700;
 
 .dashboard-container {
   padding: 1.5rem;
-  background: $neutral-100;
+  background: $neutral-200;
   min-height: 100vh;
+  font-family: $font-body;
 
   .header {
     display: flex;
@@ -58,93 +52,104 @@ $font-weight-bold: 700;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
+    background: $white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
 
     h2 {
-      font-family: $font-family-base;
-      font-weight: $font-weight-bold;
-      font-size: 1.75rem;
-      color: $pcb-green-dark;
+      font-family: $font-heading;
+      font-weight: 400;
+      font-size: 1.5rem;
+      color: $all-blue;
       margin: 0;
       position: relative;
+      letter-spacing: 0.3px;
 
       &:after {
         content: '';
         display: block;
-        width: 60px;
-        height: 4px;
-        background: $pcb-copper;
-        border-radius: 2px;
-        margin-top: 0.35rem;
+        width: 50px;
+        height: 3px;
+        background: $border-accent;
+        border-radius: 1.5px;
+        margin-top: 0.3rem;
       }
     }
 
     button[mat-raised-button] {
-      font-family: $font-family-base;
-      font-weight: $font-weight-bold;
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      background: $pcb-green;
-      color: $white;
-      @include transition(background-color);
+      background: $accent;
+      color: $text-light;
+      font-family: $font-heading;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      border: none;
+      @include transition(background-color, transform, box-shadow);
 
       &:hover {
-        background: lighten($pcb-green, 10%);
+        background: lighten($accent, 10%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba($accent, 0.1);
       }
 
-      &[color="primary"] {
-        background: $pcb-green;
-
-        &:hover {
-          background: lighten($pcb-green, 10%);
-        }
+      &:active {
+        transform: translateY(0);
       }
+
+      @include focus-ring;
     }
   }
 
   .metrics-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 
     .metric-card {
       background: $white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
       padding: 1rem;
+      border-left: 3px solid $border-accent;
+      animation: fadeInUp 0.4s ease forwards;
       @include transition(transform, box-shadow);
 
       &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba($bg-dark, 0.05);
       }
 
       mat-card-header {
-        padding: 0.5rem 1rem 0;
+        padding: 0.3rem;
 
         mat-card-title {
-          font-family: $font-family-base;
-          font-weight: $font-weight-medium;
-          font-size: 1.1rem;
-          color: $neutral-800;
+          font-family: $font-heading;
+          font-weight: 500;
+          font-size: 1rem;
+          color: $bg-dark;
+          letter-spacing: 0.2px;
         }
       }
 
       mat-card-content {
-        padding: 1rem;
+        padding: 0.5rem;
 
         .metric-value {
-          font-family: $font-family-base;
-          font-weight: $font-weight-bold;
-          font-size: 2rem;
-          color: $pcb-green;
-          margin: 0.5rem 0;
+          font-family: $font-body;
+          font-weight: 600;
+          font-size: 1.8rem;
+          color: $all-blue;
+          margin: 0.3rem 0;
         }
 
         .metric-subtext {
-          font-family: $font-family-base;
-          font-size: 0.85rem;
-          color: $neutral-300;
+          font-family: $font-body;
+          font-size: 0.8rem;
+          color: $bg-dark;
+          opacity: 0.6;
         }
       }
     }
@@ -158,33 +163,46 @@ $font-weight-bold: 700;
 
     .chart-card {
       background: $white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
       padding: 1rem;
+      border-left: 3px solid $all-blue;
+      display: flex;
+      flex-direction: column;
 
       mat-card-header {
         padding: 0 0 0.5rem;
 
         mat-card-title {
-          font-family: $font-family-base;
-          font-weight: $font-weight-medium;
-          font-size: 1.1rem;
-          color: $neutral-800;
+          font-family: $font-heading;
+          font-weight: 500;
+          font-size: 1rem;
+          color: $bg-dark;
         }
       }
 
       mat-card-content {
         padding: 0;
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .chart-container {
           position: relative;
           width: 100%;
-          height: 300px;
+          height: 250px;
+          min-height: 250px;
+          max-height: 250px;
+          overflow: visible;
+          display: block; // Ensure container is rendered
         }
 
         canvas {
-          max-height: 300px;
-          width: 100%;
+          width: 100% !important;
+          height: 250px !important;
+          max-height: 250px;
+          display: block; // Prevent canvas from collapsing
         }
       }
     }
@@ -192,102 +210,114 @@ $font-weight-bold: 700;
 
   .action-items-section {
     h2 {
-      font-family: $font-family-base;
-      font-weight: $font-weight-bold;
-      font-size: 1.5rem;
-      color: $pcb-green-dark;
+      font-family: $font-heading;
+      font-weight: 400;
+      font-size: 1.3rem;
+      color: $all-blue;
       margin-bottom: 1rem;
       position: relative;
 
       &:after {
         content: '';
         display: block;
-        width: 60px;
-        height: 4px;
-        background: $pcb-copper;
-        border-radius: 2px;
-        margin-top: 0.35rem;
+        width: 50px;
+        height: 3px;
+        background: $all-blue;
+        border-radius: 1.5px;
+        margin-top: 0.3rem;
       }
     }
 
     .action-list {
       background: $white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba($bg-dark, 0.03);
+      padding: 0.5rem;
 
       mat-list {
         padding: 0;
 
         mat-list-item {
-          padding: 0.8rem 1rem;
-          border-bottom: 1px solid $neutral-300;
-          @include transition(background-color);
+          padding: 0.8rem;
+          border-bottom: 1px solid $neutral-200;
+          border-radius: 6px;
+          margin: 0.3rem 0;
 
           &:last-child {
             border-bottom: none;
           }
 
           &:hover {
-            background: lighten($neutral-100, 1%);
+            background: $hover-bg;
+            box-shadow: 0 2px 6px rgba($bg-dark, 0.02);
           }
 
           span {
-            font-family: $font-family-base;
-            font-weight: $font-weight-medium;
-            color: $neutral-800;
+            font-family: $font-body;
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: $bg-dark;
           }
 
           .action-btn {
-            font-family: $font-family-base;
-            font-weight: $font-weight-bold;
-            font-size: 0.85rem;
+            font-family: $font-heading;
+            font-weight: 500;
+            font-size: 0.8rem;
             padding: 0.4rem 1rem;
-            @include transition(transform, background-color);
+            border-radius: 6px;
+            @include transition(transform, background-color, box-shadow);
 
             &:hover {
-              transform: scale(1.05);
+              transform: translateY(-1px);
+              box-shadow: 0 3px 6px rgba($bg-dark, 0.1);
             }
 
             &[color="primary"] {
-              background: $pcb-green;
-              color: $white;
+              background: $all-blue;
+              color: $text-light;
 
               &:hover {
-                background: lighten($pcb-green, 10%);
+                background: lighten($all-blue, 15%);
               }
             }
 
             &[color="accent"] {
-              background: $pcb-copper;
-              color: $white;
+              background: $accent;
+              color: $text-light;
 
               &:hover {
-                background: lighten($pcb-copper, 10%);
+                background: lighten($accent, 15%);
               }
             }
 
             &[color="warn"] {
-              background: #e63946;
-              color: $white;
+              background: $all-red;
+              color: $text-light;
 
               &:hover {
-                background: darken(#e63946, 10%);
+                background: lighten($all-red, 15%);
               }
             }
+
+            @include focus-ring;
           }
         }
       }
     }
   }
 
-  @media (max-width: 768px) {
-    .metrics-section {
-      grid-template-columns: 1fr;
-    }
-
+  @media (max-width: 992px) {
     .charts-section {
       grid-template-columns: 1fr;
     }
+
+    .metrics-section {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
 
     .header {
       flex-direction: column;
@@ -298,8 +328,21 @@ $font-weight-bold: 700;
       }
     }
 
-    .chart-container {
-      height: 250px;
+    .metrics-section {
+      grid-template-columns: 1fr;
+    }
+
+    .charts-section {
+      .chart-container {
+        height: 200px;
+        min-height: 200px;
+        max-height: 200px;
+      }
+
+      canvas {
+        height: 200px !important;
+        max-height: 200px;
+      }
     }
   }
 }

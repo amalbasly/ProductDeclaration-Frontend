@@ -1,29 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { trigger, style, animate, transition } from '@angular/animations';
 import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-prep-dashboard',
   standalone: false,
   templateUrl: './prep-dashboard.component.html',
-  styleUrls: ['./prep-dashboard.component.scss'],
-  animations: [
-    trigger('cardAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('0.5s ease', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
-    trigger('chartAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(30px)' }),
-        animate('0.7s ease', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
-  ],
+  styleUrls: ['./prep-dashboard.component.scss']
 })
 export class PrepDashboardComponent implements OnInit {
-  // Metrics and actions as provided
   metrics = [
     { title: 'Total PCBs', value: '1,245', subtext: '+5% from last month' },
     { title: 'Serialized PCBs', value: '780', subtext: '65% of total' },
@@ -57,8 +41,8 @@ export class PrepDashboardComponent implements OnInit {
         datasets: [{
           label: 'PCBs Produced',
           data: [200, 250, 300, 280, 320, 350],
-          borderColor: '#166a33',
-          backgroundColor: 'rgba(22, 106, 51, 0.1)',
+          borderColor: '#0b6985', // all-blue
+          backgroundColor: 'rgba(11, 105, 133, 0.2)', // Transparent all-blue
           fill: true,
           tension: 0.4,
         }],
@@ -80,14 +64,15 @@ export class PrepDashboardComponent implements OnInit {
         labels: ['Serialized', 'Non-Serialized', 'High-Density', 'Flexible'],
         datasets: [{
           data: [780, 465, 150, 100],
-          backgroundColor: ['#166a33', '#b87333', '#1e293b', '#e63946'],
+          backgroundColor: ['#0b6985', '#FF4757', '#1e293b', '#edf2f7'], // Palette colors
           borderWidth: 1,
+          borderColor: '#ffffff',
         }],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
+        plugins: { legend: { position: 'bottom', labels: { font: { family: 'Lato', size: 14 } } } },
       },
     });
   }

@@ -1,32 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
-$neutral-100: #f8fafc;
-$neutral-300: #cbd5e1;
-$neutral-800: #1e293b;
+// Brand Colors
+$all-red: #FF4757;
+$all-blue: #0b6985;
 $white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue;
+$border-accent: $all-red;
+$text-light: $white;
+$bg-dark: darken($all-blue, 20%);
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15);
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
-@mixin transition($prop: all, $time: 0.25s, $ease: ease) {
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
   transition: $prop $time $ease;
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($pcb-copper, 0.6);
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($accent, 0.3);
   }
 }
 
 .gallia-list-container {
   padding: 1.5rem;
-  background: $neutral-100;
+  background: $neutral-200;
   min-height: 100vh;
 
   .header {
@@ -38,10 +42,10 @@ $font-weight-bold: 700;
     gap: 1rem;
 
     h2 {
-      font-family: $font-family-base;
-      font-weight: $font-weight-bold;
+      font-family: $font-heading;
+      font-weight: 400;
       font-size: 1.75rem;
-      color: $pcb-green-dark;
+      color: $all-blue;
       margin: 0;
       position: relative;
 
@@ -50,30 +54,38 @@ $font-weight-bold: 700;
         display: block;
         width: 60px;
         height: 4px;
-        background: $pcb-copper;
+        background: linear-gradient(90deg, $all-red, lighten($all-red, 10%));
         border-radius: 2px;
         margin-top: 0.35rem;
       }
     }
 
     button[mat-raised-button] {
-      font-family: $font-family-base;
-      font-weight: $font-weight-bold;
+      font-family: $font-heading;
+      font-weight: 500;
       font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      background: $pcb-green;
-      color: $white;
-      @include transition(background-color);
+      padding: 0.6rem 1.2rem;
+      background: $all-blue;
+      color: $text-light;
+      border-radius: 6px;
+      @include transition(background-color, transform, box-shadow);
+      @include focus-ring;
 
       &:hover {
-        background: lighten($pcb-green, 10%);
+        background: lighten($all-blue, 10%);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba($bg-dark, 0.1);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
 
       &[color="primary"] {
-        background: $pcb-green;
+        background: $all-blue;
 
         &:hover {
-          background: lighten($pcb-green, 10%);
+          background: lighten($all-blue, 10%);
         }
       }
     }
@@ -86,7 +98,7 @@ $font-weight-bold: 700;
 
     mat-spinner {
       ::ng-deep .mat-spinner circle {
-        stroke: $pcb-green;
+        stroke: $all-blue;
       }
     }
   }
@@ -95,27 +107,27 @@ $font-weight-bold: 700;
     width: 100%;
     border-collapse: collapse;
     background: $white;
-    border-radius: 0.75rem;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba($bg-dark, 0.05);
 
     th[mat-header-cell] {
-      font-family: $font-family-base;
-      font-weight: $font-weight-medium;
+      font-family: $font-heading;
+      font-weight: 400;
       font-size: 0.9rem;
-      color: $neutral-800;
-      background: $neutral-100;
+      color: $all-blue;
+      background: lighten($neutral-200, 2%);
       padding: 0.8rem 1rem;
       text-align: left;
-      border-bottom: 2px solid $neutral-300;
+      border-bottom: 2px solid $neutral-200;
     }
 
     td[mat-cell] {
-      font-family: $font-family-base;
+      font-family: $font-body;
       font-size: 0.85rem;
-      color: $neutral-800;
+      color: $bg-dark;
       padding: 0.8rem 1rem;
-      border-bottom: 1px solid $neutral-300;
+      border-bottom: 1px solid $neutral-200;
       vertical-align: middle;
 
       .thumbnail-container {
@@ -125,7 +137,7 @@ $font-weight-bold: 700;
         .thumbnail-image {
           max-width: 60px;
           height: auto;
-          border: 1px solid $neutral-300;
+          border: 1px solid $neutral-200;
           border-radius: 4px;
           padding: 0.2rem;
           background: $white;
@@ -133,38 +145,43 @@ $font-weight-bold: 700;
           @include transition(box-shadow, border-color);
 
           &:hover {
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            border-color: $pcb-copper;
+            box-shadow: 0 2px 8px rgba($all-blue, 0.15);
+            border-color: $all-red;
           }
         }
 
         .no-thumbnail {
+          font-family: $font-body;
           font-size: 0.85rem;
-          color: $neutral-300;
+          color: lighten($bg-dark, 20%);
           padding: 0.4rem 0.6rem;
-          border: 1px dashed $neutral-300;
+          border: 1px dashed $neutral-200;
           border-radius: 4px;
         }
       }
 
       button[mat-icon-button] {
-        color: $neutral-800;
-        @include transition(color);
+        color: $bg-dark;
+        @include transition(color, transform);
+        @include focus-ring;
 
         &:hover {
-          color: $pcb-green;
+          color: $all-blue;
+          transform: scale(1.1);
         }
 
         &[color="warn"] {
-          color: #e63946;
+          color: $all-red;
 
           &:hover {
-            color: darken(#e63946, 10%);
+            color: darken($all-red, 10%);
           }
         }
 
         mat-icon {
           font-size: 1.2rem;
+          width: 1.2rem;
+          height: 1.2rem;
         }
       }
     }
@@ -173,30 +190,34 @@ $font-weight-bold: 700;
       @include transition(background-color);
 
       &:hover {
-        background: lighten($neutral-100, 1%);
+        background: lighten($neutral-200, 1%);
       }
     }
   }
 }
 
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
+  .gallia-list-container {
+    padding: 1rem;
 
-    button[mat-raised-button] {
-      width: 100%;
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      button[mat-raised-button] {
+        width: 100%;
+      }
     }
-  }
 
-  table[mat-table] {
-    td[mat-cell],
-    th[mat-header-cell] {
-      padding: 0.5rem;
-      font-size: 0.8rem;
+    table[mat-table] {
+      td[mat-cell],
+      th[mat-header-cell] {
+        padding: 0.5rem;
+        font-size: 0.8rem;
 
-      .thumbnail-image {
-        max-width: 40px;
+        .thumbnail-image {
+          max-width: 40px;
+        }
       }
     }
   }

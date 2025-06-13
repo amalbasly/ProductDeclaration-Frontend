@@ -1,6 +1,6 @@
 <div class="gallia-create-container">
   <div class="card">
-    <h2>{{ gallia.labelName === 'Etiquette' ? 'Create Label' : 'Create New Gallia Label' }}</h2>
+    <h2>{{ gallia.labelName === 'Etiquette' ? 'Create Standard Label' : 'Create New Gallia Label' }}</h2>
 
     <!-- Field Count Selection -->
     <div *ngIf="!gallia.fields.length" class="step">
@@ -14,7 +14,7 @@
     <!-- Label Creation Form -->
     <form *ngIf="gallia.fields.length" (ngSubmit)="showPreview()" #f="ngForm">
       <div class="form-group">
-        <label for="galliaName">{{ gallia.labelName === 'Etiquette' ? 'Label Name' : 'Gallia Name' }}</label>
+        <label for="galliaName">{{ gallia.labelName === 'Etiquette' ? 'Standard Label Name' : 'Gallia Name' }}</label>
         <input
           type="text"
           id="galliaName"

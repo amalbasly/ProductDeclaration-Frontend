@@ -1,10 +1,11 @@
 <nav class="sidebar" *ngIf="authService.currentUser$ | async as user" [class.open]="isOpen">
   <div *ngIf="user.employeeFunction === 'Tracability Manager'">
 
-    <!-- Logo & User Info -->
+    <!-- Logo & User Info - Enhanced -->
     <div class="logo">
-      <i class="fas fa-user-tie"></i>
+      <i class="fas fa-user-shield"></i>
       <h2>{{ (user?.pl_nom || '') + ' ' + (user?.pl_prenom || '') }}</h2>
+      <div class="role-badge">Traceability Manager</div>
     </div>
 
     <!-- Navigation Links -->
@@ -13,117 +14,85 @@
       <!-- Dashboard -->
       <li>
         <a routerLink="/traca/dashboard" routerLinkActive="active">
-          <i class="fas fa-chart-line"></i>
-          <span>Dashboard</span>
+          <div class="link-content">
+            <i class="fas fa-chart-line"></i>
+            <span class="link-text">Dashboard</span>
+          </div>
+          <div class="active-indicator"></div>
         </a>
       </li>
 
-      <!-- Product List -->
+      <!-- Approvals -->
       <li>
         <a routerLink="/traca/list" routerLinkActive="active">
-          <i class="fas fa-list"></i>
-          <span>Product List</span>
+          <div class="link-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="link-text">Approvals</span>
+          </div>
+          <div class="active-indicator"></div>
+          <div class="notification-badge" *ngIf="false">5</div> <!-- Visual only -->
         </a>
       </li>
 
-      <!-- Gallia Section -->
-      <li class="has-submenu" [class.open]="isGalliaSubmenuOpen">
-        <a (click)="toggleGalliaSubmenu()">
-          <i class="fas fa-layer-group"></i>
-          <span>Gallia</span>
+      <!-- Products (with submenu) -->
+      <li class="has-submenu" [class.open]="false">
+        <a class="submenu-toggle">
+          <div class="link-content">
+            <i class="fas fa-clipboard-list"></i>
+            <span class="link-text">Products</span>
+          </div>
           <i class="dropdown-icon fas fa-chevron-down"></i>
+          <div class="active-indicator"></div>
         </a>
         <ul class="submenu">
           <li>
-            <a routerLink="/traca/createG" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-plus"></i>
-              <span>Create Gallia</span>
+            <a routerLink="/traca/list" routerLinkActive="active">
+              <i class="fas fa-list-ul"></i>
+              <span class="link-text">Product List</span>
+              <div class="active-indicator"></div>
             </a>
           </li>
           <li>
-            <a routerLink="/traca/gallia" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-list"></i>
-              <span>Gallia List</span>
+            <a class="disabled-link">
+              <i class="fas fa-search"></i>
+              <span class="link-text">Product Audit</span>
+              <div class="coming-soon">Soon</div>
             </a>
           </li>
         </ul>
       </li>
 
-      <!-- Label Section -->
-      <li class="has-submenu" [class.open]="isLabelSubmenuOpen">
-        <a (click)="toggleLabelSubmenu()">
-          <i class="fas fa-tag"></i>
-          <span>Label</span>
-          <i class="dropdown-icon fas fa-chevron-down"></i>
+      <!-- Visual placeholders -->
+      <li class="disabled-menu-item">
+        <a>
+          <div class="link-content">
+            <i class="fas fa-file-alt"></i>
+            <span class="link-text">Reports</span>
+          </div>
+          <div class="coming-soon">Coming Soon</div>
         </a>
-        <ul class="submenu">
-          <li>
-            <a routerLink="/traca/create-etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-plus"></i>
-              <span>Create Label</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/traca/etiquette" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-list"></i>
-              <span>Label List</span>
-            </a>
-          </li>
-        </ul>
       </li>
 
-      <!-- Flan Section -->
-      <li class="has-submenu" [class.open]="isFlanSubmenuOpen">
-        <a (click)="toggleFlanSubmenu()">
-          <i class="fas fa-cut"></i>
-          <span>Flan</span>
-          <i class="dropdown-icon fas fa-chevron-down"></i>
+      <li class="disabled-menu-item">
+        <a>
+          <div class="link-content">
+            <i class="fas fa-cog"></i>
+            <span class="link-text">Settings</span>
+          </div>
+          <div class="coming-soon">Coming Soon</div>
         </a>
-        <ul class="submenu">
-          <li>
-            <a routerLink="/traca/flanC" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-plus"></i>
-              <span>Create Flan</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/traca/flanList" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-list"></i>
-              <span>Flan List</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-
-      <!-- Assembly Section -->
-      <li class="has-submenu" [class.open]="isAssemblySubmenuOpen">
-        <a (click)="toggleAssemblySubmenu()">
-          <i class="fas fa-cogs"></i>
-          <span>Assembly</span>
-          <i class="dropdown-icon fas fa-chevron-down"></i>
-        </a>
-        <ul class="submenu">
-          <li>
-            <a routerLink="/traca/assemblageC" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-plus"></i>
-              <span>Create Assembly</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/traca/assemblageL" routerLinkActive="active" (click)="$event.stopPropagation()">
-              <i class="fas fa-list"></i>
-              <span>Assembly List</span>
-            </a>
-          </li>
-        </ul>
       </li>
 
     </ul>
 
-    <!-- Email Footer -->
-    <div class="user-email">
-      <i class="fas fa-envelope"></i>
-      <span>{{ user?.employeeEmail || '' }}</span>
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="user-email">
+        <div class="email-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <span class="email-text">{{ user?.employeeEmail || '' }}</span>
+      </div>
     </div>
 
   </div>

@@ -1,201 +1,218 @@
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@400;700;900&display=swap');
+
+$all-red: #FF4757;
+$all-blue: #0b6985;
+$white: #ffffff;
+$neutral-200: #edf2f7;
+$accent: $all-blue;      // For icon colors and general accent
+$border-accent: $all-red; // For left border color in nav links
+$text-light: $white;
+$bg-dark: darken($all-blue, 20%);
+$hover-bg: rgba($white, 0.1);
+$submenu-bg: darken($all-blue, 15%);
+
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
+
 .sidebar {
   width: 250px;
   height: 100vh;
-  background: linear-gradient(180deg, #2c3e50, #1a252f);
-  color: white;
+  background-color: $bg-dark;
+  color: $text-light;
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  padding: 20px 0;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  transition: transform 0.3s ease;
+  padding: 1rem 0;
+  font-family: $font-body;
+  overflow-y: auto;
+  .profile-role {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #2c3e50; /* Darker blue/gray */
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 
   .logo {
-    padding: 0 20px 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 10px;
 
-    .profile-picture-container {
-      width: 50px;
-      height: 50px;
-      min-width: 50px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      
-      .profile-picture {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
+  i {
+    font-size: 2.2rem;
+    color: $accent;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  h2 {
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.1rem;
+    margin: 0;
+    text-align: center;
+    color: $text-light;
+  }
+
+  // Add this for the role badge
+  .role-badge {
+    background-color: $accent;
+    color: $white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &:hover i {
+    transform: rotate(8deg);
+  }
+}
+
+  .profile-info {
+    padding: 0 20px 1rem;
+
+    .profile-role {
+      font-size: 0.85rem;
+      color: rgba($white, 0.7);
     }
+  }
 
-    h2 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgba(255, 255, 255, 0.95);
-      transition: color 0.2s ease;
-    }
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: $font-body;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      
-      .profile-picture {
-        transform: scale(1.05);
+    li {
+      border-top: 1px solid rgba($white, 0.05);
+      border-bottom: 1px solid rgba($white, 0.05);
+      position: relative;
+
+      a {
+        display: flex;
+        align-items: center;
+        color: $text-light;
+        text-decoration: none;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        border-left: 4px solid transparent;
+
+        i {
+          min-width: 20px;
+          text-align: center;
+          margin-right: 10px;
+          color: $accent;
+          transition: all 0.3s ease;
+        }
+
+        .link-text {
+          flex-grow: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .dropdown-icon {
+          font-size: 0.75rem;
+          color: lighten($accent, 10%);
+          margin-left: auto;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover,
+        &.active {
+          background-color: $hover-bg;
+          border-left: 4px solid $border-accent; // red border on active/hover
+          padding-left: 16px;
+          color: $white;
+
+          i,
+          .link-text {
+            color: $white;
+          }
+
+          .dropdown-icon {
+            color: $white;
+          }
+        }
+
+        &:hover i,
+        &:hover .link-text {
+          color: $white;
+        }
       }
-      
-      h2 {
-        color: white;
+
+      &.has-submenu {
+        .submenu-toggle {
+          cursor: pointer;
+        }
+
+        &.open .dropdown-icon {
+          transform: rotate(-180deg);
+        }
+
+        .submenu {
+          list-style: none;
+          padding-left: 30px;
+          background-color: $submenu-bg;
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+
+          li {
+            a {
+              font-size: 13px;
+              padding: 10px 20px;
+              color: $text-light;
+              transition: background-color 0.3s ease, color 0.3s ease;
+
+              &:hover {
+                background-color: $hover-bg;
+                color: $accent;
+              }
+            }
+          }
+        }
+
+        &.open .submenu {
+          max-height: 300px;
+          opacity: 1;
+          display: block;
+        }
       }
     }
   }
 
-  /* Update the nav-links section in your sidebar SCSS */
-.nav-links {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-  flex-grow: 1;
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba($white, 0.05);
+    font-size: 13px;
 
-  li a {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    transition: all 0.3s;
-    position: relative;
-
-    i {
-      margin-right: 10px;
-      width: 20px;
-      text-align: center;
-      transition: all 0.3s;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    &.active {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: #3498db;
-      }
+    .user-email {
+      display: flex;
+      align-items: center;
 
       i {
-        transform: scale(1.1);
+        margin-right: 10px;
+        color: $accent;
       }
-    }
-  }
-}
 
-  .user-email {
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 13px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: auto;
-    transition: all 0.2s ease;
-
-    i {
-      color: #3498db;
-      font-size: 14px;
-      width: 20px;
-      text-align: center;
-    }
-
-    span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    &:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
-
-  .logout {
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.2s ease;
-    color: rgba(255, 255, 255, 0.8);
-
-    i {
-      font-size: 14px;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #e74c3c;
-    }
-  }
-}
-
-.main-content {
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%);
-    
-    &.open {
-      transform: translateX(0);
-      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .toggle-sidebar {
-    display: block;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 1001;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: #3498db;
+      span {
+        word-break: break-word;
+      }
     }
   }
 }

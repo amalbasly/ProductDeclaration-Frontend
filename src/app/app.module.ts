@@ -75,6 +75,7 @@ import { EmployeeService } from './Services/employee.service';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProductJustificationDialogComponent } from './pages/products/product-justification-dialog/product-justification-dialog.component';
+import { TracaHeaderComponent } from './layouts/traca-layout/traca-header/traca-header.component';
 
 @NgModule({
   declarations: [
@@ -119,6 +120,7 @@ import { ProductJustificationDialogComponent } from './pages/products/product-ju
     AssemblageFormComponent,
     AdminHeaderComponent,
     ProductJustificationDialogComponent,
+    TracaHeaderComponent,
   ],
   imports: [
     BrowserModule,

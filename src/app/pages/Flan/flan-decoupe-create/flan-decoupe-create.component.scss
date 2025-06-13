@@ -1,133 +1,329 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto :wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-// Theme Colors
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
-$neutral-100: #f8fafc;
-$neutral-300: #cbd5e1;
-$neutral-800: #1e293b;
+// Brand Colors
+$all-red: #FF4757;
+$all-blue: #0b6985;
 $white: #ffffff;
+$neutral-100: #f8fafc;
+$neutral-200: #edf2f7;
+$neutral-300: #cbd5e1;
+$bg-dark: darken($all-blue, 20%);
+$text-light: $white;
 
 // Typography
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
+
+// Mixins
+@mixin transition($prop: all, $time: 0.3s, $ease: ease-in-out) {
+  transition: $prop $time $ease;
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($all-blue, 0.2);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 
 .card {
-  background-color: $white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  font-family: $font-family-base;
-  margin: 2rem auto;
-  padding: 1.5rem;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba($all-blue, 0.08);
+  font-family: $font-body;
+  margin: 2.5rem auto;
+  padding: 2rem;
   max-width: 600px;
+  border: 1px solid rgba($all-blue, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, $all-blue, $all-red);
+  }
 
   .card-header {
-    border-bottom: 1px solid lighten($pcb-copper, 30%);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba($all-blue, 0.15);
+    position: relative;
 
     h3 {
       margin: 0;
-      font-size: 1.4rem;
-      color: $pcb-green-dark;
-      font-weight: 700;
-      position: relative;
+      font-family: $font-heading;
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: $all-blue;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
 
-      &:after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 4px;
-        background: $pcb-copper;
-        border-radius: 2px;
-        margin-top: 0.35rem;
+      &:before {
+        content: 'memory';
+        font-family: 'Material Icons';
+        font-size: 1.8rem;
+        color: $all-red;
+        animation: pulse-red 2s infinite ease-in-out;
       }
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: $all-red;
     }
   }
 
   .card-body {
     padding: 0;
 
+    // Alert Messages
     .alert {
-      border-radius: 0.5rem;
-      padding: 0.75rem 1.25rem;
+      border-left: 4px solid transparent;
+      background: lighten($all-blue, 48%);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+      animation: fadeIn 0.4s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       font-size: 0.95rem;
-      margin-bottom: 1.25rem;
       font-weight: 400;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+
+      &:before {
+        font-family: 'Material Icons';
+        font-size: 1.25rem;
+      }
+
+      &.alert-danger {
+        background: lighten($all-red, 48%);
+        border-color: $all-red;
+        color: darken($all-red, 15%);
+
+        &:before {
+          content: 'error_outline';
+          color: $all-red;
+        }
+      }
+
+      &.alert-success {
+        background: lighten($all-blue, 48%);
+        border-color: $all-blue;
+        color: $bg-dark;
+
+        &:before {
+          content: 'check_circle_outline';
+          color: $all-blue;
+        }
+      }
     }
 
-    .alert-danger {
-      background-color: #ffe5e5;
-      color: #7a0000;
-      border-left: 4px solid #dc3545;
-    }
-
-    .alert-success {
-      background-color: #e6ffe6;
-      color: #006600;
-      border-left: 4px solid $pcb-green;
-    }
-
+    // Form Styles
     form {
       .form-group {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.75rem;
+        position: relative;
 
         label {
           display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 500;
+          margin-bottom: 0.6rem;
+          font-family: $font-body;
+          font-weight: 600;
           font-size: 0.95rem;
-          color: $neutral-800;
+          color: $bg-dark;
+          @include transition(color);
+          position: relative;
+          padding-left: 8px;
+
+          &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 2px;
+            width: 4px;
+            height: 4px;
+            background: $all-red;
+            border-radius: 50%;
+          }
+
+          &:hover {
+            color: $all-blue;
+          }
         }
 
         select,
         input[type="text"],
         input[type="number"] {
           width: 100%;
-          padding: 0.5rem 0.75rem;
+          padding: 0.85rem 1.25rem;
+          font-family: $font-body;
           font-size: 0.95rem;
-          border: 1px solid #ced4da;
-          border-radius: 0.5rem;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
-          font-family: $font-family-base;
+          border: 1px solid $neutral-200;
+          border-radius: 10px;
+          background: $white;
+          @include transition(border-color, box-shadow);
+          @include focus-ring;
+          color: darken($bg-dark, 5%);
+
+          &:hover {
+            border-color: $all-blue;
+          }
 
           &:focus {
-            border-color: $pcb-copper;
-            box-shadow: 0 0 0 3px rgba($pcb-copper, 0.1);
-            outline: none;
+            border-color: $all-blue;
+            box-shadow: 0 0 0 4px rgba($all-blue, 0.15);
           }
 
           &:disabled {
             background-color: $neutral-100;
+            color: lighten($bg-dark, 30%);
             cursor: not-allowed;
           }
+        }
+
+        select {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%230b6985' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 1rem center;
+          background-size: 1rem;
+          appearance: none;
+        }
+      }
+
+      // Submit Button
+      .btn {
+        font-family: $font-heading;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 0.85rem 2.5rem;
+        border-radius: 30px;
+        background: linear-gradient(135deg, $all-blue, darken($all-blue, 8%));
+        color: $text-light;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        @include transition(transform, box-shadow);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 4px 8px rgba($all-blue, 0.15);
+
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, $all-red, darken($all-red, 10%));
+          opacity: 0;
+          @include transition(opacity);
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba($all-blue, 0.25);
+
+          &:before {
+            opacity: 0.15;
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 6px rgba($all-blue, 0.2);
+        }
+
+        &:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+          box-shadow: none;
+          transform: none;
+        }
+
+        span {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          &:before {
+            content: 'add_circle_outline';
+            font-family: 'Material Icons';
+            font-size: 1.2rem;
+          }
+        }
+
+        .spinner-border {
+          width: 1rem;
+          height: 1rem;
+          border-width: 2px;
+          border-color: $text-light transparent $text-light transparent;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    margin: 1.5rem 1rem;
+    padding: 1.75rem 1.5rem;
+    border-radius: 12px;
+
+    .card-header {
+      h3 {
+        font-size: 1.4rem;
+        
+        &:before {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .card-body {
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        select,
+        input[type="text"],
+        input[type="number"] {
+          padding: 0.75rem 1rem;
         }
       }
 
       .btn {
-        font-family: $font-family-base;
-        font-weight: 700;
-        font-size: 1rem;
-        padding: 0.5rem 1.5rem;
-        border-radius: 30px;
-        border: none;
-        box-shadow: 0 2px 6px rgba($pcb-copper, 0.3);
-        background-color: $pcb-green;
-        color: white;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: lighten($pcb-green, 10%);
-        }
-
-        &:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-
-        .spinner-border {
-          margin-right: 0.5rem;
-          vertical-align: text-bottom;
-        }
+        width: 100%;
+        padding: 0.85rem;
       }
     }
   }

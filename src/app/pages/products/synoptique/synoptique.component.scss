@@ -1,83 +1,80 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
+// Brand Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
+$white: #ffffff;
 $neutral-100: #f8fafc;
 $neutral-300: #cbd5e1;
 $neutral-800: #1e293b;
-$white: #ffffff;
-$red: #e63946;
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
+// Mixins
 @mixin transition($prop: all, $time: 0.2s, $ease: ease-out) {
   transition: $prop $time $ease;
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($red, 0.7); /* Enhanced red touch for focus */
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($all-red, 0.25); // Thinner, softer focus ring
   }
 }
 
 .synoptique-container {
   width: 100%;
-  max-width: 700px; /* Matches provided SCSS for compact layout */
-  margin: 2rem auto;
+  max-width: 750px;
+  margin: 3rem auto;
   padding: 2rem;
   background: $white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba($red, 0.1); /* Enhanced red touch */
-  font-family: $font-family-base;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: $font-body;
 
   h2 {
-    font-weight: $font-weight-bold;
-    font-size: 1.5rem;
-    color: $pcb-green-dark;
+    font-family: $font-heading;
+    font-size: 1.8rem;
+    color: $all-blue;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
     margin-bottom: 0.5rem;
     position: relative;
 
-    &:after {
+    &::after {
       content: '';
       display: block;
       width: 60px;
       height: 3px;
-      background: $red; /* Enhanced red touch */
-      border-radius: 2px;
-      margin-top: 0.25rem;
+      background: $all-red;
+      margin-top: 0.4rem;
     }
   }
 
   h5 {
-    font-weight: $font-weight-medium;
+    font-weight: 600;
     font-size: 1.1rem;
     color: $neutral-800;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
 
   .text-muted {
     font-size: 0.95rem;
-    color: $neutral-800;
-    margin-bottom: 1rem;
+    color: darken($neutral-100, 20%);
+    margin-bottom: 1.5rem;
   }
 
+  // Loading Spinner
   .text-center.py-5 {
     padding: 2rem;
-
     .spinner-border {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.8rem;
+      height: 1.8rem;
       border-width: 0.2rem;
-      color: $red; /* Enhanced red touch (replaces text-primary) */
+      color: $all-red;
     }
-
     p {
       font-size: 0.9rem;
       color: $neutral-800;
@@ -85,36 +82,37 @@ $font-weight-bold: 700;
     }
   }
 
+  // Error Alert
   .alert-danger {
-    background: lighten($red, 40%); /* Enhanced red touch */
-    border-left: 4px solid $red;
-    color: darken($red, 25%);
-    border-radius: 8px;
+    background: lighten($all-red, 35%);
+    border-left: 4px solid $all-red;
+    color: darken($all-red, 20%);
+    border-radius: 10px;
     padding: 1rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 2px 6px rgba($red, 0.2);
+    box-shadow: 0 2px 8px rgba($all-red, 0.1);
 
     .btn-outline-danger {
-      border-color: $red;
-      color: $red;
+      border-color: $all-red;
+      color: $all-red;
       border-radius: 30px;
-      padding: 0.25rem 0.75rem;
+      padding: 0.3rem 0.8rem;
       font-size: 0.85rem;
-
+      font-weight: 600;
       &:hover {
-        background: $red;
+        background: $all-red;
         color: $white;
         transform: translateY(-1px);
       }
-
       @include focus-ring;
     }
   }
 
+  // List Group - Modes
   .list-group {
-    border-radius: 0.75rem;
+    border-radius: 14px; // Softer, cuter corners
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba($red, 0.1); /* Enhanced red touch */
+    box-shadow: 0 2px 8px rgba($all-red, 0.06); // Thinner, gentler shadow
 
     .list-group-item {
       display: flex;
@@ -122,170 +120,186 @@ $font-weight-bold: 700;
       justify-content: space-between;
       border: none;
       border-bottom: 1px solid $neutral-300;
-      padding: 1rem;
+      padding: 0.8rem 1rem; // Thinner padding for a slimmer, cuter look
       background: $white;
+      min-height: 40px; // Slimmer height for a delicate feel
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background: lighten($red, 45%); /* Enhanced red touch for hover */
-        box-shadow: inset 0 0 0 1px rgba($red, 0.2);
+        background: lighten($all-red, 45%);
+        box-shadow: inset 0 0 0 1px rgba($all-red, 0.1); // Softer, cuter hover
       }
 
+      // Checkbox
       .form-check {
         margin: 0;
+        display: flex;
+        align-items: center;
 
         .form-check-input {
-          width: 1.3rem;
-          height: 1.3rem;
-          border-radius: 4px;
-          border: 1px solid $red; /* Enhanced red touch */
+          width: 1.1rem; // Smaller, cuter checkbox
+          height: 1.1rem;
+          border-radius: 6px; // Rounder for a cuter look
+          border: 1px solid $all-red; // Thinner border
           cursor: pointer;
-          margin-right: 0.5rem;
+          margin-right: 0.4rem; // Tighter spacing
           @include transition(border-color, background-color);
 
           &:checked {
-            background-color: $red;
-            border-color: $red;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+            background-color: $all-red;
+            border-color: $all-red;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"); // Thinner, cuter checkmark
           }
 
           @include focus-ring;
         }
 
         .form-check-label {
-          font-size: 0.9rem;
+          font-size: 0.9rem; // Smaller, cuter text
           color: $neutral-800;
           cursor: pointer;
         }
       }
 
+      // Rank Select
       .form-select-sm {
-        font-size: 0.85rem;
-        padding: 0.25rem 0.5rem;
-        border: 1px solid $red; /* Enhanced red touch */
-        border-radius: 30px;
-        width: 80px;
+        font-size: 0.8rem; // Smaller, cuter size
+        padding: 0.2rem 0.5rem; // Thinner padding
+        border: 1px solid $all-red; // Thinner border
+        border-radius: 20px; // Rounder, cuter shape
+        width: 70px; // Slimmer width
         color: $neutral-800;
         @include transition(border-color, box-shadow);
 
         &:hover {
-          border-color: darken($red, 10%);
+          border-color: darken($all-red, 10%);
         }
 
         &:focus {
-          border-color: $red;
-          box-shadow: 0 0 0 0.2rem rgba($red, 0.15);
+          border-color: $all-red;
+          box-shadow: 0 0 0 2px rgba($all-red, 0.2); // Thinner, softer focus
         }
 
         @include focus-ring;
       }
 
+      // Badges
       .badge {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
-        border-radius: 12px;
+        font-size: 0.65rem; // Smaller, cuter badge
+        padding: 0.25rem 0.5rem; // Thinner padding
+        border-radius: 16px; // Rounder, cuter shape
 
         &.bg-primary {
-          background: $red !important; /* Enhanced red touch */
+          background: $all-red !important;
           color: $white;
-          min-width: 24px;
+          min-width: 20px; // Smaller, cuter width
           text-align: center;
         }
 
         &.bg-info {
-          background: $pcb-green !important;
+          background: $all-blue !important;
           color: $white;
         }
       }
     }
   }
 
-  .btn {
-    font-weight: $font-weight-bold;
-    font-size: 0.9rem;
-    padding: 0.4rem 1.2rem;
-    border-radius: 30px;
-    @include transition(background-color, transform, border-color);
-
-    &.btn-primary {
-      background: $red; /* Enhanced red touch */
-      border-color: $red;
-      color: $white;
-
-      &:hover {
-        background: darken($red, 10%);
-        border-color: darken($red, 10%);
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-
-      &:disabled {
-        background: darken($red, 20%);
-        border-color: darken($red, 20%);
-        opacity: 0.7;
-      }
-    }
-
-    &.btn-secondary {
-      background: $pcb-green;
-      border-color: $red; /* Enhanced red touch */
-      color: $white;
-
-      &:hover {
-        background: $red; /* Red touch on hover */
-        border-color: darken($red, 10%);
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-
-      &:disabled {
-        background: darken($pcb-green, 20%);
-        border-color: darken($red, 20%);
-        opacity: 0.7;
-      }
-    }
-
-    &.btn-outline-secondary {
-      border-color: $red; /* Enhanced red touch */
-      color: $red;
-      background: $white;
-
-      &:hover {
-        background: lighten($red, 40%);
-        border-color: $red;
-        color: darken($red, 10%);
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-
-    .spinner-border-sm {
-      width: 1rem;
-      height: 1rem;
-      border-width: 0.2rem;
-      color: $white;
-    }
-
-    @include focus-ring;
+  // Ranked Modes Summary
+  .list-group-item.d-flex.align-items-center {
+    background: $neutral-100;
+    border-radius: 10px;
+    padding: 0.6rem 1rem; // Thinner, cuter padding
+    margin-bottom: 0.4rem; // Tighter spacing for a delicate look
   }
 
+  // Action Buttons
   .d-flex.justify-content-between,
   .d-flex.justify-content-end {
     gap: 1rem;
+    margin-top: 2rem;
 
-    @media (max-width: 576px) {
+    .text-muted {
+      font-size: 0.9rem;
+    }
+
+    .btn {
+      font-family: $font-heading;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      @include transition(background-color, transform, border-color);
+
+      &.btn-primary {
+        background: linear-gradient(135deg, $all-red, darken($all-red, 5%));
+        border-color: $all-red;
+        color: $white;
+        &:hover {
+          background: linear-gradient(135deg, darken($all-red, 5%), darken($all-red, 10%));
+          transform: translateY(-1px);
+        }
+        &:active {
+          transform: translateY(0);
+        }
+        &:disabled {
+          background: $neutral-300;
+          border-color: $neutral-300;
+          opacity: 0.7;
+        }
+      }
+
+      &.btn-secondary {
+        background: $all-blue;
+        border-color: $all-blue;
+        color: $white;
+        &:hover {
+          background: darken($all-blue, 10%);
+          border-color: darken($all-blue, 10%);
+          transform: translateY(-1px);
+        }
+        &:active {
+          transform: translateY(0);
+        }
+        &:disabled {
+          background: darken($all-blue, 20%);
+          border-color: darken($all-blue, 20%);
+          opacity: 0.7;
+        }
+      }
+
+      &.btn-outline-secondary {
+        border-color: $all-blue;
+        color: $all-blue;
+        background: transparent;
+        &:hover {
+          background: rgba($all-blue, 0.1);
+          border-color: darken($all-blue, 10%);
+          color: darken($all-blue, 10%);
+          transform: translateY(-1px);
+        }
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2rem;
+        color: $white;
+      }
+
+      @include focus-ring;
+    }
+  }
+
+  // Responsive Adjustments
+  @media (max-width: 576px) {
+    .d-flex.justify-content-between,
+    .d-flex.justify-content-end {
       flex-direction: column;
       align-items: stretch;
 
@@ -293,10 +307,8 @@ $font-weight-bold: 700;
         width: 100%;
       }
 
-      &.justify-content-between {
-        .text-muted {
-          margin-bottom: 0.5rem;
-        }
+      .text-muted {
+        margin-bottom: 0.5rem;
       }
     }
   }

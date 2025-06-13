@@ -1,44 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@300;400;700&display=swap');
 
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
+// Brand Colors
+$all-red: #FF4757; 
+$all-blue: #0b6985;
+$white: #ffffff;
 $neutral-100: #f8fafc;
 $neutral-300: #cbd5e1;
 $neutral-800: #1e293b;
-$white: #ffffff;
-$red: #e63946;
 
-$font-family-base: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-$font-weight-regular: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
+// Typography
+$font-heading: 'Fjalla One', sans-serif;
+$font-body: 'Lato', sans-serif;
 
+// Mixins
 @mixin transition($prop: all, $time: 0.2s, $ease: ease-out) {
   transition: $prop $time $ease;
 }
 
 @mixin focus-ring {
   &:focus {
-    outline: 2px solid rgba($red, 0.7); /* Enhanced red touch for focus */
+    outline: 2px solid rgba($all-blue, 0.7); // Blue focus ring for consistency
     outline-offset: 2px;
   }
 }
 
 .justification-container {
   width: 100%;
-  max-width: 650px; /* Matches provided SCSS for compact form */
+  max-width: 650px; // Compact form width
   margin: 2rem auto;
   padding: 2rem;
-  background: $white;
+  background: $neutral-100; // Light, clean background
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba($red, 0.1); /* Enhanced red touch */
-  font-family: $font-family-base;
+  box-shadow: 0 4px 12px rgba($all-blue, 0.1); // Subtle blue shadow
+  font-family: $font-body;
 
   h2 {
-    font-weight: $font-weight-bold;
+    font-family: $font-heading;
+    font-weight: 700;
     font-size: 1.5rem;
-    color: $pcb-green-dark;
+    color: $all-blue; // Blue for heading
     text-transform: uppercase;
     letter-spacing: 0.8px;
     margin-bottom: 1.5rem;
@@ -49,20 +49,20 @@ $font-weight-bold: 700;
       display: block;
       width: 60px;
       height: 3px;
-      background: $red; /* Enhanced red touch */
+      background: $all-red; // Red accent line
       border-radius: 2px;
       margin-top: 0.25rem;
     }
   }
 
   .alert-danger {
-    background: lighten($red, 40%); /* Enhanced red touch */
-    border-left: 4px solid $red;
-    color: darken($red, 25%);
+    background: lighten($all-red, 40%); // Light red background
+    border-left: 4px solid $all-red; // Bold red border
+    color: darken($all-red, 25%); // Darker red text
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 2px 6px rgba($red, 0.2);
+    box-shadow: 0 2px 6px rgba($all-red, 0.2); // Red-tinted shadow
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -70,7 +70,7 @@ $font-weight-bold: 700;
 
     .bi-exclamation-circle {
       font-size: 1.2rem;
-      color: $red;
+      color: $all-red; // Red icon
     }
   }
 
@@ -78,9 +78,9 @@ $font-weight-bold: 700;
     margin-bottom: 1.5rem;
 
     label {
-      font-weight: $font-weight-medium;
+      font-weight: 500; // Medium weight for clarity
       font-size: 0.9rem;
-      color: $neutral-800;
+      color: $neutral-800; // Dark text
       display: block;
       margin-bottom: 0.5rem;
     }
@@ -88,7 +88,7 @@ $font-weight-bold: 700;
     .form-control {
       font-size: 0.85rem;
       color: $neutral-800;
-      border: 1px solid $red; /* Enhanced red touch */
+      border: 1px solid $neutral-300; // Neutral border
       border-radius: 30px;
       padding: 0.6rem 1rem;
       width: 100%;
@@ -96,33 +96,33 @@ $font-weight-bold: 700;
       @include transition(border-color, box-shadow);
 
       &:hover {
-        border-color: darken($red, 10%);
+        border-color: $all-blue; // Blue on hover
       }
 
       @include focus-ring;
 
       &:focus {
-        border-color: $red;
-        box-shadow: 0 0 0 0.2rem rgba($red, 0.15);
+        border-color: $all-blue; // Blue on focus
+        box-shadow: 0 0 0 0.2rem rgba($all-blue, 0.15);
       }
 
       &.ng-invalid.ng-touched {
-        border-color: $red;
+        border-color: $all-red; // Red for invalid
 
         &:focus {
-          box-shadow: 0 0 0 0.2rem rgba($red, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba($all-red, 0.25);
         }
       }
 
       &[type="textarea"] {
         resize: vertical;
         min-height: 100px;
-        border-radius: 12px; /* Slightly less rounded for textarea */
+        border-radius: 12px; // Softer corners for textarea
       }
 
       &[type="select"] {
         appearance: none;
-        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23e63946' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l4 4 4-4'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%230b6985' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l4 4 4-4'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 1rem center;
         background-size: 12px 12px;
@@ -131,10 +131,10 @@ $font-weight-bold: 700;
 
     small.text-muted {
       font-size: 0.8rem;
-      color: $red !important; /* Enhanced red touch for validation hint */
+      color: $all-red !important; // Red for validation hint
       margin-top: 0.25rem;
       display: block;
-      font-weight: $font-weight-medium;
+      font-weight: 500;
     }
   }
 
@@ -146,7 +146,8 @@ $font-weight-bold: 700;
     gap: 1rem;
 
     .btn {
-      font-weight: $font-weight-bold;
+      font-family: $font-heading;
+      font-weight: 700;
       font-size: 0.9rem;
       padding: 0.5rem 1.5rem;
       border-radius: 30px;
@@ -154,13 +155,13 @@ $font-weight-bold: 700;
       @include transition(background-color, transform, border-color);
 
       &.btn-primary {
-        background: $red; /* Enhanced red touch */
-        border-color: $red;
+        background: $all-blue; // Blue for primary action
+        border-color: $all-blue;
         color: $white;
 
         &:hover {
-          background: darken($red, 10%);
-          border-color: darken($red, 10%);
+          background: darken($all-blue, 10%);
+          border-color: darken($all-blue, 10%);
           transform: translateY(-1px);
         }
 
@@ -169,8 +170,8 @@ $font-weight-bold: 700;
         }
 
         &:disabled {
-          background: darken($red, 20%);
-          border-color: darken($red, 20%);
+          background: darken($all-blue, 20%);
+          border-color: darken($all-blue, 20%);
           opacity: 0.7;
         }
 
@@ -182,13 +183,13 @@ $font-weight-bold: 700;
 
       &.btn-outline-secondary {
         background: $white;
-        border: 2px solid $red; /* Enhanced red touch */
-        color: $red;
+        border: 2px solid $neutral-300; // Neutral border
+        color: $neutral-800; // Dark text
 
         &:hover {
-          background: lighten($red, 40%);
-          border-color: $red;
-          color: darken($red, 10%);
+          background: $neutral-100; // Light hover background
+          border-color: $all-blue; // Blue on hover
+          color: $all-blue;
           transform: translateY(-1px);
         }
 
@@ -197,8 +198,8 @@ $font-weight-bold: 700;
         }
 
         &:disabled {
-          border-color: darken($red, 20%);
-          color: darken($red, 20%);
+          border-color: darken($neutral-300, 10%);
+          color: darken($neutral-300, 10%);
           opacity: 0.7;
         }
 

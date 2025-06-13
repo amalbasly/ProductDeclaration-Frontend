@@ -5,12 +5,11 @@
     <button mat-raised-button color="primary">Export Data</button>
   </header>
 
-  <!-- Metrics Section: Displays PCB metrics with staggered animations -->
+  <!-- Metrics Section -->
   <section class="metrics-section">
     <mat-card 
       class="metric-card" 
-      *ngFor="let metric of metrics; let i = index" 
-      @cardAnimation 
+      *ngFor="let metric of metrics; let i = index"
       [style.animation-delay]="i * 0.1 + 's'"
     >
       <mat-card-header>
@@ -23,9 +22,9 @@
     </mat-card>
   </section>
 
-  <!-- Charts Section: Displays Chart.js line and doughnut charts -->
+  <!-- Charts Section -->
   <section class="charts-section">
-    <mat-card class="chart-card" @chartAnimation>
+    <mat-card class="chart-card">
       <mat-card-header>
         <mat-card-title>Monthly PCB Production</mat-card-title>
       </mat-card-header>
@@ -35,7 +34,7 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <mat-card class="chart-card" @chartAnimation>
+    <mat-card class="chart-card">
       <mat-card-header>
         <mat-card-title>PCB Type Distribution</mat-card-title>
       </mat-card-header>
@@ -47,7 +46,7 @@
     </mat-card>
   </section>
 
-  <!-- Action Items Section: Lists actionable tasks with buttons -->
+  <!-- Action Items Section -->
   <section class="action-items-section">
     <h2>Action Items</h2>
     <mat-card class="action-list">

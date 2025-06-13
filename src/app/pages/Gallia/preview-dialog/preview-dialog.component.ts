@@ -3,14 +3,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateGalliaDto } from '../../../models/GalliaDto';
 
 interface PreviewDialogData {
-  gallia: CreateGalliaDto & { action?: string }; // Allow action property
+  gallia: CreateGalliaDto & { action?: string };
   previews: { [key: number]: string };
   generateLabelCanvas: () => Promise<HTMLCanvasElement>;
 }
 
 @Component({
   selector: 'app-preview-dialog',
-  standalone : false,
+  standalone: false,
   templateUrl: './preview-dialog.component.html',
   styleUrls: ['./preview-dialog.component.scss']
 })

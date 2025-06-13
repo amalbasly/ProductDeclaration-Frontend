@@ -11,13 +11,13 @@ import { PreviewDialogComponent } from '../preview-dialog/preview-dialog.compone
 
 @Component({
   selector: 'app-gallia-create',
-  standalone : false,
+  standalone: false,
   templateUrl: './gallia-create.component.html',
   styleUrls: ['./gallia-create.component.scss']
 })
 export class GalliaCreateComponent implements OnInit {
   gallia: CreateGalliaDto = {
-    labelDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+    labelDate: new Date().toISOString().split('T')[0],
     fields: [],
     labelName: 'Gallia',
     galliaName: ''
@@ -45,13 +45,13 @@ export class GalliaCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  this.route.url.subscribe((segments: UrlSegment[]) => {
-    this.labelType = segments.some(s => s.path === 'create-etiquette') ? 'Etiquette' : 'Gallia';
-    this.gallia.labelName = this.labelType;
-  });
+    this.route.url.subscribe((segments: UrlSegment[]) => {
+      this.labelType = segments.some(s => s.path === 'create-etiquette') ? 'Etiquette' : 'Gallia';
+      this.gallia.labelName = this.labelType;
+    });
 
-  this.detectUserRole(); // <- Add this line
-}
+    this.detectUserRole();
+  }
 
   detectUserRole(): void {
     const urlSegment = this.route.snapshot.pathFromRoot
@@ -145,23 +145,22 @@ export class GalliaCreateComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-  if (!this.validateForm()) return;
+    if (!this.validateForm()) return;
 
-  this.isLoading = true;
-  try {
-    const createdGallia = await this.galliaService.createGallia(this.gallia, this.labelType).toPromise();
-    if (createdGallia?.galliaId) {
-      await this.saveLabelImage(createdGallia.galliaId);
+    this.isLoading = true;
+    try {
+      const createdGallia = await this.galliaService.createGallia(this.gallia, this.labelType).toPromise();
+      if (createdGallia?.galliaId) {
+        await this.saveLabelImage(createdGallia.galliaId);
+      }
+      this.showSuccess(`${this.labelType} created successfully!`);
+      this.router.navigate([`/${this.userRole}/${this.labelType.toLowerCase()}`]);
+    } catch (error) {
+      this.showError(`Failed to create ${this.labelType}: ${this.getErrorMessage(error)}`);
+    } finally {
+      this.isLoading = false;
     }
-    this.showSuccess(`${this.labelType} created successfully!`);
-    this.router.navigate([`/${this.userRole}/${this.labelType.toLowerCase()}`]); // ← uses dynamic role
-  } catch (error) {
-    this.showError(`Failed to create ${this.labelType}: ${this.getErrorMessage(error)}`);
-  } finally {
-    this.isLoading = false;
   }
-}
-
 
   private validateForm(): boolean {
     if (this.gallia.fields.some(f => !f.fieldValue.trim())) {
@@ -205,27 +204,33 @@ export class GalliaCreateComponent implements OnInit {
 
   private async generateLabelCanvas(): Promise<HTMLCanvasElement> {
     const container = document.createElement('div');
-    container.style.width = '595px';
-    container.style.height = '842px';
+    container.style.width = '595px'; // A5 width at 96 DPI
+    container.style.height = '842px'; // A5 height
     container.style.backgroundColor = '#ffffff';
-    container.style.fontFamily = '"Roboto", sans-serif';
+    container.style.fontFamily = '"Lato", sans-serif';
     container.style.padding = '15px';
     container.style.boxSizing = 'border-box';
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
-    container.style.gap = '15px';
-    container.style.border = '2px solid #0e3b16';
+    container.style.border = '1px solid #0b6985';
+    container.style.borderRadius = '8px';
+    container.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.05)';
+    container.style.background = 'linear-gradient(180deg, #ffffff, #edf2f7)';
 
+    // Header
     const header = document.createElement('div');
     header.style.display = 'flex';
     header.style.alignItems = 'center';
-    header.style.paddingBottom = '10px';
-    header.style.borderBottom = '3px solid #b87333';
+    header.style.padding = '10px';
+    header.style.backgroundColor = '#0b6985';
+    header.style.borderRadius = '6px 6px 0 0';
+    header.style.margin = '-15px -15px 15px -15px';
 
     const logo = document.createElement('img');
-    logo.src = '/assets/images/gallia-logo.png'; // Replace with your logo
+    logo.src = '/assets/images/gallia-logo.png';
     logo.style.width = '100px';
     logo.style.height = '40px';
+    logo.style.marginRight = '15px';
     header.appendChild(logo);
 
     const titleContainer = document.createElement('div');
@@ -233,61 +238,80 @@ export class GalliaCreateComponent implements OnInit {
     titleContainer.style.textAlign = 'center';
 
     const title = document.createElement('div');
-    title.style.fontSize = '24px';
-    title.style.fontWeight = '700';
-    title.style.color = '#0e3b16';
+    title.style.fontFamily = '"Fjalla One", sans-serif';
+    title.style.fontSize = '26px';
+    title.style.fontWeight = '400';
+    title.style.color = '#ffffff';
+    title.style.textTransform = 'uppercase';
     title.textContent = this.gallia.galliaName || 'Gallia Label';
     titleContainer.appendChild(title);
 
     const subtitle = document.createElement('div');
-    subtitle.style.fontSize = '14px';
-    subtitle.style.color = '#1e293b';
+    subtitle.style.fontFamily = '"Lato", sans-serif';
+    subtitle.style.fontSize = '12px';
+    subtitle.style.color = '#edf2f7';
     subtitle.textContent = `Date: ${this.gallia.labelDate ? new Date(this.gallia.labelDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}`;
     titleContainer.appendChild(subtitle);
 
     header.appendChild(titleContainer);
     container.appendChild(header);
 
-    const grid = document.createElement('div');
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-    grid.style.gap = '15px';
-    grid.style.flexGrow = '1';
+    // Main Content
+    const content = document.createElement('div');
+    content.style.flexGrow = '1';
+    content.style.padding = '10px';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.gap = '15px';
+
+    // Fields Section
+    const fieldsContainer = document.createElement('div');
+    fieldsContainer.style.display = 'flex';
+    fieldsContainer.style.flexDirection = 'column';
+    fieldsContainer.style.gap = '10px';
+    fieldsContainer.style.padding = '10px';
+    fieldsContainer.style.backgroundColor = '#ffffff';
+    fieldsContainer.style.border = '1px solid #edf2f7';
+    fieldsContainer.style.borderRadius = '6px';
 
     const visualizationPromises = this.gallia.fields.map((field, index) => {
       return new Promise<void>((resolve) => {
-        const fieldContainer = document.createElement('div');
-        fieldContainer.style.border = '1px solid #cbd5e1';
-        fieldContainer.style.borderRadius = '8px';
-        fieldContainer.style.padding = '12px';
-        fieldContainer.style.backgroundColor = '#f8fafc';
-        fieldContainer.style.display = 'flex';
-        fieldContainer.style.flexDirection = 'column';
-        fieldContainer.style.gap = '8px';
+        const fieldRow = document.createElement('div');
+        fieldRow.style.display = 'flex';
+        fieldRow.style.alignItems = 'center';
+        fieldRow.style.padding = '8px 0';
+        fieldRow.style.borderBottom = index < this.gallia.fields.length - 1 ? '1px dotted #edf2f7' : 'none';
+
+        const fieldInfo = document.createElement('div');
+        fieldInfo.style.flex = '1';
 
         const fieldName = document.createElement('div');
+        fieldName.style.fontFamily = '"Fjalla One", sans-serif';
         fieldName.style.fontWeight = '500';
-        fieldName.style.fontSize = '16px';
-        fieldName.style.color = '#0e3b16';
+        fieldName.style.fontSize = '14px';
+        fieldName.style.color = '#0b6985';
         fieldName.textContent = field.fieldName || `Field ${index + 1}`;
-        fieldContainer.appendChild(fieldName);
+        fieldInfo.appendChild(fieldName);
 
         const fieldValue = document.createElement('div');
-        fieldValue.style.fontSize = '14px';
-        fieldValue.style.color = '#1e293b';
+        fieldValue.style.fontFamily = '"Lato", sans-serif';
+        fieldValue.style.fontSize = '12px';
+        fieldValue.style.color = '#074f63';
         fieldValue.style.wordBreak = 'break-word';
         fieldValue.textContent = field.fieldValue || 'No value';
-        fieldContainer.appendChild(fieldValue);
+        fieldInfo.appendChild(fieldValue);
+
+        fieldRow.appendChild(fieldInfo);
 
         const visualization = document.createElement('div');
+        visualization.style.width = '120px';
         visualization.style.display = 'flex';
         visualization.style.justifyContent = 'center';
         visualization.style.alignItems = 'center';
-        visualization.style.minHeight = '100px';
+        visualization.style.padding = '5px';
         visualization.style.backgroundColor = '#ffffff';
+        visualization.style.border = '1px solid #edf2f7';
         visualization.style.borderRadius = '4px';
-        visualization.style.border = '1px solid #cbd5e1';
-        visualization.style.padding = '8px';
 
         if (field.visualizationType === 'qrcode' && this.previews[index]) {
           const qrImg = document.createElement('img');
@@ -299,41 +323,68 @@ export class GalliaCreateComponent implements OnInit {
           const barcodeImg = document.createElement('img');
           barcodeImg.src = this.previews[index];
           barcodeImg.style.width = '100%';
-          barcodeImg.style.maxHeight = '60px';
+          barcodeImg.style.height = '40px';
           visualization.appendChild(barcodeImg);
         } else {
           const textViz = document.createElement('div');
           textViz.textContent = field.fieldValue || '';
-          textViz.style.fontSize = '16px';
-          textViz.style.color = '#1e293b';
-          textViz.style.wordBreak = 'break-all';
-          textViz.style.padding = '8px';
+          textViz.style.fontFamily = '"Lato", sans-serif';
+          textViz.style.fontSize = '12px';
+          textViz.style.color = '#074f63';
+          textViz.style.textAlign = 'center';
+          textViz.style.padding = '5px';
           visualization.appendChild(textViz);
         }
 
-        fieldContainer.appendChild(visualization);
-        grid.appendChild(fieldContainer);
+        fieldRow.appendChild(visualization);
+        fieldsContainer.appendChild(fieldRow);
         resolve();
       });
     });
 
     await Promise.all(visualizationPromises);
-    container.appendChild(grid);
+    content.appendChild(fieldsContainer);
 
+    // Additional Info (e.g., Serial Number, Contact)
+    const infoContainer = document.createElement('div');
+    infoContainer.style.display = 'flex';
+    infoContainer.style.justifyContent = 'space-between';
+    infoContainer.style.fontFamily = '"Lato", sans-serif';
+    infoContainer.style.fontSize = '10px';
+    infoContainer.style.color = '#074f63';
+    infoContainer.style.padding = '8px';
+    infoContainer.style.backgroundColor = '#edf2f7';
+    infoContainer.style.borderRadius = '6px';
+
+    const serial = document.createElement('div');
+    serial.textContent = `Serial: G-${Math.floor(100000 + Math.random() * 900000)}`;
+    infoContainer.appendChild(serial);
+
+    const contact = document.createElement('div');
+    contact.textContent = 'Contact: support@gallia.com';
+    infoContainer.appendChild(contact);
+
+    content.appendChild(infoContainer);
+    container.appendChild(content);
+
+    // Footer
     const footer = document.createElement('div');
-    footer.style.fontSize = '12px';
-    footer.style.color = '#666';
+    footer.style.fontFamily = '"Lato", sans-serif';
+    footer.style.fontSize = '10px';
+    footer.style.color = '#ffffff';
     footer.style.textAlign = 'center';
-    footer.style.paddingTop = '10px';
-    footer.style.borderTop = '3px solid #b87333';
-    footer.textContent = `Generated by Gallia Systems, Inc. | www.gallia.com | ${new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`;
+    footer.style.padding = '10px';
+    footer.style.backgroundColor = '#0b6985';
+    footer.style.borderRadius = '0 0 6px 6px';
+    footer.style.margin = '15px -15px -15px -15px';
+    footer.textContent = `Manufactured by Gallia Systems, Inc. | www.gallia.com | ${new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`;
     container.appendChild(footer);
 
     document.body.appendChild(container);
     const canvas = await html2canvas(container, {
       scale: 2,
       logging: false,
-      backgroundColor: '#ffffff',
+      backgroundColor: null,
       removeContainer: true
     });
     document.body.removeChild(container);
@@ -400,6 +451,6 @@ export class GalliaCreateComponent implements OnInit {
       galliaName: ''
     };
     this.desiredFieldCount = 4;
-    this.previews = {};
+    this.previews = [];
   }
 }

@@ -1,64 +1,141 @@
-<div class="dashboard-container">
-  <!-- Header Section -->
-  <header class="header">
-    <h2>PCB Preparation Dashboard</h2>
-    <button mat-raised-button color="primary">Export Data</button>
-  </header>
+<div class="dashboard-container" [class.initial-load]="isLoading">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Loading dashboard data...</p>
+  </div>
 
-  <!-- Metrics Section: Displays PCB metrics with staggered animations -->
-  <section class="metrics-section">
-    <mat-card 
-      class="metric-card" 
-      *ngFor="let metric of metrics; let i = index" 
-      @cardAnimation 
-      [style.animation-delay]="i * 0.1 + 's'"
-    >
-      <mat-card-header>
-        <mat-card-title>{{ metric.title }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="metric-value">{{ metric.value }}</p>
-        <p class="metric-subtext">{{ metric.subtext }}</p>
-      </mat-card-content>
-    </mat-card>
-  </section>
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-alert">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{{ errorMessage }}</span>
+    <button (click)="errorMessage = null" class="close-btn">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 
-  <!-- Charts Section: Displays Chart.js line and doughnut charts -->
-  <section class="charts-section">
-    <mat-card class="chart-card" @chartAnimation>
-      <mat-card-header>
-        <mat-card-title>Monthly PCB Production</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="chart-container">
-          <canvas id="productionChart"></canvas>
+  <!-- Dashboard Content -->
+  <div class="dashboard-content">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Admin Dashboard</h1>
+      <div class="header-actions">
+        <span>{{ getFormattedDate() }}</span>
+        <button class="refresh-btn" (click)="refresh()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <section class="metrics-grid">
+      <div class="metric-card" *ngFor="let metric of metrics" [ngClass]="'card-' + metric.color">
+        <div class="card-content">
+          <div class="card-icon">
+            <i class="fas {{ metric.icon }}"></i>
+          </div>
+          <div class="card-details">
+            <h3>{{ metric.title }}</h3>
+            <p class="card-value">{{ metric.value }}</p>
+            <p class="card-subtext">{{ metric.subtext }}</p>
+            <div *ngIf="metric.trend" class="card-trend">
+              <i class="fas fa-arrow-{{ metric.trend }}"></i>
+              <span>Last 7 days</span>
+            </div>
+          </div>
         </div>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="chart-card" @chartAnimation>
-      <mat-card-header>
-        <mat-card-title>PCB Type Distribution</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="chart-container">
-          <canvas id="typeChart"></canvas>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </section>
+      </div>
+    </section>
 
-  <!-- Action Items Section: Lists actionable tasks with buttons -->
-  <section class="action-items-section">
-    <h2>Action Items</h2>
-    <mat-card class="action-list">
-      <mat-list>
-        <mat-list-item *ngFor="let action of actions">
-          <span matListItemTitle>{{ action.title }}</span>
-          <button mat-raised-button [color]="action.color" class="action-btn">
-            {{ action.buttonText }}
-          </button>
-        </mat-list-item>
-      </mat-list>
-    </mat-card>
-  </section>
+    <!-- Main Content Area -->
+    <div class="main-content-area">
+      <!-- Left Column -->
+      <div class="content-column">
+        <!-- Quick Actions -->
+        <section class="quick-actions-section">
+          <div class="section-header">
+            <h2>Quick Actions</h2>
+          </div>
+          <div class="actions-grid">
+            <button 
+              class="action-btn" 
+              *ngFor="let action of quickActions"
+              (click)="executeAction(action.action)"
+            >
+              <div class="action-icon">
+                <i class="fas {{ action.icon }}"></i>
+              </div>
+              <span>{{ action.title }}</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Recent Activities -->
+        <section class="activities-section">
+          <div class="section-header">
+            <h2>Recent Activities</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="activities-list">
+            <div class="activity-item" *ngFor="let activity of activities">
+              <div class="activity-badge" [ngClass]="'bg-' + activity.color">
+                <i class="fas {{ activity.icon }}"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-message">{{ activity.message }}</p>
+                <span class="activity-time">{{ activity.timestamp | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column -->
+      <div class="content-column">
+        <!-- Performance Chart -->
+        <section class="chart-section">
+          <div class="section-header">
+            <h2>System Performance</h2>
+          </div>
+          <div class="chart-container">
+            <canvas #performanceChart></canvas>
+          </div>
+        </section>
+
+        <!-- User Distribution -->
+        <section class="chart-section">
+          <div class="section-header">
+            <h2>User Distribution</h2>
+          </div>
+          <div class="chart-container">
+            <canvas #userDistributionChart></canvas>
+          </div>
+        </section>
+
+        <!-- Recent Users -->
+        <section class="users-section">
+          <div class="section-header">
+            <h2>Recently Active Users</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="users-list">
+            <div class="user-item" *ngFor="let user of recentUsers">
+              <div class="user-avatar">
+                <img [src]="user.avatar" alt="User avatar">
+                <div class="status-indicator" [ngClass]="user.status"></div>
+              </div>
+              <div class="user-details">
+                <h3 class="user-name">{{ user.name }}</h3>
+                <p class="user-role">{{ user.role }}</p>
+                <p class="user-department">{{ user.department }}</p>
+              </div>
+              <button class="user-action">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 </div>

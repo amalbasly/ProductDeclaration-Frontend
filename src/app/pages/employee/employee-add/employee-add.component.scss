@@ -1,74 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@400;700;900&display=swap');
 
-// ALL Circuits Brand Colors
-$all-red: #E00034;
-$light-bg: #f8fafc;
+// Theme Colors (Original ALL Circuits Charter colors, as specified)
+$all-red: #FF4757; // Dominant red
+$all-blue: #087c9f; // Strong blue accent
+$all-gray: #E2E8F0;
+$all-dark-gray: #087c9f; // Matches $all-blue as per your input
+$error-color: #d62828;
+$success-color: #2ec4b6;
 $white: #ffffff;
-$gray-light: #e9ecef;
-
-// PCB Theme Integration
-$pcb-green-dark: #0e3b16;
-$pcb-green: #166a33;
-$pcb-copper: #b87333;
 $neutral-100: #f8fafc;
+$neutral-200: #edf2f7;
 $neutral-300: #cbd5e1;
-$neutral-800: #1e293b;
 
-// Font
-$font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-
-// Transitions
-@mixin transition($time: 0.3s, $ease: ease, $props...) {
-  transition: #{if(length($props) > 0, $props, all)} $time $ease;
-}
-
-// Animations
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@mixin transition($time: 0.3s, $ease: ease-in-out) {
+  transition: all $time $ease;
 }
 
 .fullscreen-container {
   min-height: 100vh;
-  padding: 2rem;
-  background-color: $light-bg;
-  font-family: $font-main;
+  padding: 2.5rem; // Increased padding for larger appearance
+  background-color: $neutral-100;
+  font-family: 'Lato', sans-serif;
 }
 
 .card {
   background-color: $white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  margin: 2rem auto;
-  padding: 1.5rem;
-  max-width: 800px; // Match form-grid layout
-  font-family: $font-main;
+  border-radius: 1rem; // Slightly larger border-radius
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); // Slightly stronger shadow
+  margin: 2.5rem auto; // Increased margin
+  padding: 2rem; // Increased padding for larger form
+  max-width: 900px; // Increased max-width for larger form
+  font-family: 'Lato', sans-serif;
+  @include transition(0.3s);
+
+  &:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1); // Adjusted hover shadow
+  }
 
   .card-header {
-    border-bottom: 1px solid lighten($pcb-copper, 30%);
-    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, darken($all-blue, 15%), darken($all-blue, 20%));
+    border-bottom: 1px solid rgba($white, 0.2);
+    margin-bottom: 2rem; // Increased margin
+    padding: 1.5rem 2rem; // Increased padding
 
     h3 {
       margin: 0;
-      font-size: 1.4rem;
-      color: $pcb-green-dark;
+      font-size: 1.6rem; // Increased font size
+      color: $white;
       font-weight: 700;
+      letter-spacing: 0.5px;
       position: relative;
+      display: inline-block;
 
       &:after {
         content: '';
         display: block;
-        width: 60px;
-        height: 4px;
-        background: $pcb-copper;
+        width: 80px; // Increased width
+        height: 4px; // Increased height
+        background: lighten($all-blue, 20%);
+        margin-top: 0.4rem; // Adjusted margin
         border-radius: 2px;
-        margin-top: 0.35rem;
       }
     }
   }
@@ -77,68 +68,61 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     padding: 0;
 
     .employee-form {
-      animation: slideIn 0.5s ease forwards;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem; // Increased gap
 
       .form-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Increased min column width
+        gap: 1.5rem; // Increased gap
       }
 
       .form-group {
-        position: relative;
-        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
 
         label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-size: 0.95rem;
-          font-weight: 500;
-          color: $neutral-800;
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          @include transition(0.3s, ease, transform, color);
-          transform-origin: top left;
+          font-size: 1.05rem; // Increased font size
+          font-weight: 600;
+          color: $all-dark-gray;
+          margin-bottom: 0.6rem; // Increased margin
 
           .required {
             color: $all-red;
-            font-size: 0.8rem;
+            font-size: 0.95rem; // Increased font size
+            margin-left: 0.3rem;
           }
         }
 
-        input {
-          width: 100%;
-          padding: 0.5rem 0.75rem;
-          font-size: 0.95rem;
-          border: 1px solid $neutral-300;
-          border-radius: 0.5rem;
-          color: $neutral-800;
+        input,
+        select {
+          padding: 0.75rem 1rem; // Increased padding
+          font-size: 1.05rem; // Increased font size
+          border: 1px solid $neutral-200;
+          border-radius: 0.6rem; // Slightly larger border-radius
+          color: $all-dark-gray;
           background-color: $white;
-          font-family: $font-main;
-          @include transition(0.3s, ease, border-color, box-shadow, transform);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+          @include transition(0.3s);
 
           &:focus {
             outline: none;
-            border-color: $pcb-copper;
-            box-shadow: 0 0 0 3px rgba($pcb-copper, 0.1);
-            transform: translateY(-2px);
-          }
-
-          &.valid {
-            border-color: $pcb-green;
-            background: rgba($pcb-green, 0.05);
+            border-color: lighten($all-blue, 10%);
+            box-shadow: 0 0 0 4px rgba(lighten($all-blue, 10%), 0.1); // Increased shadow
           }
 
           &.invalid {
             border-color: $all-red;
-            background: rgba($all-red, 0.05);
+            background-color: rgba($all-red, 0.05);
+          }
+
+          &.valid {
+            border-color: $neutral-300;
+            background-color: $white;
           }
 
           &[type="file"] {
-            padding: 0.5rem;
+            padding: 0.75rem; // Increased padding
             border: none;
             background: transparent;
             box-shadow: none;
@@ -146,197 +130,151 @@ $font-main: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
           &:disabled {
             background-color: $neutral-100;
-            cursor: not-allowed;
             opacity: 0.7;
-          }
-
-          &:not(:placeholder-shown) + label,
-          &:focus + label {
-            transform: translateY(-1.5rem) scale(0.85);
-            color: $pcb-copper;
+            cursor: not-allowed;
           }
         }
 
         .error-message {
-          font-size: 0.8rem;
           color: $all-red;
-          margin-top: 0.25rem;
-          animation: slideIn 0.3s ease;
+          font-size: 0.9rem; // Increased font size
+          margin-top: 0.3rem; // Adjusted margin
         }
 
         .file-info {
-          font-size: 0.8rem;
-          color: $neutral-800;
-          margin-top: 0.25rem;
+          font-size: 0.9rem; // Increased font size
+          color: $all-dark-gray;
+          margin-top: 0.3rem;
         }
       }
 
       .form-actions {
         display: flex;
-        gap: 1rem;
         justify-content: flex-end;
-        margin-top: 1.5rem;
+        gap: 1.25rem; // Increased gap
+        margin-top: 1.5rem; // Increased margin
 
         .btn {
-          font-family: $font-main;
           font-weight: 700;
-          font-size: 1rem;
-          padding: 0.5rem 1.5rem;
-          border-radius: 30px;
+          font-size: 1.1rem; // Increased font size
+          padding: 0.75rem 2rem; // Increased padding
+          border-radius: 35px; // Slightly larger border-radius
           border: none;
-          @include transition(0.3s, ease, background-color, transform, box-shadow);
+          cursor: pointer;
+          @include transition(0.3s);
 
           &.btn-primary {
-            background-color: $pcb-green;
+            background-color: lighten($all-blue, 10%);
             color: $white;
-            box-shadow: 0 2px 6px rgba($pcb-copper, 0.3);
+            box-shadow: 0 3px 8px rgba(lighten($all-blue, 10%), 0.3); // Adjusted shadow
 
             &:hover {
-              background-color: lighten($pcb-green, 10%);
+              background-color: lighten($all-blue, 5%);
               transform: translateY(-2px);
-              box-shadow: 0 4px 8px rgba($pcb-copper, 0.4);
+              box-shadow: 0 6px 12px rgba(lighten($all-blue, 10%), 0.4); // Increased shadow
             }
 
             &:active {
               transform: translateY(0);
-              box-shadow: 0 2px 4px rgba($pcb-copper, 0.3);
+              box-shadow: 0 3px 8px rgba(lighten($all-blue, 10%), 0.3);
             }
 
             &:disabled {
-              background-color: $gray-light;
-              opacity: 0.7;
+              background-color: $neutral-200;
+              color: $neutral-300;
               cursor: not-allowed;
               box-shadow: none;
             }
           }
 
           &.btn-details {
-            background: transparent;
-            color: $pcb-green;
-            border: 2px solid $pcb-green;
-            box-shadow: 0 2px 6px rgba($neutral-800, 0.2);
+            background-color: transparent;
+            color: $all-blue;
+            border: 2px solid $all-blue;
+            box-shadow: 0 3px 8px rgba($all-blue, 0.2); // Adjusted shadow
 
             &:hover {
-              background: $pcb-green;
+              background-color: $all-blue;
               color: $white;
               transform: translateY(-2px);
-              box-shadow: 0 4px 8px rgba($pcb-green, 0.3);
+              box-shadow: 0 6px 12px rgba($all-blue, 0.3); // Increased shadow
             }
 
             &:active {
               transform: translateY(0);
-              box-shadow: 0 2px 4px rgba($neutral-800, 0.2);
+              box-shadow: 0 3px 8px rgba($all-blue, 0.2);
             }
 
             &:disabled {
-              border-color: $gray-light;
-              color: $gray-light;
-              opacity: 0.7;
+              border-color: $neutral-200;
+              color: $neutral-300;
               cursor: not-allowed;
-              box-shadow: none;
             }
           }
         }
       }
 
       .alert {
-        border-radius: 0.5rem;
-        padding: 0.75rem 1.25rem;
-        font-size: 0.95rem;
-        margin-top: 1.25rem;
-        font-weight: 400;
+        padding: 1rem 1.5rem; // Increased padding
+        border-radius: 0.6rem; // Slightly larger border-radius
+        font-size: 1.05rem; // Increased font size
+        font-weight: 500;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        animation: slideIn 0.3s ease;
+        gap: 0.75rem; // Increased gap
+        animation: fadeIn 0.3s ease-in-out;
 
         &.alert-success {
-          background-color: #e6ffe6;
-          color: #006600;
-          border-left: 4px solid $pcb-green;
-
-          &::before {
-            content: '\2714';
-            font-size: 1rem;
-            color: $pcb-green;
-          }
+          background-color: rgba($success-color, 0.1);
+          color: $success-color;
+          border-left: 5px solid $success-color; // Increased border width
         }
 
         &.alert-danger {
-          background-color: #ffe5e5;
-          color: #7a0000;
-          border-left: 4px solid $all-red;
-
-          &::before {
-            content: '\2716';
-            font-size: 1rem;
-            color: $all-red;
-          }
+          background-color: rgba($error-color, 0.1);
+          color: $error-color;
+          border-left: 5px solid $error-color; // Increased border width
         }
       }
     }
   }
 }
 
-@media (max-width: 768px) {
-  .fullscreen-container {
-    padding: 1rem;
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-
-  .card {
-    margin: 1rem auto;
-    padding: 1rem;
-    max-width: 100%;
-  }
-
-  .employee-form {
-    .form-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    .form-group {
-      input {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-      }
-    }
-
-    .form-actions {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.75rem;
-
-      .btn {
-        padding: 0.5rem;
-        font-size: 0.9rem;
-      }
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 480px) {
-  .card {
-    padding: 0.75rem;
+// Responsive Adjustments
+@media (max-width: 768px) {
+  .fullscreen-container {
+    padding: 1.5rem; // Adjusted for responsive
   }
 
-  .employee-form {
-    .form-group {
-      label {
-        font-size: 0.9rem;
-      }
-      input {
-        font-size: 0.85rem;
-      }
-      .error-message,
-      .file-info {
-        font-size: 0.75rem;
-      }
-    }
+  .card {
+    margin: 1.5rem; // Adjusted for responsive
+    padding: 1.5rem; // Adjusted for responsive
+    max-width: 100%;
+  }
 
-    .alert {
-      font-size: 0.85rem;
-      padding: 0.5rem 1rem;
-    }
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
   }
 }
